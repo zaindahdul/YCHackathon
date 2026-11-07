@@ -6,4 +6,6 @@ Review branch: `codex/formshop-plan`, based on the existing `master` branch. The
 
 Read the root README first, then company-plan, build-plan and demo-playbook. The transcript/digest and source research are linked from the README. This is a transcription, business refinement and implementation planning PR; no application implementation is claimed.
 
-The PR URL and final remote verification are recorded after publication. The original audio remains on Srujan's computer; all text/structured transcript outputs and recovery evidence are included in the review package.
+Open review PR: [#1 — Plan Formshop: an agent-run custom CAD and merch company](https://github.com/zaindahdul/YCHackathon/pull/1).
+
+Delivery verification checks that the PR is open, targets `master`, and its head matches both the local commit and pushed remote branch. Run `python3 scripts/verify_deliverables.py delivery` to recheck using authenticated GitHub CLI access. The original audio remains on Srujan's computer; all text/structured transcript outputs and recovery evidence are included in the review package.

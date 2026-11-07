@@ -37,7 +37,7 @@ Produce a complete local MLX Whisper transcript of the supplied 64m45s recording
       files: docs/review.md
       accept: python3 scripts/verify_deliverables.py all
       deps: T3
-- [ ] T5 · Commit review package and open cofounder-facing GitHub PR
+- [x] T5 · Commit review package and open cofounder-facing GitHub PR
       files: README.md, docs/pr-delivery.md
       accept: python3 scripts/verify_deliverables.py delivery
       deps: T4
@@ -48,3 +48,4 @@ Produce a complete local MLX Whisper transcript of the supplied 64m45s recording
 - 2026-11-07 · done T2 · Verify Naive SDK and current supplier/market capabilities
 - 2026-11-07 · done T3 · Synthesize recording, business, architecture, sprint, and demo plan
 - 2026-11-07 · done T4 · Independently review and repair full deliverable package
+- 2026-11-07 · done T5 · Commit review package and open cofounder-facing GitHub PR
