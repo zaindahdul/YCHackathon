@@ -1,6 +1,6 @@
 # Business landscape and recommended wedge
 
-> **Current scope:** the [merch-first plan](../merch-first.md) supersedes the CAD-first weekend offer. This file retains capability/market research; CAD generation is a later option, not a prerequisite for the merch loop.
+> **Research context:** this file was written for the earlier CAD/merch proposals. [Fire Drill is the latest fresh recommendation](../fresh-recommendation.md). SDK sessions, tool governance and evidence limits remain relevant; product-specific CAD/supplier recommendations are historical alternatives.
 
 Research date: November 7, 2026. This is a recommendation and feasibility assessment, not evidence of connected accounts, customer demand, supplier acceptance, or orders placed. No customers or suppliers were contacted for this research.
 

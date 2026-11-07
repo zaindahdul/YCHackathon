@@ -1,19 +1,19 @@
-# Formshop
+# Naïve Hackathon — research and recommendation
 
-**An agent-run merch shop: send your company’s logo; the company handles the design, approval, production order and delivery.**
+**Latest independent recommendation: Fire Drill—an autonomous company that runs adversarial test orders against other agent-run businesses.**
 
-The current weekend priority is **one simple physical merch item delivered to a real customer**. Start with a standard mug or other SKU that a local provider confirms it can produce in time. CAD/custom parts are a later upgrade. A store-specific SKU, price and ready time are still unconfirmed; no application, checkout or supplier connection is implemented yet.
+Read **[the fresh recommendation](docs/fresh-recommendation.md)** first: the one chosen idea, why it beats the alternatives under this deadline, official competitor research, first-customer gate, minimal build and live-demo evidence. The product is a scoped investigation, replay and retest. It is a proposal, not an implemented or buyer-validated company.
 
-## Start here
+The previous [merch-first plan](docs/merch-first.md) and earlier CAD concepts are preserved as historical alternatives. The user explicitly requested a fresh selection independent of those ideas; Fire Drill is the current recommendation to evaluate.
 
-1. **[Current merch-first plan](docs/merch-first.md)** — offer, production-first check, first buyer, minimal agent loop and physical delivery evidence.
-2. [Hackathon rules](hackathon-rules.md) and [event brief](docs/hackathon-brief.md) — mandatory Naïve SDK, live operating business and Sunday 11am cutoff.
-3. [SDK research](docs/research/naive-sdk.md) — verified documented primitives and account-level uncertainties. Use ordinary SDK sessions first.
-4. [Recording digest](docs/recording-digest.md) — lessons and timestamped source context.
+## Supporting context
 
-The earlier [CAD company plan](docs/company-plan.md), [CAD build plan](docs/build-plan.md), [acquisition playbook](docs/customer-acquisition.md) and [demo script](docs/demo-playbook.md) remain labeled historical alternatives. Their QR-display-first and paid-CAD-file recommendations are superseded by the simpler merch offer. Do not run both plans in parallel.
+- [Hackathon rules](hackathon-rules.md) and [event brief](docs/hackathon-brief.md): mandatory Naïve SDK, actual operating business, Sunday 11am cutoff.
+- [SDK research](docs/research/naive-sdk.md): documented primitives, account gates and native-team uncertainty. Use ordinary SDK sessions first.
+- [Recording digest](docs/recording-digest.md): timestamped lessons and source limits.
+- Earlier [CAD company](docs/company-plan.md), [CAD build](docs/build-plan.md), [acquisition](docs/customer-acquisition.md) and [demo](docs/demo-playbook.md) plans are labeled alternatives, not simultaneous build instructions.
 
-The source recording and research remain available below. “Formshop” is a working name, not a cleared brand. No customer outreach, supplier purchase or physical fulfillment has occurred as part of this planning work.
+No new application, customer outreach, live SDK request, payment, adversarial target test or fulfillment has been performed as part of this research. Price points are experiments and all customer demand remains unverified.
 
 ## Recording
 
@@ -36,6 +36,6 @@ python3 scripts/verify_deliverables.py all
 
 This checks transcript structure, coverage, repetition, source linkage and local document references. It does not validate the future application. [Independent review and repairs](docs/review.md) records the content review. [THINKPAD.md](THINKPAD.md) preserves the planning acceptance criteria and task evidence.
 
-## First build session
+## Before implementation
 
-Confirm the exact product and local ready time first. In parallel, prove one Naïve session and prepare a provider-compatible logo layout. Recruit one independent customer, agree the exact total/artwork, submit an authorized order, collect it and hand it over. Record human checkout/pickup as human work. Follow the [current merch plan](docs/merch-first.md).
+Validate the current recommendation's first gate: consenting reachable staging targets, a concrete rule with an observable outcome, and a genuine buyer commitment. Then build one narrow customer job through delivery and retest. See [the fresh recommendation](docs/fresh-recommendation.md).

@@ -94,3 +94,24 @@ Reviewed the current `merch-first.md`, rewritten README, superseded banners in t
 - README precedence and all four historical-plan banners consistently point to the merch-first plan. CAD is a later option, not a parallel weekend commitment. Existing research and transcript remain supporting context rather than evidence of live orders.
 
 `python3 scripts/verify_deliverables.py plan` passed with 43 valid local links. This disposition does not verify store capacity, order placement, actual customer demand, public deployment, or physical delivery; those remain explicit execution checks. The lead retains responsibility for the updated PR commit and remote verification.
+
+## Fresh Fire Drill recommendation review — November 7, 2026
+
+Reviewed `fresh-recommendation.md`, the current README and the historical-proposal banner in `merch-first.md` for the user's fresh single-idea request. Scope is idea quality, evidence claims, customer access, minimal service feasibility and planning consistency; no targets were tested and no outreach was authorized or performed by this review.
+
+The recommendation has a concrete buyer hypothesis and a bounded paid service outcome. It openly acknowledges direct competition and does not claim global novelty, proven demand or guaranteed prizes. It distinguishes a response-level promise, attempted tool invocation and completed staging mutation; preserves legitimate baselines, clean-state replay and exact evidence; and makes consented staging-only scope a precondition. Human initial acquisition is disclosed. A 30-minute customer/target commitment gate addresses the main risk that other builders have neither reachable targets nor willingness to pay. Ordinary Naïve SDK sessions avoid the disputed native-team feature.
+
+Two clarification findings were sent to the lead before disposition:
+
+1. **P2 — Baseline demo wording.** “Failed baseline-free adversarial attempt” was inconsistent with the required successful legitimate baseline and obscured what to present. The demo should show the successful baseline first, then the actual adversarial result and independent replay where a failure was found.
+2. **P2 — Complete the service's non-failure and waiting-customer path.** The price includes a report and one retest, but the initial draft did not define delivery when bounded tests found no failure, results stayed inconclusive, or the buyer had not changed the target by the event cutoff. A scoped negative/inconclusive report must be a valid outcome; a customer-dependent retest needs a disclosed agreed window/pending state. The company must not invent a fix or claim completed before/after evidence while waiting for the owner.
+
+`python3 scripts/verify_deliverables.py plan` passed with 46 valid local links. Final follow-up disposition is pending the two clarification repairs; no broader business or evidence-scope blocker was identified.
+
+### Fire Drill repair check and disposition — November 7, 2026
+
+Both clarification findings were repaired in the actual recommendation and re-read. The demo now starts with a successful legitimate baseline before any reproduced adversarial failure. The new completion/retest terms define negative and inconclusive reports, blocked accepted jobs, the buyer-dependent patch deadline, an unperformed retest state, agreed extensions and confirmed versus merely requested refunds. A pending customer change cannot be represented as a completed before/after.
+
+The reviewer independently opened the official Gray Swan, Giskard agent-testing and Deepen AI red-teaming sources. They support the acknowledged competitive overlap, including managed policy tests, reproduction and retest; the proposal correctly does not attribute an exclusive workflow to Fire Drill. The Naïve outcomes page was inaccessible to this review tool, so its particular grader limitation remains documented research rather than a newly independently verified API assertion. No authenticated platform or target capability was inferred.
+
+`python3 scripts/verify_deliverables.py plan` passed again with 46 valid local links. **Fire Drill follow-up disposition: No unresolved material findings** in the reviewed recommendation and its precedence/evidence language. This is a defensible event-specific hypothesis, not proof it is novel, desirable, feasible in the actual organization, or likely to win. The reachable-target, observable-rule, reset and real-buyer gate must precede a broad implementation; PR remote verification remains the lead's responsibility.

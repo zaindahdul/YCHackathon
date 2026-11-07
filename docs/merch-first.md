@@ -1,5 +1,7 @@
 # Current weekend plan: a merch company that delivers
 
+> **Historical proposal:** the user subsequently requested an independent search without anchoring on earlier concepts. [Fire Drill is the current fresh recommendation](fresh-recommendation.md). This merch plan is retained as an alternative.
+
 Updated November 7, 2026 following Srujan's correction: the available time is very short and the product can be simple merchandise. **This replaces the QR-display/CAD-file offer as the weekend starting point.** CAD remains a later upgrade. No storefront, supplier connection or order has been implemented by this planning work.
 
 ## The offer

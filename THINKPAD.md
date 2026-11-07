@@ -6,7 +6,7 @@
 
 ## Goal
 
-Produce a complete local MLX Whisper transcript of the supplied 64m45s recording with timestamped machine-readable outputs and source provenance; digest the recording and pasted hackathon brief; refine the custom CAD/merch autonomous-company concept into a differentiated, feasible business and implementation-ready plan through the November 8 11am cutoff. Deliver source-backed SDK/supplier research, concrete customer and agent journeys, bounded MVP and failure handling, economics assumptions, two-person schedule, and an honest live-demo/evidence plan. This request is transcription and business/product planning, followed by the user-requested GitHub pull request so the cofounder can review everything. The follow-up adds an executable short-window customer acquisition strategy, ready-to-use draft copy, measurement and decision gates, published in the same cofounder review PR. The latest correction supersedes the CAD-file/QR-first weekend offer: use one simple merch SKU and prioritize an actual customer handoff, with store-specific production checked before promising it. Preserve the earlier plans as labeled alternatives and update the same PR. It does not require building/deploying the application or sending outreach in this turn.
+Produce a complete local MLX Whisper transcript of the supplied 64m45s recording with timestamped machine-readable outputs and source provenance; digest the recording and pasted hackathon brief; refine the custom CAD/merch autonomous-company concept into a differentiated, feasible business and implementation-ready plan through the November 8 11am cutoff. Deliver source-backed SDK/supplier research, concrete customer and agent journeys, bounded MVP and failure handling, economics assumptions, two-person schedule, and an honest live-demo/evidence plan. This request is transcription and business/product planning, followed by the user-requested GitHub pull request so the cofounder can review everything. The follow-up adds an executable short-window customer acquisition strategy, ready-to-use draft copy, measurement and decision gates, published in the same cofounder review PR. The latest correction supersedes the CAD-file/QR-first weekend offer: use one simple merch SKU and prioritize an actual customer handoff, with store-specific production checked before promising it. Preserve the earlier plans as labeled alternatives and update the same PR. The latest request requires a fresh independent search, ignoring earlier product concepts, and one evidence-backed recommendation judged on differentiation, reachable demand, autonomous operations, deliverability and two-person feasibility. Preserve earlier concepts as alternatives; do not claim the recommendation has been validated by buyers. It does not require building/deploying the application or sending outreach in this turn.
 
 ## Constraints
 - **Max concurrency: 3**
@@ -18,7 +18,7 @@ Produce a complete local MLX Whisper transcript of the supplied 64m45s recording
 
 ## Open questions
 
-- Exact local merch SKU, stock, cost and ready time are unconfirmed. Default to physical handoff as the target; the user has been asked whether later-delivery orders are acceptable. Do not count digital files as physical delivery.
+- Fresh recommendation Fire Drill requires consenting reachable staging targets, a concrete evidence predicate and an independent paying buyer; all are unverified. Prior merch/physical-fulfillment questions belong to the historical proposal and are not current build gates.
 - Confirm event details against the recording; supplied schedule has only 22 hacking hours, Saturday 13:00 to Sunday 11:00.
 
 ## Tasks
@@ -47,6 +47,9 @@ Produce a complete local MLX Whisper transcript of the supplied 64m45s recording
 - [x] T7 · Replace CAD-first offer with a simple merch delivery plan and update PR
       files: README.md, docs/merch-first.md, docs/company-plan.md, docs/build-plan.md, docs/customer-acquisition.md, docs/demo-playbook.md, docs/review.md, scripts/verify_deliverables.py
       accept: python3 scripts/verify_deliverables.py all
+- [x] T8 · Select one fresh hackathon business through independent ideation and red-team review
+      files: docs/fresh-recommendation.md, docs/review.md, README.md, docs/merch-first.md, docs/pr-delivery.md, docs/research/naive-sdk.md, docs/research/business-landscape.md, scripts/verify_deliverables.py
+      accept: python3 scripts/verify_deliverables.py all
 ## Log
 
 - 2026-11-07 · thinkpad created
@@ -57,3 +60,5 @@ Produce a complete local MLX Whisper transcript of the supplied 64m45s recording
 - 2026-11-07 · done T5 · Commit review package and open cofounder-facing GitHub PR
 - 2026-11-07 · done T6 · Define and review the short-window customer acquisition sprint
 - 2026-11-07 · done T7 · Replace CAD-first offer with a simple merch delivery plan and update PR
+- 2026-11-07 · set T8 · files=docs/fresh-recommendation.md, docs/review.md, README.md, docs/merch-first.md, docs/pr-delivery.md, docs/research/naive-sdk.md, docs/research/business-landscape.md, scripts/verify_deliverables.py
+- 2026-11-07 · done T8 · Select one fresh hackathon business through independent ideation and red-team review

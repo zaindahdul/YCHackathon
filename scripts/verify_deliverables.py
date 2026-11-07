@@ -88,7 +88,8 @@ def research():
 def plan():
     files = ('README.md', 'docs/hackathon-brief.md', 'docs/recording-digest.md',
              'docs/company-plan.md', 'docs/build-plan.md', 'docs/demo-playbook.md',
-             'docs/customer-acquisition.md', 'docs/merch-first.md')
+             'docs/customer-acquisition.md', 'docs/merch-first.md',
+             'docs/fresh-recommendation.md')
     paths = [ROOT / f for f in files]
     for path in paths:
         require(path.stat().st_size > 100, f'Missing/empty plan artifact: {path}')
