@@ -1,0 +1,6 @@
+# Keep PR review focused on the readable transcript and the company/build plans.
+transcripts/attempts/** linguist-generated=true
+transcripts/*.json linguist-generated=true
+transcripts/*.srt linguist-generated=true
+transcripts/*.vtt linguist-generated=true
+transcripts/*.tsv linguist-generated=true

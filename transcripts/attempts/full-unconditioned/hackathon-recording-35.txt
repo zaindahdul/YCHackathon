@@ -1,0 +1,888 @@
+a door dash store run with agents so yeah and then the second uh requirement is that it's still
+an internet sdk for a studio so our studio is our web platform um it's all the same back end
+our sdk um i hope a lot of you have taken a look at it previously um but yeah that's uh pretty much
+it um in terms of support we'll have a couple people walking around um so if you guys have
+have any questions, please go up to someone with a 3A bracelet.
+Yeah, I don't know if we set up, like, an identity
+channel yet.
+But if we do, I'll just, like, put this down really quickly
+so you guys can type questions in the Slack.
+Yeah.
+A couple of rules just to go over.
+If you leave after midnight, you can't come back until 6 AM.
+So, yeah.
+It's an overnight hackathon.
+and if you leave, you have to check in again.
+Yeah, the first floor is essentially where you guys were just now,
+and this floor is essentially open to you guys,
+as well as the conference rooms.
+The main one is where our team is, so go there.
+Yeah, obviously, that's not a picture, but I'll go.
+Yeah, so here's our official sponsor list,
+and how much credit it's for offering.
+Obviously, throughout all your projects, you'll be using Naive,
+but here's like kind of the rest of the sponsors you can use. Great group. And yeah, the price track.
+So the main track is with Naive. And so first place, we're doing iPhone 18, AirPods, second place
+Mac minis, also like Pocket AI note takers. These have been nice. I've been using them.
+Mulmer is offering a lot of prizes. Agent Mel is well-invoted. So there'll be some cool prizes
+to be handed out. And obviously, the holy grail prize here is getting a Guaranteed YC interview.
+which one team in this hackathon will get.
+And yeah.
+Okay, so yeah.
+So it's your code to claim your credits.
+Yeah, this is the last slide.
+Okay.
+So I think right now we're going to invite Nikita
+for a fireside chat.
+But in the meantime,
+you're free to just acquaintance yourself.
+Thank you.
+All right.
+Hello everyone, please welcome Nikita Shemkunov, a very special guest with us today.
+He was the co-founder and CEO of Deon, which was eventually acquired by Database.
+Before that, he was actually a YC founder of SingleStore, the biggest company in the
+Winter 11 batch.
+He was a partner at Cosla, and now he's currently at Databricks.
+Very huge figure and influence in the tech scene.
+And yeah, welcome Nikita.
+So you spent most of your career building database infrastructure, Microsoft, Facebook,
+to then founding SQL, SingleStore, and then Neon. What has fundamentally changed about
+how software is built over the past years with the rise of agents?
+Well, I'm sure everybody's aware that we don't know how to write code anymore. But I think
+It's more interesting what this means.
+And I think from where I stand is we've been seeing a lot more
+in particularly building system projects.
+So I've been writing systems and
+thinking about systems and
+that are probably like engines.
+And engines is distortion.
+There's some technology.
+There's some computer technology.
+It happens to speak some language, right?
+So there's some compiler technology, there's some special things to date and age, there's
+a way called query optimization, which is like, iterate over possible ways to execute
+a particular query and then choose the better one.
+This might not be the best one, but it's going to be hard to run out of time doing this.
+But like, it is all system engineering.
+And there are like many system engineering companies that are working on like, storage,
+operating system, networking, all sorts of huge, obviously like, AWS is a massive place,
+you know, a lot of system engineering problems and building various services, analytics,
+you know, click-click-pile, data bridge something, all those places. This is all systems engineering.
+And the most profound thing is that something that used to be hard is not hard anymore.
+And I think we all realize that by building like software or like staff services, like so quickly it just takes together enough.
+But not everybody who is building system engineers realize that you can be incredibly more ambitious.
+So some are very, some are like very native to this. I'll start with this one.
+So Neon runs on micro VMs.
+And this is Postgres.
+This is in a micro VM.
+And the micro VM is today.
+So a lot of people do Firecracker,
+but we chose the variety of reads.
+There's actually no purpose.
+Once you run through the decision tree,
+you go through various stages of read.
+And then you do either Firecracker or you use
+or sometimes you just call .
+There's operating system.
+So somebody on our team,
+oh, and then when you start with different workloads,
+especially like we're partners with WebLift,
+and then there's like long list of partners
+that use NUTS to generate an app
+and NUTS database for the app.
+Some of those partners have a same old,
+so today NUTS launches 150,000 database per day,
+like that's not new,
+And then everything that scales to zero comes back up.
+So roughly 20 million starts and stops per day.
+And then when those light coding tools generate apps,
+chances are the app is not going to be used.
+I think it's like 99% chance the app is built once, used once,
+and then thrown away.
+And therefore, it puts a lot of pressure
+on the cost at the low end.
+So the question is, fine, if the app actually works,
+and scales, and people are using it,
+I'm OK to pay for it.
+But I don't want to pay for this gigantic volume of garbage
+apps that are one time use for this.
+So therefore, there's a lot of pressure to cost it a little.
+So where does the cost come from in this micro-DM?
+It actually comes from memory.
+So they have a memory that you allocate to micro-DM,
+and you can add one to those mailboxes
+that you buy from Amazon is the limited pack.
+Can you reduce the amount of memory?
+But like, again, at the low end,
+Linux consumes, just Linux by being there,
+consumes a bunch of memory.
+So, okay, what do you do?
+So one engineer looked at all the system calls
+Postgres is making, and then reimplemented it,
+like built a new operating system
+that just supports those operating system calls,
+and those systems calls only.
+And in the past that would be like,
+you basically go and get another operating system.
+And so people would just crash with agents very, very quickly.
+I think it took them like less than a week.
+And then reduce the cost of me and Ronnie and the low end by a factor of 20.
+Simply because there's no operating system.
+And by the way, there's no scheduler in this thing, so
+this can only run in the single core.
+but if the usage comes in, and then we see that the usage comes in, we fail over to a proper micro-VM with Linux inside.
+But then the cost of memory is less because we know this VM is actually being used.
+So you can do crazy things like this.
+Another example.
+In databases, so that might not resonate with many because it's like deep in the weeds,
+But the problem of scaling out writes for databases with like, any nodes, incrementally, and so like you can just write scale infinitely, has always been a very hard problem.
+And every time you go like, coach DB, flat scale, get tests, all of those systems are trying to scale, right?
+None of them are particularly successful.
+And then, again, same story, like, you have to choose an architecture.
+And once you've chosen an architecture plane, it's a trick for five years.
+And then five years later, you look back and it's like, oh man, you made the wrong architecture choices.
+But like, so it's one of those things where you have to choose very, very carefully.
+And then you get punished by the fact that you didn't think through and moving.
+But then the customer's writing and data movement is hard, so it's very hard to change things.
+There are some architectures that in the past would take five years.
+But now we have agents so we can build data factories.
+So we just get the multi-master project where we come to the levels to add right nodes to lead to the end.
+With a very risky architecture.
+So we actually don't know if it's going to work super well.
+But we think there's more people there. We think it's going to come from us.
+But we're not going to spend five years verifying that.
+I think, so the work I showed up at like,
+we had a few days by building the ad factory
+that implements this architecture very carefully
+and thought out.
+We've been told all the time,
+but we don't really get all the authority.
+So be more ambitious,
+and you can start building crazy shit
+and that spans not just like the regular
+application software that we're building,
+but it can go all the way down
+So any level of infrastructure, like all the way down,
+and you can still do it very very well.
+Awesome, it's crazy to see agencies
+making all the little infrastructure changes.
+So yeah, wow, over 150,000 databases
+being spanned out per day, and actually today,
+80% of databases created on Neon
+are provisioned by AI agents rather than humans.
+When did you first notice that shift,
+and what did it change about how you built the products?
+So we noticed that when Replit launched Replication,
+Replit was already a partner at the time,
+and we knew Replit had like 30 million accounts,
+and that we were very excited that Replit would have
+Neon database for all of their apps.
+And then they launched Neon integration
+before they launched the database,
+and we didn't get a lot of traffic.
+We got a lot more traffic from the site.
+So we're like, okay, well, let's just run it, yes,
+like you tried, and then you tried to do whatever one,
+but we kind of ride along, go along.
+And then when they launched the agent,
+that very launch date, it was 13,000 databases
+coming from the Northwestern,
+and it was a jump of like 10, I think.
+And it was like, holy shit.
+And I remember one of the team members jumping up and down
+and saying, like, the most important thing
+that changed in the user is an agent now.
+And that happened on the day of, once we saw that stop it.
+So that was the very critical moment when we realized that the world has changed.
+So what this means is, well, when we build something, anything really, you need to clearly understand who the user is.
+How do you have the answers?
+When my friends, you know, they don't drive the car.
+And if you use their light, you're about to...
+He's a pre-med rat that has all the answers.
+and all this stuff.
+It all starts with who the user is,
+and the clarity of who the user is is very important.
+Because that guides you, like, which features to build
+and on what to build.
+So agents, obviously,
+so there's like models, harnesses,
+and then just like agents that people are using.
+And so you understand what we call critical user journeys
+make sure that those are supported. And that's why we invested in the MCP, that's why we
+invested into GEO, and that's why all the product experiences, because it's still like
+usually the journey starts with a human driving an agent. So we made sure that we can close
+the loop on each one of those journeys.
+Absolutely, that's amazing. Yeah, a lot of software right now is being discovered by
+agents and agents are not the users, so it's amazing.
+Yeah, so today agents can write code,
+deploy applications, provision infrastructure.
+How far do you think we are from agents
+eventually independently operating entire business?
+There's a theme with this hackathon,
+but when can we see Databricks being run
+by almost all agents and not humans anymore?
+Well, I think soon.
+You know, Databricks is an interesting example.
+It's a large company, about 30,000 people.
+And it's a continual company.
+Infrastructure was built before this revolution showed up.
+And so everything, but it's also a very, very aggressive company.
+So internally, everybody is building the factories.
+And so trying to automate as much of the
+the software production is possible.
+So what I think we're gonna see in the future,
+and maybe I'm not seeing far enough,
+but I'm seeing kind of like a little bit far.
+We will, first of all, the technology.
+The shift to the left, to the left and the power
+to developers has been happening for a long time.
+So, but now because you can get a little more done
+with a smaller team, we will have smaller teams.
+So the rule of thumb of the past was like,
+okay, we'll have eight to 12 people,
+eight is like the golden number.
+I think like Romans invented this
+when we went to war or something,
+and it still carries to this day.
+I think that today's number is like three to five,
+where all of the folks are participating
+in the software.
+So there isn't like a manager
+that's just been doing managerial work.
+So that unit of like three to five people,
+and those people can get a lot more done
+than the first people in the business.
+So I think that's the first thing that's going to happen.
+The second thing, the ratio between human spend
+and token spend will continue getting more and more pressure
+towards the token spend.
+And tokens are getting so much cheaper.
+So those curves, like in the world of tokens,
+cost people flat, we would still kind of see
+how we're spending a lot more on tokens than on people.
+But they also dropping in price.
+So those are two kind of opposite forces
+that contribute to the ratio between the spend
+of humans and tokens.
+But we probably want to be in a situation where, well,
+we can spend a certain amount of capital on humans and tokens.
+And that equation will have higher
+like faster feedback loop and higher fidelity.
+So, in a case like that, now you're doing it a bit quicker,
+and therefore you can measure it more accurately.
+So you're not sitting on that risk for a long time,
+between investing into something
+and waiting for this thing to rise.
+But that thing arrives pretty quickly.
+So therefore, and then tokens have to be very elastic.
+So we'll see, everywhere you can have that,
+you can shortcut into that loop,
+where you're like, okay, I'm forwarding
+a couple of investments here,
+I invest in tokens, they do software distributed,
+you get revenue back, that's where people will be slamming
+the total to get the outcome they want.
+So that's kind of interesting, so that transformation.
+Like, fully autonomously, I don't know if the incumbents
+are gonna do it, or like startups.
+Because once you're a startup, you can engineer
+from principles from K-Zero, and we already see
+like tiny companies that are crossing the border.
+So I think this will just continue.
+But is there a point in time where models have the agency of incorporating the company,
+throwing this into the real world, and operating completely autonomously?
+Well, this will be cool.
+I think it will happen soon.
+I don't know when.
+Awesome.
+Yeah, tokens are the new payroll.
+So, yeah, today, Asian infrastructure needs things like isolated environments, branching, purpose-built APIs.
+What do you think is the biggest bottleneck preventing agents from running reliably for days or weeks without human intervention?
+Yeah, I think on the infrastructure side, and I think this problem is seen by us, by the cloud fair, by ourselves, and probably by hyperscaners like Amazon and whatnot.
+I think we're still bottlenecked on intelligence a bit.
+So I think if those things are models
+of more intelligence, that will be more effective.
+And then I think we bottleneck into the breadth of services
+and observability specifically around those services
+that in the system like Vercel, like VM, like Cloudflare,
+allows you to build any example, right?
+Because those systems are still limited today
+to build arbitrary software.
+You can build arbitrary software in AWS,
+but that thing is not custom built for Asian consumption.
+The end-person level, custom built for Asian consumption,
+but you cannot build full breadth of those systems.
+But the world, like,
+basically is probably cheaper to build new things.
+And one thing we discovered,
+and I was talking earlier about it,
+Since the usage of NEM is consumed by, like there's an MCP in the suite, as we introduce additional services, agents just start using them.
+Like the end user, the human user, doesn't know that additional services are getting pulled in through an MCP.
+So the human doesn't need to make a decision.
+So like, oh, now I want to like, I use NEM database and now I want to use auth and I also want to use the NEM functions.
+functions, they're just part of the .
+So that speeds up the technology transition.
+So if I'm right, then everybody who's
+building factories and larger companies
+will start building factories to produce software.
+Then they will be realizing that factories
+are not as efficient on Amazon and on hyperscaler
+as they could be.
+And this will create more tailwind for the
+or sell Wildfire to the world.
+We're like, no, I'm just like,
+this infrastructure is not just going to swap it out.
+So my factory runs out.
+So that's the bet.
+Awesome.
+And as you said, Neon's consumption mainly being from agents.
+Yeah, Neon-made databases are something that software
+can basically create and insulate through an API.
+So as agents become increasingly autonomous,
+what other infrastructure do you think needs to be
+completely redone really redesigned for machines rather than humans well there's a thesis like
+we think that everything and especially everything's supposed to be right
+and well if it's branchable then you know and branchable
+branchable cheaply like cost effectively then um you know whatever your software runs on can
+and we create an isolated environment
+with forming that branch.
+Now, you would have to be careful, right?
+There's data, there's secrets, there's all of those things.
+So, I didn't know that where we're setting,
+we have a notion of an environment
+where when you branch the production environment
+into staging environment, the test environment,
+we will also apply some modification to the state.
+So it's like, say, for example,
+secret but everything should be right so now you like you have a copy of your
+complete universe and then agents can basically rip in in there without
+disrupting the main production of those things so once you have that now you
+can start building proper parallel that like basically it's a borderless war
+And what else should be there?
+What happens should be there.
+Like, message queues should be there.
+Observability should be there.
+Analytics should be there.
+So those are like all the staples and resources.
+But also like DNS and like, yeah, like the most of it.
+Yeah.
+So, you know, you've been in the infrastructure layer for a long time,
+basically throughout your entire career.
+For our hackers today and builders today,
+do you think people starting companies now should be building in the bottom layer,
+infrastructure layer, or application layer? And where would you be personally building
+starting today?
+I'd be building infrastructure because I know how to build infrastructure.
+So the function of what to do is, you know, you should apply it to a person, to a human that is there,
+and this is my set of skills.
+so I'll just keep going deeper I think that's been working for me and everyone
+was unique it's it's been working for me to like get deeper and deeper
+understanding of the database space which is again from the technology standpoint
+like storage and review but from the like products standpoint like how do you
+actually have product experiences why this works why this doesn't work in the real world so
+So I've been accumulating that knowledge and still have ideas of what to do as well.
+Master project and all that. But now I'm even like exploring those ideas deeper and deeper.
+I think that is the reward in this world. If you understand something deeper, then you can actually get to an outcome.
+Like validate the hypothesis of how that deeper knowledge can be dissolved in the real world.
+But this question is also very, very hard because you see people bitter less all the time.
+This is all the time. So yesterday I was in Utah and we had this deep discussion with Dilip, the CEO of Figma,
+where it's, you know, like, what to do with how you work with the labs is a big question, right?
+On the one hand, you want all the models working incredibly well,
+you need software.
+But the moment that front door to your service
+switches from your control to somebody else's control,
+you can be disinitiated very, very easily.
+And an analogy to put that in,
+I see a lot of people that at some point,
+Facebook and Google just destroyed media.
+They just disintegrated media.
+And media was a good business in the past,
+and now it's a terrible business.
+And the reason for that is the front door to media consumption changed.
+And it's either went to social networks where media is produced by citizens,
+like direct to the audience.
+So all this media services kind of kind of subsurvived at New York Times.
+But a lot just got completely destroyed.
+So when the front door to your product shits to something else,
+and it's actually very enticing to actually do this, right?
+this, right? Because, oh, you got all this agent traffic. Amazing. Like, you have a spike in your consumption. But then you also need to, like, really step back and see what happens and how can you modulate this. And if your service provides real value to this world, then you also have power, right? Because you have users who love your product. And that should drive your decisions about your relationship with this agent world.
+kind of like evolves over time.
+That's amazing. And last question
+we have for you is
+you've now built two major infrastructure companies
+and have seen several
+generations of technology shifts.
+For the founders and hackers here today,
+what's one contrarian bet you'd make
+about AI agents over the next three to five
+years?
+Contrarian bet?
+I don't mean like super smart to say. I keep saying the same thing which is like you can be incredibly more efficient in systems.
+And so one thing you can do is to like list all the infrastructure companies.
+companies uh like a lot of them in the south base a lot of their like cisco
+and new times uh pure storage um and uh you know you live in san francisco in your 20s and you just
+let you like oh this is like boomer companies like where my dad works or something like this
+But they are more vulnerable than you might think.
+And their defensibility is product and technology,
+and the fact that it's very hard to build systems
+and also a combination of software and hardware together.
+But then, you're like, well actually, the node is not that high.
+uh...
+how did you lose it
+what people actually
+is very very dangerous.
+Dangerous like in a good way of the word dangerous.
+So you become dangerous.
+You become dangerous because you can now see like,
+okay well, you've got like this technology
+that's like, oh it's like part of this world.
+You're pure forces.
+Like, guess what?
+You know, and agents.
+And therefore you can like go and attack either,
+sometimes either directly or like with a platform
+like a bundles of product out of them but the knowledge of how to build technology is um
+it's always been dangerous to know how the business works and how this calls for
+especially if it's really hard to build so so studying all these markets
+and the the dynamics in each one of those markets
+is
+ambitious. We need to build an operating system in a week. We need to build storage in a week. We need to build database technologies that are very good for us. So that's an interesting time to go and attack all those problems.
+Absolutely. Thank you so much. Yeah, so just, yeah, that's all the questions. I think if anyone has, like, we'll do like a quick Q&A. If anyone has any questions, please feel free to ask.
+Thank you.
+I guess my question, and you talked a little bit about this is, you know,
+both how you sort of differentiate your product.
+I guess in today's day and age where sort of everyone will have access to these agents,
+I have access to the agents, you have access to the agents,
+how do you think the entrepreneurs of today's generation should think about making a moat
+so that, you know, what they're building doesn't get, like, disrupted, like, tomorrow?
+I don't like moats. I don't like thinking about moats.
+Basically, I'm thinking about this, like, is this a good market?
+Who also participates in this market? Who is your competition?
+And do you create an advantage from first principles with a combination of your team and technology?
+And if you have an excellent team, modes doesn't matter as much.
+Sure, there are modes like network photography and all those things,
+like those that are really hard to break.
+But then, like I said earlier, a lot of the modes only have very low depth in technology.
+Those get thinner.
+And if you barrage into a large market, you will then.
+And then thinking, oh, how am I going to defend myself over time?
+I don't think that actually matters as much.
+I think it's like, this is a big market, this is a big opportunity, I have just the right team to go and like, you know, wedge in in there.
+That's the more important thing. And then, like, as you go, and if you are successful wedging in, you will keep getting additional information about what to do next.
+Because the world will tell you. And everything is expanding.
+like the world of tech is expanding.
+And in the growing market, there's always going to be competitors,
+and competitors, they're all going to participate in the same ecosystem.
+And then naturally, will choose to take different swing lanes.
+Because one is more successful in this swing lane, and the other one is more successful in that swing lane.
+So, screen loads, I don't think that matters much.
+Thank you.
+Thank you, my name is Aziz.
+If you were to look at young people growing up now
+and growing up in the Asian world and all of that,
+maybe other kids and all of that,
+what would be the things you would get them
+to do in the Asian world,
+especially in the space of communication.
+That's a tough one.
+I'm kind of like
+simple minded
+in this and follow
+like
+probably five kids
+and with my kids
+I follow kind of those three principles.
+You know,
+math is good,
+sports is good,
+love is good,
+So having them do what they want to with their OS is good.
+So let's try to do that, and then we'll figure that out.
+Take a few more questions.
+But none of those feedbacks shopped out that broad.
+Hey, thank you for the talk.
+I was super insightful.
+I wanted to check what your advice would be
+for wanting to get reverse ping customers over the weekend?
+So launch it.
+Launch it, talk about it on apps.
+I think that's how, like add payments into your app.
+And then try to promote them, talk to your friends,
+talk to your colleagues, make some phone calls,
+talk to like YC companies and try to find them
+to use your service.
+But I like building services like,
+kind of, Keith or Boyd way,
+where you think of when you first principles,
+kind of, believe a certain place needs to exist.
+And then you buy into that thinking.
+So when you tell a friend,
+that hey, this is this opportunity to build XYZ,
+this is probably the shape of XYZ,
+that it needs to, that should be clearly
+in context of the future.
+And then you just put all your effort and energy into making the best product with a set price.
+And then you launch it, and then you have a good website that clearly explains what that XYZ is.
+An example for Nia was, like when Nia launched it, it said serverless Postgres.
+So it's very clear for people who know what Postgres is, what serverless is, add two and two.
+the product, when you go in, click a button, say,
+create Postgres, you know, like, in some second,
+you get that extra stream.
+It's like, okay, well, I guess it's serverless.
+And so that was, like, the idea.
+And typically, if you, like, the way to wedge in
+is to build something that's very, very narrow,
+like a widget, and describe what it is
+in a fairly narrow way as well.
+And so what you see is what you get, kind of thing.
+So it's easy to use, very narrow, kind of plugs in into all the other things that you're
+going to use.
+And that thing doesn't exist for a sweet competition, so that allows you to break in and start getting
+some traction.
+So if you have that kind of vision, and then what can you do in a week?
+You can do a lot in a week these days.
+So you can build an M2M application there, and then you just launch it, and you see.
+Awesome, cool, we'll take two more questions. One suggestion, maybe you guys can sell some of your services that you built this weekend to each other.
+Oh yeah, that's a good one.
+Yeah, I want to take someone from that site.
+What would you say is a product or tool that you use right now that you think a lot of people don't know about?
+Well, I run big teams now, so mostly talking to people.
+So I use a lot of Signal where we discuss like, we should acquire this company or that company,
+with their responders, what tool.
+I'm not sure I'm using a particular differentiated tool.
+I'm mostly working with people. I read a lot. I was playing for Utah this morning and I read a multi-master design that was published on YouTube.
+So, I don't know.
+Alright, we'll take one more question.
+Thanks for the talk.
+How do you think about, like, there are some companies like Amazon, eBay, like straight
+up buying agents, and there are some companies that try to be as agent-native as possible,
+like DoorDash, Uber.
+It's similar to the point you were discussing in your discussion with Dylan, that how, like,
+Like, if people buy into the future where, like, people would just go to their agent and not directly interact with any of these services,
+or someone building something new today, like, would you have any advice?
+Like, try to make something that should be startable?
+Well, I think it's like, there's a huge independence on what you build exactly.
+So obviously if somebody is afraid of direct agent consumption and they're not willing to be low level APIs to agents with the fear of disremediation,
+because it might be an opportunity for you.
+So you can say, you know, I'll give you an example.
+uh, you know, me and his agent maximum, right?
+Like, we want agents to, like, really, like,
+agents say job, we say ha-ha.
+Uh, that direction is not agent maximum.
+It's agent maximum inside the database called Dart.
+Um, but in terms of, like, driving database to the cloud,
+there is, like, a health tension between the topic
+and database right now, and then, uh, you know,
+database wants the topic to, like, potentially consume some
+to the low-level API and potentially
+inform some problems to inside
+the data. There's GoldGarden, which has
+proprietary data so they can process that
+better. So I think
+that's why
+it just depends
+on what
+you're building. So it goes back to
+the earlier ones, like what's the movie that
+you're living? What's the script
+of this movie? And
+agent matching
+either makes sense or doesn't make sense
+on your specific. So I
+I haven't been so busy.
+Awesome.
+Thank you so much, Nikita, for all the questions.
+And yeah, thank you for having me here today as speaker.
+Thanks so much.
+OK.
+We're going to bring up one of the founding team members
+of the group right now.
+Please welcome Timo.
+Thank you.
+Thank you.
+Hey guys, I'm Timo from Modera.
+You probably haven't heard of Modera yet, so that's why I'll give you a quick introduction of what we are doing at Modera.
+So, basically we're trying to bridge the gap between AI agents and smartphones.
+But I'll get into more detail about that later.
+So first, a couple of things about me.
+So as I said, I'm Timo, I'm founding engineer at Mova.
+And I'm the lead of our iOS platform.
+So that's also one of the products you guys will be granted access to today.
+So I'm curious to hear your feedback about it.
+Yeah, Luke is my coworker and I will be here for all weekend.
+So if you guys need any kind of assistance or get stuck anywhere, just come find us and we'll let you know.
+So probably all of you have used computer use or browser agents before.
+But what the agents nowadays are mostly missing is a microphone.
+And since more than 50% of the screen time nowadays is spent on mobile apps, there's a gap that we're trying to close without product.
+Because a lot of apps don't have public APIs or MCPs, so you have to fall back to on-screen automation.
+So, yeah, initially we started as an open source project.
+It's a framework for LLM agents, like a loop where you can basically use any LLM to automate your smart phone and get the experience of the device from it.
+and we recently reached the 10th day GitHub stars.
+That was a big milestone for us, so if you were 10 already,
+then please feel free to give us a star as well.
+Our mobile hands also reached the first place on the iOS World Benchmark,
+and we are sharing the first place on the now satisfied Android World Benchmark with Google.
+So, yeah, the agent already, like, worked back in the day, but when we were trying to scale automation then we, like,
+at Blocker, because we need a lot of phones to actually, like, run the automation horizontally.
+So that's why we built the Nubarang Cloud, which took Pelengi, it's basically
+We know phones and we put an API on them so you get full control on the phone itself.
+You can install apps, open apps, tap type, take a screenshot, set GPS coordinates and so on.
+Also, stop and resume the device so you're not paying for it any time you don't use it.
+And the state is preserved, so you report that inside and then stop it, you need to
+sit down again, you spin the device up again, and you'll make a way to stop it.
+So, yeah, three things that a phone enables you to do, which is not possible with, like, computer use or browser use already.
+So, like, we're not trying to replace computer use and browser use, we're trying to add to it.
+Because they were great, like, for desktop apps and web already.
+But what's missing is that you can automate those native apps for like, I bet you guys know a couple of services that only offer phone movers and phone apps, and have no website you can use or no API you can use.
+So that's where this plays in. And like I said, you have persistent device state, so apps read your device identifiers and so on.
+So it's very important that you keep the identifier the same in your account, which emulators, regular emulators don't offer for you.
+And you can also get access to SMS and other parts of the phone's data.
+So yeah, that's the basic thing.
+Then to spark your creativity a little bit, here's a couple of things that you could build today.
+So, yeah, it's really common stuff. You can retrieve data, for example, like what your Facebook marketplace listing for price changes or similar.
+But you could also act for a user, like check a write-up to the write-ups and compare the price at the pickup time, which I think is cheaper or less.
+And testing is also a big part of this thing.
+So of course you can also do that with us.
+You can have your agent come to an app and generate like reports and screenshots and recording and everything.
+everything. So your other agents can know what to fix, for example.
+And very common also is publishing clips on social media.
+And today, together with Naive, this is where you can basically entirely close the loop
+between generating and writing the content and then publishing it on a different platform.
+So yeah, that's just the idea.
+So if you have something else in mind,
+that will also work.
+So yeah, then there's four ways to put on a platform.
+So the easiest is you just send your agents once you set up
+the MCP, and they can control your devices.
+Then if you need more granular control,
+you can go down to the right, which is like,
+it hosts the task agent, which is going to reload,
+or you go back to the raw device API,
+where you can do like API calls to tap your screenshot.
+And that's because you can control the phone with your own fingers,
+like remote controls do.
+Yeah, all you need is an account and a phone and that's what you'll get with the test today.
+So this is a quick example of how you can make MCPs also in Outlooks.
+This is a small example of running a task.
+So if you want to call it from code, you can give it an instruction.
+So it's pretty handy for a data retrieval because you can also define an output schema that is guaranteed to be satisfied.
+Unfortunately I can't show you guys the live demo here, but if you want to see something, then you can head over to our booth and we'll be happy to show you something there.
+So, yeah, let's go over the past two guys again.
+So you, once you claim the codes, you will have the grant for 72 hours.
+And it includes six seats for your team members.
+And you can spin up to 500 points on one iPhone on the platform.
+So if you need more, then reach out to us. We can do something here.
+and you also get 1.5k and home use agent credits that you can also use on the platform
+so yeah to get started you basically get like one person on your team has to scan the QR code
+and then you pass and then you can invite your team members to the workspace
+So if you guys are curious about the API or anything, you can find it on the box over
+under there.
+And in case you need any help, Lucia and I will be here for the whole weekend, so you
+you should always come by and say hi and we'll help you out with that.
+So if you have any questions, then yeah, bye.
+Thank you Timo.
+Yeah, next we're going to have the co-founders of Moded come up and give a talk.
+Where are you guys at?
+Okay.
+Who's the EAP people?
+Who's the EAP people?
+No, no.
+Is it someone hosting this event from EAP?
+Dennis, yeah.
+Dennis.
+Yeah, so Dennis is not here, but he was here.
+He's the guy that made what? What's his company?
+Naive.
+Not this one.
+That's cool.
+What year was he?
+Damn. It's tough.
+Thanks.
+Hello, everyone.
+My name is Shen Kun.
+I'm a co-founder of the
+of wallet and what we are building here is that it's basically the open router for
+agent use. We connect your agent to a bunch of tools and APIs and you don't need to
+handle any integrations and you don't need to sum up for accounts or
+services and you don't need to pay for subscriptions anymore. Your agent and you
+can just directly use all the services that you have connection to. So some of the
+examples that we have is that we have Apollo, CDANs, TinyFish,
+Viroqua, Exxon, all the social media scrapers, and also
+HTML, the other sponsor today, all the different kinds of the
+tools. Normally you need to like sign up for account and pay for
+subscription so that you can get the connection to your agents,
+but right now you don't have to do that anymore because then you
+provide unified layer and unified interface for your
+agents that you can just use right away. And a lot of those
+tools I think it's gonna be helpful for you to design your HMM company today since they are directly relevant to a lot of business use cases and today we also have a lot of customers that are either running agencies or running go to market workflow on us and so some of them might be super relevant to you guys so I'm gonna share a few use cases and hopefully they're gonna help you to really brainstorm what you wanna build in the two days.
+So the first case is the go-to-market workflow. We have the connection to Apollo, people at
+data labs, employee, LinkedIn, and AsianMail, and all that stuff. And your agent can easily
+to fund the relevant list, and for example you want to look for customers, or you want
+to look for a customer who just raised money recently, you are able to fund that as well.
+And then you can do the enrichment. Like fund, let's say, what's the email address of the
+as the founder of a monitor that you can find people on jazz
+and then put up the entire workflow.
+And the second is the creator campaigns.
+We have all the social media strippers.
+Let's say you want to run a UGC campaign
+where you want to find the creators on YouTube
+and Twitter or TikTok, and then you can just tell your agent
+that, oh, I want to find recent small creators
+who has a really high engagement in the AI and tech space.
+then your agent will be able to help you fund it.
+And the third is the competitive monitoring.
+So as you're agent running a company,
+then probably there's someone might be copy you
+or they're competing with you.
+Then you can set up a monitor on how the SEO performing,
+like how they're running their social media
+and if they're running any page right now,
+and then you can set up social workflow.
+And third is the people by SEO and GEO.
+That's for sure you need to have for your company
+since you want to have the visibility
+in both Google Search, HHP, and Cloud.
+And we have the access for them as well.
+And lastly, we have all the generation models,
+like CDANs, Minimacs, Pagent,
+and you can just use them and create content.
+So it's kind of really easy to use.
+We provide skills, CLI, and SAP
+that you can just connect directly,
+to connect to your agent or the company that you build to let agent run.
+And for any projects use agents during the hackdown,
+we're going to feature you on the landing page.
+And hopefully that can bring some traffic and also bring some backlinks to your project.
+And we also put up the sponsor track.
+For the first place, the project is money.
+you're going to get $1,500 money credits plus $1,500
+base active cards.
+And for the second place, they're
+going to be $1,000 for each.
+And the third place is going to be $500 for each.
+And for anyone who uses us in the project
+and you post your project and tag
+on it on any type of social media,
+you will get 200 credits in money credits.
+and take a photo of it, and if you use the link to sign up,
+you can get $20 credits to Starbucks.
+And by the way, we are also hiring.
+That we started six months ago, we're rolling super fast.
+We right now process like millions of transactions
+every single day.
+We are hiring engineers and marketing roles as well,
+so come to say hi.
+Thank you.
+Thank you.
+Thank you.
+I'm going to go ahead and get my hands dirty.
+I'm going to get my hands dirty.
+I'm going to get my hands dirty.
+I'm going to get my hands dirty.
+I'm going to get my hands dirty.
+I'm going to get my hands dirty.
+I'm going to get my hands dirty.
+I'm going to get my hands dirty.
+I'm going to get my hands dirty.
+I'm going to get my hands dirty.
+I'm going to get my hands dirty.
+I'm going to get my hands dirty.
+I'm going to get my hands dirty.
+Are we starting?
+No.
+At one.
+Wait.
+At one?
+At one does lunch.
+I know that for a fact.
+We're moving.
+We're having a moment.
+You said we had one more speaker.
+Everyone, please welcome the co-founder and CEO of AgentMill from YCS25,
+one of the fastest growing YC companies of all time.
+Let's go, guys.
+Hi, I'm Hadi. I'm one of the co-founders of AgentMail. If you guys have heard about us, we do email for our agents. We are the inbox API. We give your agents their own address to send, receive, remember, just like we do.
+So, a little bit about the product.
+I mean, it's kind of in the name, so not anything crazy, but we give your agent an inbox of its own.
+You can create them in code, you can send, receive, reply.
+You can keep threads, attachments, all the state within an email.
+And you can build coworkers, not just agents.
+Naive, we work with them really closely in terms of autonomous businesses.
+If you are building an agent that runs a company, email becomes important.
+So I'm excited to see what you guys are going to build and how it goes.
+If you have any questions, I'll be here for a couple more hours, not be dull.
+One thing I want to point out, and what we're working on, is Agent ID, which is sign in with Google, but for agents.
+So if you think about Gmail, a lot of times you don't want to just enter in your password,
+that for every single site it's as simple as click a button and you can
+authenticate that new website so agent ID is our new offering I'd love for you
+guys to try it out with that your agents can create accounts and services like
+fire crawl context.dev super memory etc and it makes it a lot easier to have
+access to these services as opposed to signing up separately so as you guys are
+building up on this businesses I'd love for you to try out agent ID and give me
+some feedback. If you guys go on agentid.com slash docs, it'll get you set up and it's
+as easy as a prompt to let your agent sign in to all these services. And also if you're
+building something like a side project and you want initial users, we have 10 million
+active inboxes on the platform now. So if you want distribution, if you want to get
+surfaced within the HTML user base, add this to your app.
+So here's a few ideas of what you can build and what we see within our customers.
+You can build research agencies, recruiting coordinators, newsletters, transactional services,
+you name it.
+The possibilities with email are literally endless, so I'm excited to see these type
+of things and we have some prizes for you guys as well.
+First place gets six months of our start-up plan free, plus a $500 Visa gift card.
+Second place gets three months of our start-up plan free, and then third place also gets the same price.
+So this is how you're actually going to access and get credits for HTML today.
+So everyone here, I'd love if you could take a picture.
+What you're going to do is you're going to go to console.html.to,
+And then you're gonna open console.agmail.io
+slash dashboard slash hackathon.
+This is gonna let you put in a code
+and get credits without needing to put a card down.
+And then this will give you access for 30 days
+so even beyond the hackathon, you guys are good to go
+and build whatever you want
+and be able to use HTML there.
+And then this is the code you're actually gonna enter.
+That is a long one, so please take a picture.
+It's HTML hack 657x.
+And then you can redeem this by Tuesday night. So you guys have plenty of time. It's gonna be live whenever you guys need it.
+Yeah
+That covers it. I think one parting note is when we started HML
+How hard is it to build was often a turnoff. We were like, oh if it's too hard, we're not gonna build it
+I think the world has changed
+What you can build now is incredible in a day. So with this hackathon with this category
+I think every single company is going to be an autonomous company.
+So I'm excited to see what you can build.
+For us, when we look at use cases, when we look at what we want people to build,
+it should be the most ambitious, the most defining, the most scary things you can build.
+We'd love to see them because that's really where we're at.
+So thank you guys.
+I'm excited to see what you build.
+If you have any questions, reach out to me.
+Thank you.
+Thank you so much, Ali.
+HML's a great company.
+everyone.
+Even if you're Asian, use Asian mail.
+Okay, so yeah, that concludes
+all of our anchor talks, I believe.
+Separate ground rules
+I forgot to add. So yeah, this is the main
+hacking room. You can also access the
+cafeteria, and there's actually a bottom
+floor that you guys can access as well.
+You go downstairs,
+plenty of working space as well, and
+outlets.
+Yeah, happy hacking, man.
+Wait, do you guys have a team or do you guys want to, like, we're thinking of, like, maybe doing Panems, but if you guys want to join our team.
+Do you guys have a plan or no?
+I don't know.
+Do you have a team already?
+What are you guys thinking of doing?
+What?
+Have you guys thought about something?
+Like, semi.
+Yeah.
+We, like, we had Claude come up with a few ideas.
+But we're thinking, like, we have a, we have just a markdown file with a few ideas.

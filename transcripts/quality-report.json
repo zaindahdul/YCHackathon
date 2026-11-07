@@ -1,0 +1,128 @@
+{
+  "model": "mlx-community/whisper-large-v3-mlx",
+  "duration_seconds": 3885.461333,
+  "segment_count": 877,
+  "word_count": 8717,
+  "first_segment_seconds": 0.0,
+  "last_segment_end_seconds": 3884.02,
+  "transcript_sha256": "b00b950886c7603806ec4407667732832b212fe68eab476f09f239e63bcb9cc9",
+  "filler_fraction": 0.0019502122289778595,
+  "focused_repairs": {
+    "model": "mlx-community/whisper-large-v3-mlx",
+    "preprocessing": "ffmpeg mono 16kHz, loudnorm I=-20 TP=-2 LRA=11",
+    "options": {
+      "language": "en",
+      "condition_on_previous_text": false,
+      "word_timestamps": true,
+      "hallucination_silence_threshold": 2.0
+    },
+    "clips": [
+      {
+        "start": 1627.72,
+        "end": 1670.56,
+        "name": "clip-1627p72-1670p56"
+      },
+      {
+        "start": 3020.8,
+        "end": 3061.3,
+        "name": "clip-3020p8-3061p3"
+      },
+      {
+        "start": 3422.7,
+        "end": 3501.32,
+        "name": "clip-3422p7-3501p32"
+      }
+    ]
+  },
+  "remaining_review_flags": [
+    {
+      "start": 143.76,
+      "end": 173.73999999999998,
+      "text": " Thank you.",
+      "reasons": [
+        "long low-content segment; possible room pause/hallucination"
+      ]
+    },
+    {
+      "start": 173.76,
+      "end": 200.26,
+      "text": " All right.",
+      "reasons": [
+        "long low-content segment; possible room pause/hallucination"
+      ]
+    },
+    {
+      "start": 2340.3,
+      "end": 2370.28,
+      "text": " Thank you.",
+      "reasons": [
+        "long low-content segment; possible room pause/hallucination"
+      ]
+    },
+    {
+      "start": 2370.3,
+      "end": 2400.28,
+      "text": " Thank you.",
+      "reasons": [
+        "long low-content segment; possible room pause/hallucination"
+      ]
+    },
+    {
+      "start": 3332.72,
+      "end": 3362.7,
+      "text": " Thank you.",
+      "reasons": [
+        "long low-content segment; possible room pause/hallucination"
+      ]
+    },
+    {
+      "start": 3362.72,
+      "end": 3392.7,
+      "text": " Thank you.",
+      "reasons": [
+        "long low-content segment; possible room pause/hallucination"
+      ]
+    },
+    {
+      "start": 3392.72,
+      "end": 3422.7,
+      "text": " Thank you.",
+      "reasons": [
+        "long low-content segment; possible room pause/hallucination"
+      ]
+    }
+  ],
+  "gaps_over_10_seconds": [
+    {
+      "start": 2950.3,
+      "end": 2963.3,
+      "seconds": 13.0
+    },
+    {
+      "start": 3020.8,
+      "end": 3033.22,
+      "seconds": 12.42
+    },
+    {
+      "start": 3034.62,
+      "end": 3058.76,
+      "seconds": 24.14
+    },
+    {
+      "start": 3422.7,
+      "end": 3500.2,
+      "seconds": 77.5
+    },
+    {
+      "start": 3513.14,
+      "end": 3541.14,
+      "seconds": 28.0
+    },
+    {
+      "start": 3560.68,
+      "end": 3571.14,
+      "seconds": 10.46
+    }
+  ],
+  "interpretation": "Complete audio was processed. Gaps and flags do not establish missing speech or word accuracy; names/URLs/chatter remain uncertain. No complete human listening audit."
+}
