@@ -37,7 +37,7 @@ Build a runnable TypeScript company runtime seeded with four concrete PMF experi
 - [x] T4 · Seed four experiments and document the operating contract
       files: config/experiments.seed.json, docs/OPERATING_MODEL.md, docs/ARCHITECTURE.md, ideas.md, README.md, scripts/verify_deliverables.py
       accept: python3 scripts/verify_deliverables.py all
-- [ ] T5 · Review, repair, consolidate and verify main delivery
+- [x] T5 · Review, repair, consolidate and verify main delivery
       files: docs/REVIEW.md, docs/DELIVERY.md
       accept: npm run build && npm run format:check
       deps: T1, T2, T3, T4
@@ -53,3 +53,6 @@ Build a runnable TypeScript company runtime seeded with four concrete PMF experi
 - 2026-11-07 · done T2 · Implement and verify the Naive execution adapter
 - 2026-11-07 · done T3 · Produce verified artifacts from authorized inputs
 - 2026-11-07 · done T4 · Seed four experiments and document the operating contract
+- 2026-11-07 · Published implementation 69fb2da to origin/main. Default-branch settings update returned HTTP404; viewerPermission WRITE, remote default remains master and requires owner/admin. Both collaborator and research histories retained. Final delivery script will require clean local main matching origin/main plus merge ancestry.
+- 2026-11-07 · done T5 · Review, repair, consolidate and verify main delivery
+- 2026-11-07 · Final independent review: no unresolved material findings in bounded runtime. pad finish --timeout 60 passed all five tasks with fresh acceptance checks; 77 behavior tests, build/format, 877 transcript segments and 82 Markdown references verified. Final remote clean-head check follows documentation push.
