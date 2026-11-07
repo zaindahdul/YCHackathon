@@ -2,7 +2,7 @@
 
 > **Superseded weekend scope:** Srujan has chosen a simpler merch-first delivery path. Use [the current merch plan](merch-first.md). The CAD/QR-display material below is retained as an earlier alternative and later expansion; it is not the current build or sales instruction.
 
-This is an implementation-ready proposal, not a built or deployed application. Research was checked November 7, 2026; no SDK sessions, payments, or supplier orders were executed for this planning work. Start from [the company offer](company-plan.md) and [verified SDK notes](research/naive-sdk.md).
+This is an implementation-ready proposal, not a built or deployed application. Research was checked November 7, 2026; no SDK sessions, payments, or supplier orders were executed for this planning work. Start from [the company offer](company-plan.md) and [verified SDK notes](../research/naive-sdk.md).
 
 ## Finish line at Sunday 11am
 
@@ -27,7 +27,7 @@ Use the [first-90-minute acquisition plan](customer-acquisition.md): Srujan spen
 
 ## First integration spike — timebox 45 minutes
 
-The preserved [hackathon rules](../hackathon-rules.md) note unresolved submission format and prebuilt-code permissibility; confirm relevant organizer requirements at kickoff. The transcription and plan are preparation, not a claim about eligible prior implementation.
+The preserved [hackathon rules](../../hackathon-rules.md) note unresolved submission format and prebuilt-code permissibility; confirm relevant organizer requirements at kickoff. The transcription and plan are preparation, not a claim about eligible prior implementation.
 
 1. Obtain organizer-provided Naïve access; verify organization, active plan/credits, model list and tools. Keep credentials server-side and out of Git.
 2. Create one low-budget designer agent and run a real SDK session. Capture session ID and events.

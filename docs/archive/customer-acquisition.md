@@ -114,4 +114,4 @@ The recommended recruiting approach is our application of the event setting and 
 
 If an activated Stripe account is already available, a hosted Payment Link can avoid building a custom checkout page. It still needs the correct product/scope, live/test labeling and payment reconciliation; a browser return is not proof of payment. [Stripe Payment Links setup](https://docs.stripe.com/payment-links/create)
 
-Supplier access, willingness to pay, channel access, production timing and model latency remain unverified. See [company plan](company-plan.md), [build acceptance and payment/approval rules](build-plan.md), and [supplier research](research/business-landscape.md). There is no claim that marketing activity, payment setup or customer acquisition has already happened.
+Supplier access, willingness to pay, channel access, production timing and model latency remain unverified. See [company plan](company-plan.md), [build acceptance and payment/approval rules](build-plan.md), and [supplier research](../research/business-landscape.md). There is no claim that marketing activity, payment setup or customer acquisition has already happened.

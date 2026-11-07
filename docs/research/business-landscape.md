@@ -1,12 +1,12 @@
 # Business landscape and recommended wedge
 
-> **Research context:** this file was written for the earlier CAD/merch proposals. [Fire Drill is the latest fresh recommendation](../fresh-recommendation.md). SDK sessions, tool governance and evidence limits remain relevant; product-specific CAD/supplier recommendations are historical alternatives.
+> **Research context:** this file was written for the earlier CAD/merch proposals. [Fire Drill is the latest fresh recommendation](../archive/fresh-recommendation.md). SDK sessions, tool governance and evidence limits remain relevant; product-specific CAD/supplier recommendations are historical alternatives.
 
 Research date: November 7, 2026. This is a recommendation and feasibility assessment, not evidence of connected accounts, customer demand, supplier acceptance, or orders placed. No customers or suppliers were contacted for this research.
 
 ## Decision status
 
-This research records alternatives considered. The integrated [company plan](../company-plan.md) and [build plan](../build-plan.md) are authoritative: one QR-display family, native Naïve build123d first, and a scoped digital design offer. CadQuery and the $399 batch/deposit below are unselected alternatives for later validation, not parallel weekend commitments.
+This research records alternatives considered. The integrated [company plan](../archive/company-plan.md) and [build plan](../archive/build-plan.md) are authoritative: one QR-display family, native Naïve build123d first, and a scoped digital design offer. CadQuery and the $399 batch/deposit below are unselected alternatives for later validation, not parallel weekend commitments.
 
 ## Recommendation
 

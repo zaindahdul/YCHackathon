@@ -1,6 +1,6 @@
 # Naïve SDK research for an autonomous fabrication company
 
-> **Research context:** this file was written for the earlier CAD/merch proposals. [Fire Drill is the latest fresh recommendation](../fresh-recommendation.md). SDK sessions, tool governance and evidence limits remain relevant; product-specific CAD/supplier recommendations are historical alternatives.
+> **Research context:** this file was written for the earlier CAD/merch proposals. [Fire Drill is the latest fresh recommendation](../archive/fresh-recommendation.md). SDK sessions, tool governance and evidence limits remain relevant; product-specific CAD/supplier recommendations are historical alternatives.
 
 Verified against official documentation on November 7, 2026. These are documented capabilities, not a live account test. No package was installed, account accessed, credential used, or paid request made during this research.
 

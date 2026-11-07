@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify transcript integrity and local planning references; does not test a future app."""
+"""Verify transcript integrity, repository references and published main; behavior uses npm run check."""
 import argparse
 import hashlib
 import json
@@ -86,15 +86,14 @@ def research():
 
 
 def plan():
-    files = ('README.md', 'docs/hackathon-brief.md', 'docs/recording-digest.md',
-             'docs/company-plan.md', 'docs/build-plan.md', 'docs/demo-playbook.md',
-             'docs/customer-acquisition.md', 'docs/merch-first.md',
-             'docs/fresh-recommendation.md')
+    files = ('README.md', 'ideas.md', 'AGENTS.md', 'docs/hackathon-brief.md',
+             'docs/recording-digest.md', 'docs/OPERATING_MODEL.md', 'docs/ARCHITECTURE.md',
+             'docs/NAIVE_SETUP.md', 'docs/REVIEW.md', 'docs/DELIVERY.md', 'docs/archive/README.md')
     paths = [ROOT / f for f in files]
     for path in paths:
         require(path.stat().st_size > 100, f'Missing/empty plan artifact: {path}')
-    local_links(paths)
-    print('Planning artifact/reference checks passed; content quality requires the separate independent review')
+    local_links([p for p in ROOT.rglob('*.md') if not any(x in p.parts for x in ('node_modules', '.git', 'data'))])
+    print('Current and archived document/reference checks passed; behavior uses npm run check')
 
 
 def delivery():
@@ -102,17 +101,18 @@ def delivery():
         return subprocess.check_output(arguments, cwd=ROOT, text=True).strip()
     branch = run('git', 'branch', '--show-current')
     commit = run('git', 'rev-parse', 'HEAD')
-    pr = json.loads(run('gh', 'pr', 'view', branch, '--repo', 'zaindahdul/YCHackathon',
-                        '--json', 'url,state,headRefOid,baseRefName,headRefName'))
-    require(pr['state'] == 'OPEN', 'PR is not open')
-    require(pr['baseRefName'] == 'master', 'PR targets wrong base')
-    require(pr['headRefName'] == branch, 'PR branch differs')
-    require(pr['headRefOid'] == commit, 'PR does not contain current local commit')
-    remote = run('git', 'ls-remote', 'origin', f'refs/heads/{branch}').split()[0]
-    require(remote == commit, 'Remote branch differs from local HEAD')
-    record = (ROOT / 'docs/pr-delivery.md').read_text()
-    require(pr['url'] in record, 'Delivery record omits actual PR URL')
-    print(f'Delivery: open PR targets master and contains local HEAD: {pr["url"]}')
+    require(branch == 'main', 'Current branch is not main')
+    remote = run('git', 'ls-remote', 'origin', 'refs/heads/main').split()[0]
+    require(remote == commit, 'Remote main differs from local HEAD')
+    require(not run('git', 'status', '--porcelain'), 'Working tree is not clean')
+    for ancestor in ('fd6eb33', 'b46bfe1', 'bd2a830'):
+        subprocess.run(['git', 'merge-base', '--is-ancestor', ancestor, 'HEAD'], cwd=ROOT, check=True)
+    repo = json.loads(run('gh', 'repo', 'view', 'zaindahdul/YCHackathon', '--json', 'url,defaultBranchRef'))
+    record = (ROOT / 'docs/DELIVERY.md').read_text()
+    require(repo['url'] + '/tree/main' in record, 'Delivery record omits published main URL')
+    default = repo['defaultBranchRef']['name']
+    require(default == 'main' or 'default branch remains' in record.lower(), 'Unrecorded default-branch blocker')
+    print(f'Delivery: clean main matches origin ({commit[:12]}), all histories preserved; default={default}')
 
 
 def main():
@@ -127,11 +127,11 @@ def main():
             if args.scope in (name, 'all'):
                 fn()
         if args.scope == 'all':
-            review = (ROOT / 'docs/review.md').read_text()
+            review = (ROOT / 'docs/REVIEW.md').read_text()
             require('Final disposition' in review, 'Final independent review disposition missing')
             require('No unresolved material findings' in review, 'Review still has material findings')
             print('Review disposition recorded; lead must still inspect its evidence')
-    except (AssertionError, OSError, KeyError, ValueError) as error:
+    except (AssertionError, OSError, KeyError, ValueError, subprocess.CalledProcessError, IndexError) as error:
         parser.exit(1, f'FAIL: {error}\n')
 
 

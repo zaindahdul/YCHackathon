@@ -1,0 +1,20 @@
+{
+  "mode": "live",
+  "liveAuthorized": false,
+  "totalBudgetCents": 0,
+  "perTaskBudgetCents": 100,
+  "maxActiveExperiments": 2,
+  "maxTasksPerCycle": 2,
+  "minimumQualifiedLeads": 5,
+  "minimumCompletedOrders": 2,
+  "minimumIndependentPayments": 2,
+  "responseWindowMinutes": 30,
+  "explorationShare": 0.25,
+  "allowedChannels": [],
+  "allowedTools": [],
+  "allowedSourceDomains": [],
+  "allowAutonomousExpansion": true,
+  "maxExperiments": 8,
+  "stopAt": "2026-11-08T19:00:00Z",
+  "enabledFulfillmentTypes": ["video", "microtool"]
+}

@@ -64,4 +64,4 @@ Remaining names, technical terms and room chatter are uncertain. Long low-conten
 5. Get a paying customer if possible, otherwise describe the pilot honestly.
 6. Add mobile/email only if they help complete the job.
 
-See the [company plan](company-plan.md), [implementation plan](build-plan.md), and [demo playbook](demo-playbook.md) for the concrete response to these lessons.
+See the [company plan](archive/company-plan.md), [implementation plan](archive/build-plan.md), and [demo playbook](archive/demo-playbook.md) for the concrete response to these lessons.
