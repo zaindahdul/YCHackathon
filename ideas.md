@@ -8,7 +8,14 @@ Shortlist for the Naïve Autonomous Company Hackathon (Nov 7-8, 2026). See `hack
 
 ---
 
-## 1. A QA agency that tests new mobile apps (current pick)
+## 4. PMF Engine: a company that finds its own product-market fit (building this)
+
+One company runs offers as experiments and keeps or kills them by itself. It launches a free offer with its own landing page, does outreach on X and by email, delivers to every signup, and kills or pivots based on numbers it counted itself. Ideas 1 to 3 below are its first three experiments. See `README.md`.
+
+- **Pitch:** "We didn't pick our idea. Our company did."
+- **Guardrails:** it can only pivot to offers an agent can deliver by email within 30 minutes. Kill and pivot calls run on fixed rules (`server/rules.ts`) that separate "nobody saw it" from "people saw it and didn't want it".
+
+## 1. A QA agency that tests new mobile apps
 
 Agents find newly launched apps, test them on real cloud iPhones and Androids, and send the developer a free bug report with a screen recording. A recurring test plan is the paid upsell.
 
