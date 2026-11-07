@@ -1,10 +1,14 @@
 /**
- * `npm run kickoff`: starts the company. Sends the strategist its first brief (launch three
- * experiments and hand them to growth) as the Scout persona, using the Naïve SDK.
- * Run it once, after `naive up` and after X is connected. The schedules take over from there.
+ * `npm run kickoff`: opens the studio. Sends every founder its first brief (find a problem,
+ * start a company, build, ship, post) as the Scout persona, using the Naïve SDK, so all the
+ * companies start in parallel. Run it once, after `naive up` and after the social account is
+ * connected. The schedules take over from there.
+ *
+ *   npm run kickoff                 every founder
+ *   npm run kickoff -- founder-2    just one
  */
 import { createClient } from "@usenaive-sdk/managed-agents";
-import { IDENTITY, KICKOFF } from "../crew/crew.ts";
+import { FOUNDERS, IDENTITY, kickoffFor } from "../crew/crew.ts";
 
 const apiKey = process.env["NAIVE_API_KEY"];
 if (!apiKey) {
@@ -12,19 +16,18 @@ if (!apiKey) {
   process.exit(1);
 }
 
+const only = process.argv.slice(2);
+const names = FOUNDERS.map((f) => f.name as string).filter((name) => only.length === 0 || only.includes(name));
 const naive = createClient({ apiKey });
-const agents = await naive.agents.list({ limit: 100 });
-const strategist = (agents.data as { id: string; name: string }[]).find((agent) => agent.name === "strategist");
-if (!strategist) {
-  console.error("No agent named strategist in this organization. Run `npm run naive:up` first.");
-  process.exit(1);
-}
+const agents = (await naive.agents.list({ limit: 100 })).data as { id: string; name: string }[];
 
-const session = await naive.sessions.create({
-  agent_id: strategist.id,
-  message: KICKOFF,
-  identity: IDENTITY,
-  budget_micro_usd: 3_000_000,
-});
-console.log(`Kicked off: session ${session.id}`);
-console.log(`Watch it:   naive session stream --session ${session.id}`);
+for (const name of names) {
+  const agent = agents.find((a) => a.name === name);
+  if (!agent) {
+    console.error(`No agent named ${name}. Run \`npm run naive:up\` first.`);
+    process.exitCode = 1;
+    continue;
+  }
+  const session = await naive.sessions.create({ agent_id: agent.id, message: kickoffFor(name), identity: IDENTITY, budget_micro_usd: 4_000_000 });
+  console.log(`${name}: session ${session.id}   (watch: npx naive session stream --session ${session.id})`);
+}

@@ -1,14 +1,22 @@
 /**
- * The app's whole route table, independent of where it runs: the deployed function
+ * The studio's whole route table, independent of where it runs: the deployed function
  * (`server/entry.ts`), the local dev server (`server/dev.ts`) and the tests all call
  * `handleRequest` with the same request shape.
+ *
+ *   /                      public dashboard of every company
+ *   /c/<slug>              one company: problem, evidence, versions, decisions, outreach, feedback
+ *   /p/<slug>/<path>       the company's product, built and shipped by its founder agent
+ *   /p/<slug>/api/items    the product's backend: a small JSON document store
+ *   /t.js, /api/t          product analytics (views, uses, signups, feedback)
+ *   /mcp                   the agents' tools (platform bearer only)
+ *   /api/interventions     log a human step-in (admin bearer only)
  */
 import { createHash, timingSafeEqual } from "node:crypto";
 import type { Db } from "./db.ts";
-import { handleMcp } from "./mcp.ts";
-import { renderClosed, renderDashboard, renderLanding, renderNotFound, renderThanks } from "./pages.ts";
-import { Repo, visitorKey } from "./repo.ts";
-import { capsFromEnv, isBot, isEmail } from "./rules.ts";
+import { handleMcp, productUrl, shipProduct, ToolError } from "./mcp.ts";
+import { renderCompany, renderDashboard, renderNotFound, renderNotLive, renderOffline, renderReport, renderReports, TRACKER_JS, wrapProductHtml } from "./pages.ts";
+import { LIMITS, Repo, RepoError, type Company } from "./repo.ts";
+import { PRIVATE_FILES, capsFromEnv, cleanPath, contentTypeOf, isBot, isEmail, placeholderReason } from "./rules.ts";
 
 export interface ApiRequest {
   method: string;
@@ -17,6 +25,8 @@ export interface ApiRequest {
   headers: Record<string, string | undefined>;
   /** The body, parsed: a form's fields or a JSON value. Null when there was none or it did not parse. */
   body: unknown;
+  /** The body exactly as sent, when the host handed it over unparsed (uploads). */
+  raw?: string;
 }
 
 export interface ApiReply {
@@ -24,6 +34,7 @@ export interface ApiReply {
   headers?: Record<string, string>;
   html?: string;
   json?: unknown;
+  /** A raw body; its type comes from headers["content-type"], else text/plain. */
   text?: string;
 }
 
@@ -32,8 +43,6 @@ export interface Env {
   mcpToken?: string;
   /** The operator's own bearer, for logging interventions (ADMIN_TOKEN). */
   adminToken?: string;
-  /** Salts the anonymous visitor hash. */
-  salt: string;
   vars: Record<string, string | undefined>;
 }
 
@@ -54,19 +63,15 @@ export function parseBody(raw: unknown, contentType: string | undefined): unknow
   try {
     return JSON.parse(text);
   } catch {
-    return type.includes("json") ? null : Object.fromEntries(new URLSearchParams(text));
+    return null;
   }
 }
 
-const sameSecret = (a: string, b: string) =>
-  timingSafeEqual(createHash("sha256").update(a).digest(), createHash("sha256").update(b).digest());
-
+const sameSecret = (a: string, b: string) => timingSafeEqual(createHash("sha256").update(a).digest(), createHash("sha256").update(b).digest());
 const bearer = (header: string | undefined) => /^Bearer\s+(\S+)$/i.exec(header ?? "")?.[1] ?? null;
-
 function hasBearer(req: ApiRequest, ...secrets: (string | undefined)[]): boolean {
   const token = bearer(req.headers["authorization"]);
-  if (!token) return false;
-  return secrets.some((secret) => secret !== undefined && secret !== "" && sameSecret(secret, token));
+  return token !== null && secrets.some((secret) => secret !== undefined && secret !== "" && sameSecret(secret, token));
 }
 
 export function originOf(req: ApiRequest): string {
@@ -76,29 +81,32 @@ export function originOf(req: ApiRequest): string {
 }
 
 const html = (status: number, body: string): ApiReply => ({ status, html: body, headers: { "cache-control": "no-store" } });
-const json = (status: number, body: unknown): ApiReply => ({ status, json: body });
-const field = (body: unknown, key: string): string => {
-  if (typeof body !== "object" || body === null) return "";
-  const value = (body as Record<string, unknown>)[key];
+const json = (status: number, body: unknown): ApiReply => ({ status, json: body, headers: { "cache-control": "no-store" } });
+const obj = (body: unknown): Record<string, unknown> => (typeof body === "object" && body !== null && !Array.isArray(body) ? (body as Record<string, unknown>) : {});
+const str = (body: unknown, key: string): string => {
+  const value = obj(body)[key];
   return typeof value === "string" ? value.trim() : "";
 };
 
-const SOURCE = /^[a-z0-9_-]{1,24}$/i;
+const UID = /^[A-Za-z0-9-]{4,64}$/;
+const COLLECTION = /^[A-Za-z0-9_-]{1,40}$/;
+const isOpen = (c: Company) => c.status === "live" || c.status === "winner";
 
 export async function handleRequest(req: ApiRequest, ctx: Context): Promise<ApiReply> {
   const now = ctx.now ?? (() => new Date());
   const repo = async () => new Repo(await ctx.db());
-  const { method, path } = req;
+  const { method } = req;
+  // Product paths keep their trailing slash (relative links depend on it); everything else matches without one.
+  const raw = req.path;
+  const path = raw.length > 1 ? raw.replace(/\/+$/, "") : raw;
 
   if (path === "/health") return { status: 200, text: "ok" };
 
-  // ---------------------------------------------------------------- agents' tools
+  // ---------------------------------------------------------------- the agents' tools
   if (path === "/mcp") {
     if (method !== "POST") return { status: 405, headers: { allow: "POST" }, text: "MCP streamable HTTP: POST only" };
     if (!hasBearer(req, ctx.env.mcpToken, ctx.env.adminToken)) return json(401, { error: "unauthorized" });
-    const caps = capsFromEnv(ctx.env.vars);
-    const maxLive = Number(ctx.env.vars["MAX_LIVE_EXPERIMENTS"]) || 3;
-    const mcp = { repo: await repo(), origin: originOf(req), caps, maxLive, now };
+    const mcp = { repo: await repo(), origin: originOf(req), caps: capsFromEnv(ctx.env.vars), now };
     if (Array.isArray(req.body)) {
       const answers = (await Promise.all(req.body.map((m) => handleMcp(m, mcp)))).filter((a) => a !== null);
       return answers.length === 0 ? { status: 202 } : json(200, answers);
@@ -113,77 +121,221 @@ export async function handleRequest(req: ApiRequest, ctx: Context): Promise<ApiR
     const r = await repo();
     if (method === "GET") return json(200, await r.listInterventions());
     if (method !== "POST") return json(405, { error: "GET or POST" });
-    const description = field(req.body, "description");
+    const description = str(req.body, "description");
     if (description === "" || description.length > 1000) return json(400, { error: "description is required (at most 1000 characters)" });
     return json(201, await r.logIntervention(description));
   }
 
   if (path === "/api/state" && method === "GET") {
     const r = await repo();
-    const board = await r.scoreboard(now());
+    const companies = await r.scoreboard(now());
     return json(200, {
       now: now().toISOString(),
-      experiments: board.map(({ thresholds: _t, ...e }) => e),
-      decisions: await r.listDecisions(50),
+      companies: companies.map(({ thresholds: _t, ...c }) => c),
+      decisions: await r.listDecisions({ limit: 100 }),
       interventions: await r.listInterventions(),
     });
+  }
+
+  // ---------------------------------------------------------------- uploads from a founder's sandbox
+  const upload = /^\/api\/upload\/(up_[a-f0-9]{40})(?:\/(.+))?$/.exec(path);
+  if (upload) {
+    const r = await repo();
+    const link = await r.getUpload(upload[1]!, now());
+    if (!link) return json(404, { error: "this upload link does not exist or has expired; get a new one with pmf.get_upload_link" });
+    const rest = upload[2] ?? "";
+    if (rest === "" && method === "GET") {
+      const staged = await r.stagedFiles(link.token);
+      return json(200, { staged: staged.map((f) => ({ path: f.path, bytes: Buffer.byteLength(f.content, "utf8") })) });
+    }
+    if (rest === "commit" && method === "POST") {
+      const company = await r.getCompany(link.company_id);
+      if (!company) return json(404, { error: "no such company" });
+      const staged = await r.stagedFiles(link.token);
+      if (staged.length === 0) return json(400, { error: "nothing staged: PUT the files first" });
+      const body = obj(req.body);
+      const note = (typeof body["note"] === "string" ? body["note"] : req.query.get("note") ?? "").trim().slice(0, 200);
+      if (!note) return json(400, { error: "give a note: what changed in this version" });
+      const replace = body["replace"] === true || req.query.get("replace") === "1";
+      try {
+        const version = await shipProduct(r, company, staged, note, replace, link.founder);
+        await r.clearStaged(link.token);
+        return json(201, { version, product_url: productUrl(originOf(req), company.slug), check: "Open the product_url with the browser and use it like a new user." });
+      } catch (error) {
+        if (error instanceof ToolError) return json(400, { error: error.message });
+        throw error;
+      }
+    }
+    if (rest !== "commit" && method === "PUT") {
+      const clean = cleanPath(rest);
+      if (!clean) return json(400, { error: "bad path: relative, letters/digits/._-/ only, and one of .html .css .js .mjs .json .svg .md .txt .webmanifest .xml" });
+      const content = req.raw ?? (typeof req.body === "string" ? req.body : null);
+      if (content === null) return json(400, { error: "send the file as the raw body: curl --data-binary @file -H 'content-type: application/octet-stream'" });
+      if (Buffer.byteLength(content, "utf8") > LIMITS.fileBytes) return json(413, { error: `the limit per file is ${LIMITS.fileBytes} bytes` });
+      const fake = placeholderReason(clean, content);
+      if (fake) return json(400, { error: fake });
+      await r.stageFile(link.token, clean, content);
+      return json(200, { staged: clean, bytes: Buffer.byteLength(content, "utf8") });
+    }
+    return json(405, { error: "GET the link, PUT <path>, or POST commit" });
+  }
+
+  // ---------------------------------------------------------------- product analytics
+  if (path === "/t.js" && method === "GET") {
+    return { status: 200, text: TRACKER_JS, headers: { "content-type": "text/javascript; charset=utf-8", "cache-control": "public, max-age=300" } };
+  }
+
+  if (path === "/api/t") {
+    if (method !== "POST") return json(405, { error: "POST only" });
+    if (isBot(req.headers["user-agent"])) return { status: 204 };
+    const body = obj(req.body);
+    const slug = str(body, "c");
+    const uid = str(body, "u");
+    const type = str(body, "t");
+    if (!UID.test(uid) || !/^[a-z0-9-]{1,64}$/.test(slug)) return json(400, { error: "bad event" });
+    const r = await repo();
+    const company = await r.getCompanyBySlug(slug);
+    if (!company || !isOpen(company)) return { status: 204 };
+    const pagePath = str(body, "p").slice(0, 200) || null;
+    if (type === "view" || type === "use") {
+      const name = type === "use" ? (str(body, "n").slice(0, 64) || "use") : "";
+      const ref = str(body, "r").toLowerCase();
+      await r.recordEvent(company.id, uid, type, name, pagePath, now(), /^[a-z0-9_-]{1,24}$/.test(ref) ? ref : null);
+      return { status: 204 };
+    }
+    if (type === "signup") {
+      const email = str(body, "email").toLowerCase();
+      if (!isEmail(email)) return json(400, { error: "invalid email" });
+      await r.addSignup(company.id, email, uid, "product");
+      await r.recordEvent(company.id, uid, "use", "signup", pagePath, now());
+      return { status: 204 };
+    }
+    if (type === "feedback") {
+      const text = str(body, "text").slice(0, 2000);
+      if (text.length < 2) return json(400, { error: "empty feedback" });
+      await r.addFeedback(company.id, "product", text, null);
+      return { status: 204 };
+    }
+    return json(400, { error: "unknown event type" });
   }
 
   // ---------------------------------------------------------------- public pages
   if (path === "/" && method === "GET") {
     const r = await repo();
-    const [experiments, decisions, touches, deliveries, interventions] = await Promise.all([
-      r.scoreboard(now()), r.listDecisions(40), r.listTouches({ limit: 15 }), r.listDeliveries(15), r.listInterventions(),
+    const [companies, decisions, touches, feedback, interventions, reports] = await Promise.all([
+      r.scoreboard(now()), r.listDecisions({ limit: 40 }), r.listTouches({ limit: 15 }), r.listFeedback(undefined, 15), r.listInterventions(), r.listReports({ limit: 8 }),
     ]);
-    const signupsTotal = experiments.reduce((n, e) => n + e.stats.signups, 0);
-    return html(200, renderDashboard({ now: now(), experiments, decisions, touches, deliveries, interventions, signupsTotal }));
+    return html(200, renderDashboard({ now: now(), companies, decisions, touches, feedback, interventions, reports }));
   }
 
-  const landing = /^\/x\/([a-z0-9-]{1,64})(\/thanks)?$/.exec(path);
-  if (landing) {
+  if (path === "/reports" && method === "GET") {
     const r = await repo();
-    const experiment = await r.getExperimentBySlug(landing[1]!);
-    if (!experiment) return html(404, renderNotFound());
-    const open = experiment.status === "live" || experiment.status === "winner";
+    const [reports, companies] = await Promise.all([r.listReports({ limit: 200 }), r.scoreboard(now())]);
+    return html(200, renderReports(reports, new Map(companies.map((c) => [c.id, c.name]))));
+  }
 
-    if (landing[2]) {
-      return html(200, renderThanks(experiment));
-    }
+  const reportPage = /^\/r\/(rep_[a-f0-9]{12})$/.exec(path);
+  if (reportPage && method === "GET") {
+    const r = await repo();
+    const report = await r.getReport(reportPage[1]!);
+    const company = report && (await r.getCompany(report.company_id));
+    if (!report || !company) return html(404, renderNotFound());
+    return html(200, renderReport(report, company));
+  }
 
-    if (method === "GET") {
-      if (!open) return html(410, renderClosed(experiment));
-      const sourceParam = req.query.get("src") ?? "";
-      const source = SOURCE.test(sourceParam) ? sourceParam.toLowerCase() : null;
-      const ua = req.headers["user-agent"];
-      if (!isBot(ua)) {
-        const ip = (req.headers["x-forwarded-for"] ?? req.headers["x-real-ip"] ?? "").split(",")[0]!.trim();
-        await r.recordView(experiment.id, visitorKey(ip, ua ?? "", ctx.env.salt), source);
-      }
-      return html(200, renderLanding(experiment, { source }));
-    }
+  const companyPage = /^\/c\/([a-z0-9-]{1,64})$/.exec(path);
+  if (companyPage && method === "GET") {
+    const r = await repo();
+    const board = await r.scoreboard(now());
+    const company = board.find((c) => c.slug === companyPage[1]);
+    if (!company) return html(404, renderNotFound());
+    const [decisions, versions, touches, feedback, reports] = await Promise.all([
+      r.listDecisions({ company_id: company.id, limit: 50 }), r.versionResults(company.id), r.listTouches({ company_id: company.id, limit: 30 }), r.listFeedback(company.id, 30), r.listReports({ company_id: company.id, limit: 50 }),
+    ]);
+    const parentName = company.parent_id ? board.find((c) => c.id === company.parent_id)?.name ?? null : null;
+    return html(200, renderCompany(company, { decisions, versions, touches, feedback, reports, parentName }));
+  }
 
-    if (method === "POST") {
-      if (!open) return html(410, renderClosed(experiment));
-      // A filled honeypot is a bot. Answer as if it worked so it learns nothing.
-      if (field(req.body, "website") !== "") return { status: 303, headers: { location: `/x/${experiment.slug}/thanks` } };
-      const values = {
-        email: field(req.body, "email").toLowerCase(),
-        name: field(req.body, "name").slice(0, 120),
-        need: field(req.body, "need").slice(0, 4000),
-        link: field(req.body, "link").slice(0, 500),
-      };
-      const sourceField = field(req.body, "src");
-      const source = SOURCE.test(sourceField) ? sourceField.toLowerCase() : "direct";
-      const again = (error: string) => html(422, renderLanding(experiment, { source, error, values }));
-      if (!isEmail(values.email)) return again("Please enter a valid email address so we can send it to you.");
-      if (values.need.length < 3) return again("Tell us a little about what you need so we can do it well.");
-      if (values.link && !/^https?:\/\//i.test(values.link)) values.link = `https://${values.link}`;
-      await r.addSignup({ experiment_id: experiment.id, email: values.email, name: values.name || null, need: values.need, link: values.link || null, source });
-      // No address in the redirect: a query string ends up in logs and browser history.
-      return { status: 303, headers: { location: `/x/${experiment.slug}/thanks` } };
+  // ---------------------------------------------------------------- products
+  const product = /^\/p\/([a-z0-9-]{1,64})(\/.*)?$/.exec(raw);
+  if (product) {
+    const slug = product[1]!;
+    const rest = product[2] ?? "";
+    // Relative links inside a product need the trailing slash.
+    if (rest === "" && method === "GET") return { status: 308, headers: { location: `/p/${slug}/` } };
+    const r = await repo();
+    const company = await r.getCompanyBySlug(slug);
+    if (!company) return html(404, renderNotFound());
+
+    const api = /^\/api\/items(?:\/([A-Za-z0-9_]{1,40}))?$/.exec(rest);
+    if (api) return await itemsApi(req, r, company, api[1] ?? null);
+
+    if (method !== "GET") return json(405, { error: "GET only" });
+    if (company.status === "killed") return html(410, renderOffline(company.name));
+    const wanted = rest === "" || rest === "/" ? "index.html" : rest.slice(1);
+    const clean = cleanPath(wanted);
+    let file = clean && !PRIVATE_FILES.has(clean) ? await r.readFile(company.id, clean) : null;
+    let served = clean ?? "";
+    // Single-page apps: an extensionless path that is not a file falls back to index.html.
+    if (file === null && !/\.[a-z0-9]+$/i.test(wanted)) {
+      file = await r.readFile(company.id, "index.html");
+      served = "index.html";
     }
-    return html(405, renderNotFound());
+    if (file === null) return company.status === "building" ? html(503, renderNotLive(company.name)) : html(404, renderNotFound());
+    const type = contentTypeOf(served);
+    const isHtml = type.startsWith("text/html");
+    return {
+      status: 200,
+      text: isHtml ? wrapProductHtml(file, company.slug) : file,
+      headers: { "content-type": type, "cache-control": isHtml ? "no-store" : "public, max-age=60", "x-content-type-options": "nosniff" },
+    };
   }
 
   return html(404, renderNotFound());
+}
+
+/** The products' backend: list, add, read, update and remove JSON documents. */
+async function itemsApi(req: ApiRequest, r: Repo, company: Company, id: string | null): Promise<ApiReply> {
+  if (!isOpen(company)) return json(410, { error: "this product is offline" });
+  const userHeader = req.headers["x-pmf-user"] ?? "";
+  const user = UID.test(userHeader) ? userHeader : null;
+  const body = obj(req.body);
+  const sizeOk = (data: unknown) => data !== undefined && Buffer.byteLength(JSON.stringify(data), "utf8") <= LIMITS.itemBytes;
+
+  try {
+    if (id === null) {
+      if (req.method === "GET") {
+        const collection = req.query.get("collection") ?? "";
+        if (!COLLECTION.test(collection)) return json(400, { error: "collection is required (letters, digits, _ and -)" });
+        const mine = req.query.get("mine") === "1";
+        if (mine && !user) return json(400, { error: "mine needs the x-pmf-user header" });
+        const limit = Math.min(Math.max(Number(req.query.get("limit")) || 50, 1), 200);
+        return json(200, { items: await r.listItems(company.id, collection, mine ? user : null, limit) });
+      }
+      if (req.method === "POST") {
+        const collection = str(body, "collection");
+        if (!COLLECTION.test(collection)) return json(400, { error: "collection is required (letters, digits, _ and -)" });
+        if (!sizeOk(body["data"])) return json(400, { error: `data is required and at most ${LIMITS.itemBytes} bytes` });
+        if (!user && body["shared"] !== true) return json(400, { error: "send x-pmf-user, or shared: true" });
+        return json(201, await r.addItem(company.id, collection, body["shared"] === true ? null : user, body["data"]));
+      }
+      return json(405, { error: "GET or POST" });
+    }
+    if (req.method === "GET") {
+      const item = await r.getItem(company.id, id);
+      return item ? json(200, item) : json(404, { error: "not found" });
+    }
+    if (req.method === "PUT") {
+      if (!sizeOk(body["data"])) return json(400, { error: `data is required and at most ${LIMITS.itemBytes} bytes` });
+      const item = await r.updateItem(company.id, id, user, body["data"]);
+      return item ? json(200, item) : json(404, { error: "not found, or not yours" });
+    }
+    if (req.method === "DELETE") {
+      return (await r.deleteItem(company.id, id, user)) ? json(200, { deleted: id }) : json(404, { error: "not found, or not yours" });
+    }
+    return json(405, { error: "GET, PUT or DELETE" });
+  } catch (error) {
+    if (error instanceof RepoError) return json(409, { error: error.message });
+    throw error;
+  }
 }

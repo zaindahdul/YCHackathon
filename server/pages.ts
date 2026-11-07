@@ -1,10 +1,10 @@
 /**
- * Server-rendered HTML: the public dashboard at `/` (the company's live record, for judges and
- * anyone curious) and one landing page per experiment at `/x/:slug`. No client framework: every
- * page is one request, readable without JavaScript, and fast on a phone.
+ * Server-rendered HTML for the studio's public pages: the portfolio dashboard at `/` (the live
+ * record, for judges and anyone curious) and one page per company at `/c/<slug>`. Plus the
+ * tracker every product page gets, and the wrapper that adds it.
  */
 import { maskEmail } from "./rules.ts";
-import type { Decision, Delivery, Experiment, Intervention, ScoredExperiment, Touch } from "./repo.ts";
+import type { Decision, Feedback, Intervention, Report, ScoredCompany, Touch, VersionResult } from "./repo.ts";
 
 export const esc = (value: unknown): string =>
   String(value ?? "")
@@ -14,13 +14,58 @@ export const esc = (value: unknown): string =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
+/**
+ * A small markdown renderer for founder-written reports: headings, lists, paragraphs, bold,
+ * italics, inline code, quotes and http(s) links. Everything is escaped first, so a report can
+ * never inject HTML or script.
+ */
+export function renderMarkdown(md: string): string {
+  const inline = (text: string) =>
+    esc(text)
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/(^|[^*])\*([^*\s][^*]*)\*/g, "$1<em>$2</em>")
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" rel="noopener nofollow">$1</a>');
+  const out: string[] = [];
+  let list: "ul" | "ol" | null = null;
+  let para: string[] = [];
+  const flush = () => {
+    if (para.length) out.push(`<p>${inline(para.join(" "))}</p>`);
+    para = [];
+  };
+  const close = () => {
+    if (list) out.push(`</${list}>`);
+    list = null;
+  };
+  for (const raw of md.replace(/\r\n/g, "\n").split("\n")) {
+    const line = raw.trimEnd();
+    const heading = /^(#{1,4})\s+(.*)$/.exec(line);
+    const bullet = /^\s*[-*]\s+(.*)$/.exec(line);
+    const numbered = /^\s*\d+[.)]\s+(.*)$/.exec(line);
+    const quote = /^>\s?(.*)$/.exec(line);
+    if (line.trim() === "") { flush(); close(); continue; }
+    if (heading) { flush(); close(); const level = Math.max(2, Math.min(heading[1]!.length, 4)); /* the page title is the only h1 */ out.push(`<h${level}>${inline(heading[2]!)}</h${level}>`); continue; }
+    if (bullet || numbered) {
+      flush();
+      const kind = bullet ? "ul" : "ol";
+      if (list !== kind) { close(); out.push(`<${kind}>`); list = kind; }
+      out.push(`<li>${inline((bullet ?? numbered)![1]!)}</li>`);
+      continue;
+    }
+    if (quote) { flush(); close(); out.push(`<blockquote>${inline(quote[1]!)}</blockquote>`); continue; }
+    close();
+    para.push(line.trim());
+  }
+  flush();
+  close();
+  return out.join("\n");
+}
+
 const TZ = "America/Los_Angeles";
 const time = (value: Date | string) =>
   new Date(value).toLocaleString("en-US", { timeZone: TZ, weekday: "short", hour: "numeric", minute: "2-digit" });
 const clip = (text: string, max: number) => (text.length > max ? `${text.slice(0, max - 1)}…` : text);
-
-/** A small, stable hue per experiment so each landing page looks like its own product. */
-const hueOf = (slug: string) => [...slug].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 7);
+const safeUrl = (url: string) => (/^https?:\/\//i.test(url) ? url : "#");
 
 const BASE_CSS = `
 :root{--bg:#f7f7f5;--panel:#ffffff;--ink:#16181d;--muted:#5d6370;--line:#e4e4df;--soft:#f0f0ec;
@@ -37,41 +82,22 @@ a{color:var(--accent)}h1,h2,h3{line-height:1.2;margin:0}
 .wrap{max-width:1120px;margin:0 auto;padding:28px 16px 64px}
 .muted{color:var(--muted)}.small{font-size:13px}
 .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.02em;white-space:nowrap}
-.p-live,.p-keep,.p-launch{background:var(--info-bg);color:var(--info)}
-.p-winner,.p-scale,.p-delivered{background:var(--good-bg);color:var(--good)}
-.p-killed,.p-kill,.p-failed{background:var(--bad-bg);color:var(--bad)}
-.p-paused,.p-too_early,.p-note,.p-new,.p-working{background:var(--soft);color:var(--muted)}
-.p-no_reach,.p-pivot{background:var(--warn-bg);color:var(--warn)}
-`;
-
-const page = (title: string, body: string, extraCss = "", head = "") => `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(title)}</title>${head}<style>${BASE_CSS}${extraCss}</style></head><body>${body}</body></html>`;
-
-// ------------------------------------------------------------------- dashboard
-
-export interface DashboardData {
-  now: Date;
-  experiments: ScoredExperiment[];
-  decisions: Decision[];
-  touches: Touch[];
-  deliveries: (Delivery & { experiment_id: string; email: string })[];
-  interventions: Intervention[];
-  signupsTotal: number;
-}
-
-const DASH_CSS = `
+.p-live,.p-keep,.p-launch,.p-ship{background:var(--info-bg);color:var(--info)}
+.p-winner,.p-scale{background:var(--good-bg);color:var(--good)}
+.p-killed,.p-kill,.p-stalled{background:var(--bad-bg);color:var(--bad)}
+.p-building,.p-too_early,.p-note,.p-ended{background:var(--soft);color:var(--muted)}
+.p-no_reach,.p-pivot,.p-iterate{background:var(--warn-bg);color:var(--warn)}
 header.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between;margin-bottom:22px}
 header.top h1{font-size:28px;letter-spacing:-.02em}
-.lede{max-width:640px;margin-top:6px}
+.lede{max-width:680px;margin-top:6px}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:26px}
 .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .kpi b{display:block;font-size:26px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .kpi span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-section{margin-top:30px}section>h2{font-size:17px;margin-bottom:12px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+section{margin-top:30px}section h2{font-size:17px;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0}
-.card h3{font-size:16px;margin-bottom:4px}
+.card h3{font-size:17px;margin:8px 0 2px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
 .stats div{background:var(--soft);border-radius:8px;padding:6px 8px}
@@ -84,67 +110,117 @@ ol.log li{background:var(--panel);border:1px solid var(--line);border-radius:10p
 ol.log li p{margin:6px 0 0;overflow-wrap:anywhere}
 .empty{color:var(--muted);font-style:italic}
 footer{margin-top:40px;color:var(--muted);font-size:13px}
+.table{width:100%;overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.table table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+.table th,.table td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.table th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.table tr:last-child td{border-bottom:0}.table td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.doc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 22px 18px;max-width:820px}
+.doc h2{font-size:19px;margin:22px 0 8px}.doc h3{font-size:16px;margin:18px 0 6px}.doc h4{font-size:15px;margin:14px 0 4px}
+.doc p,.doc li{max-width:72ch}.doc ul,.doc ol{padding-left:22px}
+.doc blockquote{margin:10px 0;padding:6px 12px;border-left:3px solid var(--accent);background:var(--soft);border-radius:0 8px 8px 0}
+.doc code{background:var(--soft);padding:1px 5px;border-radius:5px;font-size:13px}
+.p-checkpoint{background:var(--soft);color:var(--muted)}
 `;
 
-const kpi = (value: number | string, label: string) => `<div class="kpi"><b>${esc(value)}</b><span>${esc(label)}</span></div>`;
+const page = (title: string, body: string, head = "") => `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(title)}</title>${head}<style>${BASE_CSS}</style></head><body>${body}</body></html>`;
 
-function experimentCard(e: ScoredExperiment, names: Map<string, string>): string {
-  const s = e.stats;
-  const parent = e.parent_id ? `<div class="small muted">Pivot from ${esc(names.get(e.parent_id) ?? e.parent_id)}</div>` : "";
+const kpi = (value: number | string, label: string) => `<div class="kpi"><b>${esc(value)}</b><span>${esc(label)}</span></div>`;
+const pill = (kind: string, label = kind) => `<span class="pill p-${esc(kind)}">${esc(label.replace("_", " "))}</span>`;
+
+function decisionLog(decisions: Decision[], names: Map<string, string>, empty: string): string {
+  if (decisions.length === 0) return `<p class="empty">${esc(empty)}</p>`;
+  return `<ol class="log">${decisions.map((x) => `<li>
+    <div class="row">${pill(x.decision)}<strong>${esc(x.company_id ? names.get(x.company_id) ?? x.company_id : "Studio")}</strong>
+    <span class="small muted">${esc(time(x.created_at))} · ${esc(x.agent)}</span></div>
+    <p>${esc(x.reasoning)}</p></li>`).join("")}</ol>`;
+}
+
+function touchLog(touches: Touch[], names: Map<string, string>): string {
+  if (touches.length === 0) return `<p class="empty">No outreach yet.</p>`;
+  return `<ol class="log">${touches.map((t) => `<li>
+    <div class="row">${pill("note", t.channel === "x" ? "X" : t.channel)}
+    <span class="small muted">${esc(time(t.created_at))} · ${esc(names.get(t.company_id) ?? "")}${t.target && t.channel === "email" ? ` · to ${esc(maskEmail(t.target))}` : ""}${t.impressions ? ` · ${t.impressions} impressions` : ""}</span></div>
+    <p>${t.url ? `<a href="${esc(safeUrl(t.url))}" rel="noopener">${esc(clip(t.content, 240))}</a>` : esc(clip(t.content, 240))}</p></li>`).join("")}</ol>`;
+}
+
+function feedbackLog(feedback: Feedback[], names: Map<string, string>): string {
+  if (feedback.length === 0) return `<p class="empty">No feedback yet.</p>`;
+  return `<ol class="log">${feedback.map((f) => `<li>
+    <div class="row">${pill("note", f.source)}<span class="small muted">${esc(time(f.created_at))} · ${esc(names.get(f.company_id) ?? "")}${f.email ? ` · ${esc(maskEmail(f.email))}` : ""}</span></div>
+    <p>${esc(clip(f.text, 400))}</p></li>`).join("")}</ol>`;
+}
+
+type ReportRow = Omit<Report, "body">;
+
+function reportList(reports: ReportRow[], names: Map<string, string>, empty: string): string {
+  if (reports.length === 0) return `<p class="empty">${esc(empty)}</p>`;
+  return `<ol class="log">${reports.map((r) => `<li>
+    <div class="row">${pill(r.kind, r.kind === "kill" ? "killed" : r.kind)}<strong>${esc(names.get(r.company_id) ?? "")}</strong>
+    <span class="small muted">${esc(time(r.created_at))} · ${esc(r.agent)}</span></div>
+    <p><a href="/r/${esc(r.id)}">${esc(r.title)}</a></p></li>`).join("")}</ol>`;
+}
+
+const fmtPct = (num: number, den: number) => (den > 0 ? `${((num / den) * 100).toFixed(0)}%` : "–");
+
+/** Every shipped version is a test; this is what happened while each one was live. */
+function testsTable(versions: VersionResult[]): string {
+  if (versions.length === 0) return `<p class="empty">Nothing shipped yet.</p>`;
+  return `<div class="table"><table><thead><tr><th>Test</th><th>What changed</th><th>Live</th><th>Visitors</th><th>Used it</th><th>Rate</th><th>Signups</th><th>Outreach</th></tr></thead><tbody>
+  ${versions.map((v) => {
+    const end = v.ended_at ? new Date(v.ended_at) : new Date();
+    const hours = Math.max(0, (end.getTime() - new Date(v.created_at).getTime()) / 3_600_000);
+    return `<tr><td class="n">v${v.version}</td><td>${esc(v.note)}<div class="small muted">${esc(time(v.created_at))}${v.ended_at ? "" : " · live now"}</div></td>
+    <td class="n">${hours.toFixed(1)}h</td><td class="n">${v.visitors}</td><td class="n">${v.active_users}</td><td class="n">${fmtPct(v.active_users, v.visitors)}</td><td class="n">${v.signups}</td><td class="n">${v.touches}</td></tr>`;
+  }).join("")}
+  </tbody></table></div>`;
+}
+
+function companyCard(c: ScoredCompany, names: Map<string, string>): string {
+  const s = c.stats;
+  const open = c.status === "live" || c.status === "winner";
   return `<article class="card">
-  <div class="row"><span class="pill p-${esc(e.status)}">${esc(e.status)}</span><span class="pill p-${esc(e.judgement.verdict)}">${esc(e.judgement.verdict.replace("_", " "))}</span></div>
-  <h3 style="margin-top:8px">${esc(e.name)}</h3>${parent}
-  <div class="small muted">${esc(clip(e.audience, 140))}</div>
-  <p style="margin:8px 0 0">${esc(e.offer)}</p>
+  <div class="row">${pill(c.status)}${pill(c.judgement.verdict)}<span class="small muted">${esc(c.founder)}</span></div>
+  <h3><a href="/c/${esc(c.slug)}" style="color:inherit;text-decoration:none">${esc(c.name)}</a></h3>
+  ${c.parent_id ? `<div class="small muted">Pivot from ${esc(names.get(c.parent_id) ?? c.parent_id)}</div>` : ""}
+  <p style="margin:6px 0 0">${esc(clip(c.solution, 200))}</p>
+  <div class="small muted" style="margin-top:4px">For ${esc(clip(c.audience, 140))}</div>
   <div class="stats">
-    <div><b>${s.age_hours}h</b><span>running</span></div>
-    <div><b>${s.touches}</b><span>outreach</span></div>
-    <div><b>${s.impressions}</b><span>impressions</span></div>
-    <div><b>${s.views}</b><span>visitors</span></div>
+    <div><b>${s.active_users}</b><span>users</span></div>
+    <div><b>${s.returning_users}</b><span>came back</span></div>
+    <div><b>${s.visitors}</b><span>visitors</span></div>
     <div><b>${s.signups}</b><span>signups</span></div>
-    <div><b>${s.delivered}</b><span>delivered</span></div>
+    <div><b>${s.touches}</b><span>outreach</span></div>
+    <div><b>v${s.versions}</b><span>shipped</span></div>
   </div>
-  <a class="small" href="/x/${esc(e.slug)}">Landing page →</a>
-  <div class="verdict muted">${esc(e.judgement.reason)}</div>
+  <div class="row small">${open && s.versions > 0 ? `<a href="/p/${esc(c.slug)}/">Open the product →</a>` : ""}<a href="/c/${esc(c.slug)}">Decisions and history</a></div>
+  <div class="verdict muted">${esc(c.judgement.reason)}</div>
 </article>`;
 }
 
+// ------------------------------------------------------------------- the studio dashboard
+
+export interface DashboardData {
+  now: Date;
+  companies: ScoredCompany[];
+  decisions: Decision[];
+  touches: Touch[];
+  feedback: Feedback[];
+  interventions: Intervention[];
+  reports: ReportRow[];
+}
+
 export function renderDashboard(d: DashboardData): string {
-  const names = new Map(d.experiments.map((e) => [e.id, e.name]));
-  const live = d.experiments.filter((e) => e.status === "live").length;
-  const pivots = d.decisions.filter((x) => x.decision === "pivot" || x.decision === "kill").length;
-  const outreach = d.experiments.reduce((n, e) => n + e.stats.touches, 0);
-  const views = d.experiments.reduce((n, e) => n + e.stats.views, 0);
-  const delivered = d.experiments.reduce((n, e) => n + e.stats.delivered, 0);
-  const firstStart = d.experiments[0]?.created_at;
-
-  const ordered = [...d.experiments].sort((a, b) => {
-    const rank = (e: ScoredExperiment) => (e.status === "live" ? 0 : e.status === "winner" ? 1 : e.status === "paused" ? 2 : 3);
-    return rank(a) - rank(b) || new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-  });
-
-  const decisions = d.decisions.length === 0
-    ? `<p class="empty">No decisions yet. The strategist logs every launch, kill and pivot here.</p>`
-    : `<ol class="log">${d.decisions.map((x) => `<li>
-        <div class="row"><span class="pill p-${esc(x.decision)}">${esc(x.decision)}</span>
-        <strong>${esc(x.experiment_id ? names.get(x.experiment_id) ?? x.experiment_id : "Company")}</strong>
-        <span class="small muted">${esc(time(x.created_at))} · ${esc(x.agent)}</span></div>
-        <p>${esc(x.reasoning)}</p></li>`).join("")}</ol>`;
-
-  const touches = d.touches.length === 0
-    ? `<p class="empty">No outreach yet.</p>`
-    : `<ol class="log">${d.touches.map((t) => `<li>
-        <div class="row"><span class="pill p-note">${esc(t.channel === "x" ? "X" : t.channel)}</span>
-        <span class="small muted">${esc(time(t.created_at))} · ${esc(names.get(t.experiment_id) ?? "")}${t.target && t.channel === "email" ? ` · to ${esc(maskEmail(t.target))}` : ""}</span>
-        ${t.impressions ? `<span class="small muted">· ${t.impressions} impressions</span>` : ""}</div>
-        <p>${t.url ? `<a href="${esc(t.url)}" rel="noopener">${esc(clip(t.content, 220))}</a>` : esc(clip(t.content, 220))}</p></li>`).join("")}</ol>`;
-
-  const deliveries = d.deliveries.length === 0
-    ? `<p class="empty">Nothing delivered yet.</p>`
-    : `<ol class="log">${d.deliveries.map((x) => `<li>
-        <div class="row"><span class="pill p-delivered">delivered</span>
-        <span class="small muted">${esc(time(x.created_at))} · ${esc(maskEmail(x.email))} · ${esc(names.get(x.experiment_id) ?? "")}</span></div>
-        <p>${esc(x.summary)}</p></li>`).join("")}</ol>`;
+  const names = new Map(d.companies.map((c) => [c.id, c.name]));
+  const running = d.companies.filter((c) => c.status === "live" || c.status === "building");
+  const sum = (f: (c: ScoredCompany) => number) => d.companies.reduce((n, c) => n + f(c), 0);
+  const kills = d.companies.filter((c) => c.status === "killed").length;
+  const founders = new Set(d.companies.map((c) => c.founder)).size;
+  const first = d.companies[0]?.created_at;
+  const rank = (c: ScoredCompany) => (c.status === "live" ? 0 : c.status === "winner" ? 1 : c.status === "building" ? 2 : 3);
+  const ordered = [...d.companies].sort((a, b) => rank(a) - rank(b) || b.stats.active_users - a.stats.active_users || new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
   const interventions = d.interventions.length === 0
     ? `<p class="empty">None so far. Every time a human steps in, it is logged here.</p>`
@@ -152,89 +228,140 @@ export function renderDashboard(d: DashboardData): string {
 
   const body = `<div class="wrap">
 <header class="top"><div><h1>PMF Engine</h1>
-<p class="lede muted">An autonomous company searching for product–market fit. Its agents launch offers, find customers on X and by email, deliver the work, and kill or pivot whatever the numbers say is not working. This page is its live record.</p></div>
-<div class="small muted">${firstStart ? `Running since ${esc(time(firstStart))}<br>` : ""}Updated ${esc(time(d.now))} · refreshes every minute</div></header>
+<p class="lede muted">An AI venture studio with no human staff. Each founder agent runs its own company: it finds a real problem people are complaining about, builds a working product, ships it, finds users, and keeps, iterates or kills it based on what users actually do. This page is the live record.</p></div>
+<div class="small muted">${first ? `Running since ${esc(time(first))}<br>` : ""}Updated ${esc(time(d.now))} · refreshes every minute</div></header>
 <div class="kpis">
-${kpi(`${live}/${d.experiments.length}`, "live / tried")}${kpi(pivots, "kills & pivots")}${kpi(outreach, "outreach sent")}
-${kpi(views, "visitors")}${kpi(d.signupsTotal, "signups")}${kpi(delivered, "delivered")}${kpi(d.interventions.length, "human step-ins")}
+${kpi(sum((c) => c.stats.active_users), "users")}${kpi(sum((c) => c.stats.returning_users), "came back")}${kpi(sum((c) => c.stats.signups), "signups")}
+${kpi(`${running.length}/${d.companies.length}`, "running / started")}${kpi(sum((c) => c.stats.versions), "versions shipped")}
+${kpi(kills, "killed")}${kpi(sum((c) => c.stats.touches), "outreach")}${kpi(d.interventions.length, "human step-ins")}
 </div>
-<section><h2>Experiments</h2>${d.experiments.length === 0 ? `<p class="empty">No experiments yet. The strategist launches the first ones on its first run.</p>` : `<div class="grid">${ordered.map((e) => experimentCard(e, names)).join("")}</div>`}</section>
-<section><h2>Decision log</h2>${decisions}</section>
-<section class="two"><div><h2 style="font-size:17px;margin-bottom:12px">Recent outreach</h2>${touches}</div><div><h2 style="font-size:17px;margin-bottom:12px">Recent deliveries</h2>${deliveries}</div></section>
+<section><h2>Companies${founders ? ` · ${founders} founder${founders === 1 ? "" : "s"}` : ""}</h2>${d.companies.length === 0 ? `<p class="empty">No companies yet. Each founder starts one on its first run.</p>` : `<div class="grid">${ordered.map((c) => companyCard(c, names)).join("")}</div>`}</section>
+<section><h2>Latest reports · <a class="small" href="/reports">all reports</a></h2>${reportList(d.reports, names, "No reports yet. A founder writes a detailed report every time it closes a test: iterate, scale or kill.")}</section>
+<section><h2>Decision log</h2>${decisionLog(d.decisions, names, "No decisions yet. Every launch, ship, iteration, kill and pivot is logged here.")}</section>
+<section class="two"><div><h2>Recent outreach</h2>${touchLog(d.touches, names)}</div><div><h2>What users said</h2>${feedbackLog(d.feedback, names)}</div></section>
 <section><h2>Where a human stepped in</h2>${interventions}</section>
 <footer>Built on the Naïve SDK. Email addresses are masked on this page.</footer>
 </div>`;
-  return page("PMF Engine", body, DASH_CSS, `<meta http-equiv="refresh" content="60"><meta name="description" content="An autonomous company searching for product-market fit, live.">`);
+  return page("PMF Engine", body, `<meta http-equiv="refresh" content="60"><meta name="description" content="An AI venture studio running several companies at once, live.">`);
 }
 
-// ------------------------------------------------------------------- landing pages
+// ------------------------------------------------------------------- one company
 
-const LANDING_CSS = (hue: number) => `
-:root{--brand:hsl(${hue} 70% 45%);--brand-soft:hsl(${hue} 70% 95%)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--brand:hsl(${hue} 80% 68%);--brand-soft:hsl(${hue} 40% 16%)}}
-:root[data-theme="dark"]{--brand:hsl(${hue} 80% 68%);--brand-soft:hsl(${hue} 40% 16%)}
-main{max-width:620px;margin:0 auto;padding:48px 16px 56px}
-.tag{display:inline-block;background:var(--brand-soft);color:var(--brand);font-weight:600;font-size:12px;padding:4px 10px;border-radius:999px;letter-spacing:.04em;text-transform:uppercase}
-h1{font-size:clamp(28px,6vw,42px);letter-spacing:-.025em;margin:16px 0 12px}
-.sub{font-size:18px;color:var(--muted);margin:0 0 22px}
-ul.points{list-style:none;padding:0;margin:0 0 28px}
-ul.points li{padding:8px 0 8px 30px;position:relative;border-bottom:1px solid var(--line)}
-ul.points li:before{content:"";position:absolute;left:4px;top:15px;width:12px;height:7px;border-left:2px solid var(--brand);border-bottom:2px solid var(--brand);transform:rotate(-45deg)}
-form{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:12px}
-label{font-weight:600;font-size:14px;display:grid;gap:6px}
-input,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
-textarea{min-height:96px;resize:vertical}
-input:focus,textarea:focus{outline:2px solid var(--brand);outline-offset:1px}
-button{font:inherit;font-weight:700;background:var(--brand);color:#fff;border:0;border-radius:10px;padding:12px 16px;cursor:pointer}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button{color:#0f1115}}
-:root[data-theme="dark"] button{color:#0f1115}
-.hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
-.fine{font-size:13px;color:var(--muted);margin-top:18px}
-.error{background:var(--bad-bg);color:var(--bad);border-radius:10px;padding:10px 12px}
-`;
-
-export function renderLanding(e: Experiment, opts: { source: string | null; error?: string; values?: Record<string, string> }): string {
-  const v = opts.values ?? {};
-  const body = `<main>
-<span class="tag">Free while we test it</span>
-<h1>${esc(e.headline)}</h1>
-<p class="sub">${esc(e.subhead)}</p>
-<ul class="points">${e.bullets.map((b) => `<li>${esc(b)}</li>`).join("")}</ul>
-<form method="post" action="/x/${esc(e.slug)}">
-  ${opts.error ? `<div class="error" role="alert">${esc(opts.error)}</div>` : ""}
-  <label>Email<input type="email" name="email" required maxlength="254" autocomplete="email" value="${esc(v["email"])}"></label>
-  <label>Name <span class="muted small">(optional)</span><input type="text" name="name" maxlength="120" autocomplete="name" value="${esc(v["name"])}"></label>
-  <label>${esc(e.ask_label)}<textarea name="need" required maxlength="4000">${esc(v["need"])}</textarea></label>
-  <label>Link <span class="muted small">(optional: your site, app or listing)</span><input type="url" name="link" maxlength="500" placeholder="https://" value="${esc(v["link"])}"></label>
-  <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
-  <input type="hidden" name="src" value="${esc(opts.source ?? "")}">
-  <button type="submit">${esc(e.cta)}</button>
-</form>
-<p class="fine">This offer is run by an AI-operated company. Agents do the work and email it to you, usually within 30 minutes. We use your email only to send it and never share it. <a href="/">See everything the company does →</a></p>
-</main>`;
-  return page(e.headline, body, LANDING_CSS(hueOf(e.slug)), `<meta name="description" content="${esc(e.subhead)}"><meta property="og:title" content="${esc(e.headline)}"><meta property="og:description" content="${esc(e.subhead)}">`);
+export function renderCompany(c: ScoredCompany, d: { decisions: Decision[]; versions: VersionResult[]; touches: Touch[]; feedback: Feedback[]; reports: ReportRow[]; parentName: string | null }): string {
+  const names = new Map([[c.id, c.name]]);
+  const open = c.status === "live" || c.status === "winner";
+  const body = `<div class="wrap">
+<p class="small"><a href="/">← All companies</a></p>
+<div class="row">${pill(c.status)}${pill(c.judgement.verdict)}<span class="small muted">Run by ${esc(c.founder)} · started ${esc(time(c.created_at))}</span></div>
+<h1 style="font-size:30px;letter-spacing:-.02em;margin:10px 0 6px">${esc(c.name)}</h1>
+${c.parent_id ? `<p class="small muted">Pivot from ${esc(d.parentName ?? c.parent_id)}: ${esc(c.pivot_reason ?? "")}</p>` : ""}
+<p class="lede">${esc(c.solution)}</p>
+${open && c.stats.versions > 0 ? `<p><a href="/p/${esc(c.slug)}/"><strong>Open the product →</strong></a></p>` : ""}
+<div class="kpis" style="margin-top:18px">
+${kpi(c.stats.active_users, "users")}${kpi(c.stats.returning_users, "came back")}${kpi(c.stats.visitors, "visitors")}${kpi(c.stats.signups, "signups")}${kpi(c.stats.touches, "outreach")}${kpi(`v${c.stats.versions}`, "shipped")}
+</div>
+<p class="verdict muted">${esc(c.judgement.reason)}</p>
+<section class="card"><h2>The problem</h2><p>${esc(c.problem)}</p><p class="small muted">For ${esc(c.audience)}</p>
+${c.evidence.length ? `<p class="small">Evidence people have this problem: ${c.evidence.map((u, i) => `<a href="${esc(safeUrl(u))}" rel="noopener nofollow">[${i + 1}]</a>`).join(" ")}</p>` : ""}</section>
+<section><h2>Tests</h2><p class="small muted">Every shipped version is a test. These are the studio's own counts for the time each version was the live one.</p>${testsTable(d.versions)}</section>
+<section><h2>Reports</h2>${reportList(d.reports, names, "No reports yet. The founder writes one every time it closes a test.")}</section>
+<section><h2>Decisions</h2>${decisionLog(d.decisions, names, "No decisions yet.")}</section>
+<section class="two"><div><h2>Outreach</h2>${touchLog(d.touches, names)}</div><div><h2>What users said</h2>${feedbackLog(d.feedback, names)}</div></section>
+</div>`;
+  return page(`${c.name} · PMF Engine`, body, `<meta http-equiv="refresh" content="60">`);
 }
 
-export function renderThanks(e: Experiment): string {
-  const body = `<main>
-<span class="tag">You're in</span>
-<h1>Thanks. We're on it.</h1>
-<p class="sub">We'll email it to you, usually within 30 minutes. Reply to that email with any questions.</p>
-<p class="fine"><a href="/x/${esc(e.slug)}">← Back</a> · <a href="/">See what the company is doing right now</a></p>
-</main>`;
-  return page("Thanks", body, LANDING_CSS(hueOf(e.slug)));
+// ------------------------------------------------------------------- reports
+
+const STAT_LABELS: [string, string][] = [
+  ["status", "Status"], ["verdict", "Verdict"], ["verdict_reason", "Why"], ["hours_live", "Hours live"], ["versions", "Versions shipped"],
+  ["visitors", "Visitors"], ["active_users", "Used it"], ["returning_users", "Came back"], ["signups", "Signups"],
+  ["touches", "Outreach"], ["posts", "Posts"], ["emails", "Emails"], ["impressions", "Impressions"], ["engagements", "Engagements"], ["feedback", "Feedback"],
+];
+
+export function renderReport(r: Report, c: { name: string; slug: string; founder: string }): string {
+  const s = r.snapshot as Record<string, unknown>;
+  const tests = Array.isArray(s["tests"]) ? (s["tests"] as Record<string, unknown>[]) : [];
+  const facts = STAT_LABELS.filter(([key]) => s[key] !== undefined && s[key] !== null)
+    .map(([key, label]) => `<tr><th>${esc(label)}</th><td>${esc(s[key])}</td></tr>`).join("");
+  const channels = typeof s["outreach_by_channel"] === "object" && s["outreach_by_channel"] !== null
+    ? Object.entries(s["outreach_by_channel"] as Record<string, number>).map(([k, v]) => `${esc(k)}: ${esc(v)}`).join(" · ") : "";
+  const testRows = tests.map((t) => `<tr><td class="n">v${esc(t["version"])}</td><td>${esc(t["note"])}</td><td class="n">${esc(t["visitors"])}</td><td class="n">${esc(t["active_users"])}</td><td class="n">${fmtPct(Number(t["active_users"]) || 0, Number(t["visitors"]) || 0)}</td><td class="n">${esc(t["signups"])}</td><td class="n">${esc(t["touches"])}</td></tr>`).join("");
+  const body = `<div class="wrap">
+<p class="small"><a href="/">← Studio</a> · <a href="/c/${esc(c.slug)}">${esc(c.name)}</a> · <a href="/reports">All reports</a></p>
+<div class="row">${pill(r.kind, r.kind === "kill" ? "killed" : r.kind)}<span class="small muted">${esc(c.name)} · written by ${esc(r.agent)} · ${esc(time(r.created_at))}</span></div>
+<h1 style="font-size:28px;letter-spacing:-.02em;margin:10px 0 16px;max-width:820px">${esc(r.title)}</h1>
+<article class="doc">${renderMarkdown(r.body)}</article>
+<section><h2>The studio's numbers when this was written</h2><p class="small muted">Counted by the studio itself, not reported by the founder.</p>
+<div class="table" style="max-width:820px"><table><tbody>${facts}${channels ? `<tr><th>Outreach by channel</th><td>${channels}</td></tr>` : ""}</tbody></table></div></section>
+${tests.length ? `<section><h2>Every test up to this point</h2><div class="table" style="max-width:820px"><table><thead><tr><th>Test</th><th>What changed</th><th>Visitors</th><th>Used it</th><th>Rate</th><th>Signups</th><th>Outreach</th></tr></thead><tbody>${testRows}</tbody></table></div></section>` : ""}
+</div>`;
+  return page(`${r.title} · ${c.name}`, body);
 }
 
-export function renderClosed(e: Experiment): string {
-  const body = `<main>
-<span class="tag">Closed</span>
-<h1>This offer has closed.</h1>
-<p class="sub">We ran "${esc(e.name)}" as an experiment and have moved on to other offers.</p>
-<p class="fine"><a href="/">See what the company is offering now →</a></p>
-</main>`;
-  return page("Offer closed", body, LANDING_CSS(hueOf(e.slug)));
+export function renderReports(reports: ReportRow[], names: Map<string, string>): string {
+  const body = `<div class="wrap">
+<p class="small"><a href="/">← Studio</a></p>
+<h1 style="font-size:28px;letter-spacing:-.02em;margin:10px 0 6px">Reports</h1>
+<p class="lede muted">Every time a founder closes a test (iterate, scale or kill) it writes up the hypothesis, what it built, how it tested it, the results, what users said and what it learned. Newest first.</p>
+<section>${reportList(reports, names, "No reports yet.")}</section>
+</div>`;
+  return page("Reports · PMF Engine", body, `<meta http-equiv="refresh" content="60">`);
 }
 
 export function renderNotFound(): string {
-  return page("Not found", `<main style="max-width:620px;margin:0 auto;padding:64px 16px"><h1>Not found</h1><p class="muted">Nothing lives at this address. <a href="/">Go to the dashboard</a>.</p></main>`);
+  return page("Not found", `<div class="wrap"><h1>Not found</h1><p class="muted">Nothing lives at this address. <a href="/">See the studio's companies</a>.</p></div>`);
 }
+
+export function renderOffline(name: string): string {
+  return page("Offline", `<div class="wrap"><h1>${esc(name)} has shut down.</h1><p class="muted">It was an experiment by an AI venture studio, and the numbers said to move on. <a href="/">See what the studio is building now →</a></p></div>`);
+}
+
+export function renderNotLive(name: string): string {
+  return page("Coming soon", `<div class="wrap"><h1>${esc(name)} is being built right now.</h1><p class="muted">An AI founder is working on it. Check back in a little while, or <a href="/">watch the studio work →</a></p></div>`);
+}
+
+// ------------------------------------------------------------------- products
+
+/**
+ * Every HTML page of a product gets the tracker and a small disclosure badge. Founders don't
+ * have to remember either: they only call `pmf.track("…")` on the core action.
+ */
+export function wrapProductHtml(html: string, slug: string): string {
+  const tag = `<script src="/t.js" data-company="${esc(slug)}"></script>`;
+  const badge = `<a href="/c/${esc(slug)}" target="_blank" rel="noopener" style="position:fixed;right:10px;bottom:10px;z-index:2147483647;font:12px/1.2 system-ui,sans-serif;background:rgba(20,22,28,.82);color:#fff;padding:6px 10px;border-radius:999px;text-decoration:none">Built by AI agents · see how</a>`;
+  let out = /<\/head>/i.test(html) ? html.replace(/<\/head>/i, `${tag}</head>`) : `${tag}${html}`;
+  out = /<\/body>/i.test(out) ? out.replace(/<\/body>(?![\s\S]*<\/body>)/i, `${badge}</body>`) : `${out}${badge}`;
+  return out;
+}
+
+/**
+ * `/t.js`: analytics and a tiny backend for every product, as `window.pmf`:
+ *   pmf.track(name)          the core action happened (this is what counts a user)
+ *   pmf.signup(email)        someone wants updates or an account
+ *   pmf.feedback(text)       what they think (founders read it)
+ *   pmf.db.list/add/get/update/remove   a JSON document store at /p/<slug>/api/items
+ *   pmf.user                 this browser's anonymous id (also the owner of what it saves)
+ *
+ * Opening any product page with ?qa=1 marks the browser as a tester: from then on it sends no
+ * analytics at all, so a founder checking its own product never counts as a user.
+ */
+export const TRACKER_JS = `(function(){
+var s=document.currentScript,c=s&&s.getAttribute("data-company");if(!c||window.pmf)return;
+var k="pmf_uid",u;try{u=localStorage.getItem(k);if(!u){u=(window.crypto&&crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2));localStorage.setItem(k,u)}}catch(e){u="tmp-"+Math.random().toString(36).slice(2)}
+var qa=false;try{if(/[?&]qa=1(&|$)/.test(location.search))localStorage.setItem("pmf_qa","1");qa=localStorage.getItem("pmf_qa")==="1"}catch(e){}
+function post(b){if(qa)return Promise.resolve(true);var body=JSON.stringify(Object.assign({c:c,u:u,p:location.pathname},b));return fetch("/api/t",{method:"POST",body:body,keepalive:true,headers:{"content-type":"text/plain"}}).then(function(r){return r.ok}).catch(function(){return false})}
+var api="/p/"+c+"/api/items";
+function call(m,path,body){return fetch(api+path,{method:m,headers:{"content-type":"application/json","x-pmf-user":u},body:body===undefined?undefined:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j&&j.error||("HTTP "+r.status));return j})})}
+window.pmf={user:u,
+track:function(name){return post({t:"use",n:String(name||"use").slice(0,64)})},
+signup:function(email){return post({t:"signup",email:String(email||"")})},
+feedback:function(text){return post({t:"feedback",text:String(text||"").slice(0,2000)})},
+db:{list:function(col,o){o=o||{};return call("GET","?collection="+encodeURIComponent(col)+(o.mine?"&mine=1":"")+(o.limit?"&limit="+o.limit:""))},
+add:function(col,data,o){o=o||{};return call("POST","",{collection:col,data:data,shared:!!o.shared})},
+get:function(id){return call("GET","/"+encodeURIComponent(id))},
+update:function(id,data){return call("PUT","/"+encodeURIComponent(id),{data:data})},
+remove:function(id){return call("DELETE","/"+encodeURIComponent(id))}}};
+var ref=null;try{ref=new URLSearchParams(location.search).get("ref")}catch(e){}
+post({t:"view",r:ref});
+})();`;

@@ -29,12 +29,13 @@ createServer(async (req, res) => {
     const reply = await handleRequest(
       {
         method: (req.method ?? "GET").toUpperCase(),
-        path: url.pathname.length > 1 ? url.pathname.replace(/\/+$/, "") : url.pathname,
+        path: url.pathname,
         query: url.searchParams,
         headers,
         body: parseBody(Buffer.concat(chunks), headers["content-type"]),
+        raw: Buffer.concat(chunks).toString("utf8"),
       },
-      { db: async () => db, env: { mcpToken: "dev", adminToken: "dev", salt: "dev", vars: process.env } },
+      { db: async () => db, env: { mcpToken: "dev", adminToken: "dev", vars: process.env } },
     );
     send(hostRes, reply);
   } catch (error) {
