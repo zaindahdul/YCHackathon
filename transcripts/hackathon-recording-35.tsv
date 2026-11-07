@@ -1,0 +1,878 @@
+start	end	text
+0	6000	a door dash store run with agents so yeah and then the second uh requirement is that it's still
+6000	11440	an internet sdk for a studio so our studio is our web platform um it's all the same back end
+12000	19440	our sdk um i hope a lot of you have taken a look at it previously um but yeah that's uh pretty much
+19440	26000	it um in terms of support we'll have a couple people walking around um so if you guys have
+26000	30640	have any questions, please go up to someone with a 3A bracelet.
+32880	34740	Yeah, I don't know if we set up, like, an identity
+34740	35800	channel yet.
+36260	38820	But if we do, I'll just, like, put this down really quickly
+38820	40300	so you guys can type questions in the Slack.
+41200	41560	Yeah.
+44700	46360	A couple of rules just to go over.
+46980	49720	If you leave after midnight, you can't come back until 6 AM.
+50460	51380	So, yeah.
+52860	54060	It's an overnight hackathon.
+54060	57300	and if you leave, you have to check in again.
+59060	62000	Yeah, the first floor is essentially where you guys were just now,
+62100	64520	and this floor is essentially open to you guys,
+64920	66920	as well as the conference rooms.
+67500	70400	The main one is where our team is, so go there.
+71120	72720	Yeah, obviously, that's not a picture, but I'll go.
+75200	77540	Yeah, so here's our official sponsor list,
+78240	80520	and how much credit it's for offering.
+81200	83760	Obviously, throughout all your projects, you'll be using Naive,
+83760	90160	but here's like kind of the rest of the sponsors you can use. Great group. And yeah, the price track.
+90600	98660	So the main track is with Naive. And so first place, we're doing iPhone 18, AirPods, second place
+98660	102940	Mac minis, also like Pocket AI note takers. These have been nice. I've been using them.
+103980	108340	Mulmer is offering a lot of prizes. Agent Mel is well-invoted. So there'll be some cool prizes
+108340	113600	to be handed out. And obviously, the holy grail prize here is getting a Guaranteed YC interview.
+113760	117220	which one team in this hackathon will get.
+118420	118880	And yeah.
+120480	121680	Okay, so yeah.
+121800	123460	So it's your code to claim your credits.
+129100	130700	Yeah, this is the last slide.
+131080	131300	Okay.
+133520	136380	So I think right now we're going to invite Nikita
+136380	137640	for a fireside chat.
+137640	138480	But in the meantime,
+138900	142160	you're free to just acquaintance yourself.
+143760	173740	Thank you.
+173760	200260	All right.
+200260	205680	Hello everyone, please welcome Nikita Shemkunov, a very special guest with us today.
+207840	213080	He was the co-founder and CEO of Deon, which was eventually acquired by Database.
+213380	218320	Before that, he was actually a YC founder of SingleStore, the biggest company in the
+218320	219180	Winter 11 batch.
+220120	222400	He was a partner at Cosla, and now he's currently at Databricks.
+223380	226200	Very huge figure and influence in the tech scene.
+226680	227760	And yeah, welcome Nikita.
+230260	237260	So you spent most of your career building database infrastructure, Microsoft, Facebook,
+237260	245200	to then founding SQL, SingleStore, and then Neon. What has fundamentally changed about
+245200	249200	how software is built over the past years with the rise of agents?
+249200	255200	Well, I'm sure everybody's aware that we don't know how to write code anymore. But I think
+255200	258200	It's more interesting what this means.
+258200	263200	And I think from where I stand is we've been seeing a lot more
+263200	267200	in particularly building system projects.
+267200	271200	So I've been writing systems and
+271200	274200	thinking about systems and
+274200	277200	that are probably like engines.
+277200	279200	And engines is distortion.
+279200	280200	There's some technology.
+280200	282200	There's some computer technology.
+282200	284200	It happens to speak some language, right?
+284200	289200	So there's some compiler technology, there's some special things to date and age, there's
+289200	294200	a way called query optimization, which is like, iterate over possible ways to execute
+294200	297200	a particular query and then choose the better one.
+297200	301200	This might not be the best one, but it's going to be hard to run out of time doing this.
+301200	305200	But like, it is all system engineering.
+305200	309200	And there are like many system engineering companies that are working on like, storage,
+309200	316200	operating system, networking, all sorts of huge, obviously like, AWS is a massive place,
+316200	322200	you know, a lot of system engineering problems and building various services, analytics,
+322200	329200	you know, click-click-pile, data bridge something, all those places. This is all systems engineering.
+329200	336200	And the most profound thing is that something that used to be hard is not hard anymore.
+336200	344200	And I think we all realize that by building like software or like staff services, like so quickly it just takes together enough.
+344200	353200	But not everybody who is building system engineers realize that you can be incredibly more ambitious.
+353200	360200	So some are very, some are like very native to this. I'll start with this one.
+360200	363200	So Neon runs on micro VMs.
+363200	364200	And this is Postgres.
+364200	365200	This is in a micro VM.
+365200	369200	And the micro VM is today.
+369200	371200	So a lot of people do Firecracker,
+371200	374200	but we chose the variety of reads.
+374200	376200	There's actually no purpose.
+376200	378200	Once you run through the decision tree,
+378200	380200	you go through various stages of read.
+380200	384200	And then you do either Firecracker or you use
+384200	388200	or sometimes you just call .
+388200	389620	There's operating system.
+389980	392140	So somebody on our team,
+394120	396720	oh, and then when you start with different workloads,
+397320	399760	especially like we're partners with WebLift,
+400300	402240	and then there's like long list of partners
+402240	404900	that use NUTS to generate an app
+404900	406340	and NUTS database for the app.
+407260	409360	Some of those partners have a same old,
+410840	414980	so today NUTS launches 150,000 database per day,
+415080	415900	like that's not new,
+415900	419060	And then everything that scales to zero comes back up.
+419060	422720	So roughly 20 million starts and stops per day.
+425800	431520	And then when those light coding tools generate apps,
+431520	433460	chances are the app is not going to be used.
+433460	437360	I think it's like 99% chance the app is built once, used once,
+437360	438580	and then thrown away.
+438580	440360	And therefore, it puts a lot of pressure
+440360	442640	on the cost at the low end.
+442640	445840	So the question is, fine, if the app actually works,
+445840	448240	and scales, and people are using it,
+448240	449780	I'm OK to pay for it.
+449780	453560	But I don't want to pay for this gigantic volume of garbage
+453560	456880	apps that are one time use for this.
+456880	460660	So therefore, there's a lot of pressure to cost it a little.
+460660	464760	So where does the cost come from in this micro-DM?
+464760	466600	It actually comes from memory.
+466600	469520	So they have a memory that you allocate to micro-DM,
+469520	471700	and you can add one to those mailboxes
+471700	474560	that you buy from Amazon is the limited pack.
+474560	475860	Can you reduce the amount of memory?
+475860	478520	But like, again, at the low end,
+478520	481300	Linux consumes, just Linux by being there,
+481300	482920	consumes a bunch of memory.
+482920	484680	So, okay, what do you do?
+485720	488260	So one engineer looked at all the system calls
+488260	491900	Postgres is making, and then reimplemented it,
+493440	495440	like built a new operating system
+495440	497840	that just supports those operating system calls,
+497840	499700	and those systems calls only.
+499700	504700	And in the past that would be like,
+504700	508340	you basically go and get another operating system.
+508340	511420	And so people would just crash with agents very, very quickly.
+511420	514360	I think it took them like less than a week.
+514360	519500	And then reduce the cost of me and Ronnie and the low end by a factor of 20.
+521260	523060	Simply because there's no operating system.
+523060	526220	And by the way, there's no scheduler in this thing, so
+526220	528340	this can only run in the single core.
+528340	537340	but if the usage comes in, and then we see that the usage comes in, we fail over to a proper micro-VM with Linux inside.
+537340	542340	But then the cost of memory is less because we know this VM is actually being used.
+542340	544340	So you can do crazy things like this.
+544340	546340	Another example.
+546340	551340	In databases, so that might not resonate with many because it's like deep in the weeds,
+551340	563340	But the problem of scaling out writes for databases with like, any nodes, incrementally, and so like you can just write scale infinitely, has always been a very hard problem.
+563340	570340	And every time you go like, coach DB, flat scale, get tests, all of those systems are trying to scale, right?
+570340	572340	None of them are particularly successful.
+572340	578340	And then, again, same story, like, you have to choose an architecture.
+578340	582340	And once you've chosen an architecture plane, it's a trick for five years.
+582340	588340	And then five years later, you look back and it's like, oh man, you made the wrong architecture choices.
+588340	595340	But like, so it's one of those things where you have to choose very, very carefully.
+595340	601340	And then you get punished by the fact that you didn't think through and moving.
+601340	606340	But then the customer's writing and data movement is hard, so it's very hard to change things.
+606340	610340	There are some architectures that in the past would take five years.
+610340	614340	But now we have agents so we can build data factories.
+614340	620340	So we just get the multi-master project where we come to the levels to add right nodes to lead to the end.
+620340	624340	With a very risky architecture.
+624340	628340	So we actually don't know if it's going to work super well.
+628340	632340	But we think there's more people there. We think it's going to come from us.
+632340	635340	But we're not going to spend five years verifying that.
+635340	638820	I think, so the work I showed up at like,
+638820	642360	we had a few days by building the ad factory
+642360	644900	that implements this architecture very carefully
+644900	646300	and thought out.
+646300	647260	We've been told all the time,
+647260	648720	but we don't really get all the authority.
+648720	650820	So be more ambitious,
+650820	653360	and you can start building crazy shit
+653360	658360	and that spans not just like the regular
+660380	662360	application software that we're building,
+662360	665080	but it can go all the way down
+665080	667980	So any level of infrastructure, like all the way down,
+667980	670240	and you can still do it very very well.
+670240	671840	Awesome, it's crazy to see agencies
+671840	674700	making all the little infrastructure changes.
+674700	678220	So yeah, wow, over 150,000 databases
+678220	680940	being spanned out per day, and actually today,
+680940	683400	80% of databases created on Neon
+683400	687200	are provisioned by AI agents rather than humans.
+687200	689080	When did you first notice that shift,
+689080	693080	and what did it change about how you built the products?
+693080	698080	So we noticed that when Replit launched Replication,
+698280	700820	Replit was already a partner at the time,
+700820	703960	and we knew Replit had like 30 million accounts,
+705880	708980	and that we were very excited that Replit would have
+708980	711860	Neon database for all of their apps.
+712740	715480	And then they launched Neon integration
+715480	717380	before they launched the database,
+717380	719020	and we didn't get a lot of traffic.
+719020	721000	We got a lot more traffic from the site.
+721000	723140	So we're like, okay, well, let's just run it, yes,
+723140	726800	like you tried, and then you tried to do whatever one,
+726800	729220	but we kind of ride along, go along.
+729220	730680	And then when they launched the agent,
+730680	734480	that very launch date, it was 13,000 databases
+734480	735900	coming from the Northwestern,
+735900	738720	and it was a jump of like 10, I think.
+738720	740380	And it was like, holy shit.
+740380	743560	And I remember one of the team members jumping up and down
+743560	745800	and saying, like, the most important thing
+745800	749800	that changed in the user is an agent now.
+749800	753340	And that happened on the day of, once we saw that stop it.
+753880	757380	So that was the very critical moment when we realized that the world has changed.
+758880	768040	So what this means is, well, when we build something, anything really, you need to clearly understand who the user is.
+768040	769020	How do you have the answers?
+769860	772860	When my friends, you know, they don't drive the car.
+773240	776040	And if you use their light, you're about to...
+776040	777400	He's a pre-med rat that has all the answers.
+777400	778640	and all this stuff.
+778640	780840	It all starts with who the user is,
+780840	785840	and the clarity of who the user is is very important.
+785840	788140	Because that guides you, like, which features to build
+788140	789340	and on what to build.
+789340	790800	So agents, obviously,
+794680	797740	so there's like models, harnesses,
+798580	801580	and then just like agents that people are using.
+801580	805500	And so you understand what we call critical user journeys
+805500	810500	make sure that those are supported. And that's why we invested in the MCP, that's why we
+810500	818000	invested into GEO, and that's why all the product experiences, because it's still like
+818000	823840	usually the journey starts with a human driving an agent. So we made sure that we can close
+823840	825540	the loop on each one of those journeys.
+826900	830380	Absolutely, that's amazing. Yeah, a lot of software right now is being discovered by
+830380	833260	agents and agents are not the users, so it's amazing.
+834780	837500	Yeah, so today agents can write code,
+837500	840220	deploy applications, provision infrastructure.
+840220	842920	How far do you think we are from agents
+842920	845240	eventually independently operating entire business?
+845240	846280	There's a theme with this hackathon,
+846280	849640	but when can we see Databricks being run
+849640	852040	by almost all agents and not humans anymore?
+852040	856660	Well, I think soon.
+856660	860660	You know, Databricks is an interesting example.
+860660	864660	It's a large company, about 30,000 people.
+864660	868660	And it's a continual company.
+868660	872660	Infrastructure was built before this revolution showed up.
+872660	876660	And so everything, but it's also a very, very aggressive company.
+876660	880660	So internally, everybody is building the factories.
+880660	884660	And so trying to automate as much of the
+884660	887240	the software production is possible.
+887240	890760	So what I think we're gonna see in the future,
+891820	894320	and maybe I'm not seeing far enough,
+894320	898420	but I'm seeing kind of like a little bit far.
+900060	902420	We will, first of all, the technology.
+903860	906560	The shift to the left, to the left and the power
+906560	909580	to developers has been happening for a long time.
+909580	913960	So, but now because you can get a little more done
+913960	917300	with a smaller team, we will have smaller teams.
+917300	920160	So the rule of thumb of the past was like,
+920160	922620	okay, we'll have eight to 12 people,
+922620	924760	eight is like the golden number.
+924760	926840	I think like Romans invented this
+926840	928920	when we went to war or something,
+928920	931160	and it still carries to this day.
+931160	933700	I think that today's number is like three to five,
+933700	937880	where all of the folks are participating
+937880	939380	in the software.
+939380	940800	So there isn't like a manager
+940800	942900	that's just been doing managerial work.
+942900	944860	So that unit of like three to five people,
+944860	946580	and those people can get a lot more done
+946580	947860	than the first people in the business.
+947860	949740	So I think that's the first thing that's going to happen.
+949740	953220	The second thing, the ratio between human spend
+953220	958040	and token spend will continue getting more and more pressure
+958040	959840	towards the token spend.
+959840	962440	And tokens are getting so much cheaper.
+962440	967440	So those curves, like in the world of tokens,
+968040	971140	cost people flat, we would still kind of see
+971140	974940	how we're spending a lot more on tokens than on people.
+974940	976480	But they also dropping in price.
+976480	979620	So those are two kind of opposite forces
+979620	982240	that contribute to the ratio between the spend
+982240	984580	of humans and tokens.
+984580	988920	But we probably want to be in a situation where, well,
+988920	992700	we can spend a certain amount of capital on humans and tokens.
+992700	995960	And that equation will have higher
+995960	999580	like faster feedback loop and higher fidelity.
+999580	1002080	So, in a case like that, now you're doing it a bit quicker,
+1002080	1004580	and therefore you can measure it more accurately.
+1004580	1007420	So you're not sitting on that risk for a long time,
+1007420	1008960	between investing into something
+1008960	1011320	and waiting for this thing to rise.
+1011320	1013080	But that thing arrives pretty quickly.
+1013080	1017520	So therefore, and then tokens have to be very elastic.
+1017520	1020520	So we'll see, everywhere you can have that,
+1020520	1022860	you can shortcut into that loop,
+1022860	1024280	where you're like, okay, I'm forwarding
+1024280	1025820	a couple of investments here,
+1025820	1028780	I invest in tokens, they do software distributed,
+1028780	1033020	you get revenue back, that's where people will be slamming
+1033020	1036720	the total to get the outcome they want.
+1036720	1038960	So that's kind of interesting, so that transformation.
+1038960	1042780	Like, fully autonomously, I don't know if the incumbents
+1042780	1044760	are gonna do it, or like startups.
+1044760	1047340	Because once you're a startup, you can engineer
+1047340	1052340	from principles from K-Zero, and we already see
+1052540	1055940	like tiny companies that are crossing the border.
+1055940	1058040	So I think this will just continue.
+1058040	1066040	But is there a point in time where models have the agency of incorporating the company,
+1066280	1069380	throwing this into the real world, and operating completely autonomously?
+1070240	1071280	Well, this will be cool.
+1072080	1073280	I think it will happen soon.
+1073380	1073820	I don't know when.
+1074980	1075380	Awesome.
+1075520	1076620	Yeah, tokens are the new payroll.
+1079060	1084980	So, yeah, today, Asian infrastructure needs things like isolated environments, branching, purpose-built APIs.
+1084980	1091980	What do you think is the biggest bottleneck preventing agents from running reliably for days or weeks without human intervention?
+1091980	1102980	Yeah, I think on the infrastructure side, and I think this problem is seen by us, by the cloud fair, by ourselves, and probably by hyperscaners like Amazon and whatnot.
+1102980	1107980	I think we're still bottlenecked on intelligence a bit.
+1110580	1113260	So I think if those things are models
+1113260	1116020	of more intelligence, that will be more effective.
+1116020	1119400	And then I think we bottleneck into the breadth of services
+1119400	1122200	and observability specifically around those services
+1124440	1127780	that in the system like Vercel, like VM, like Cloudflare,
+1127780	1132540	allows you to build any example, right?
+1132540	1135640	Because those systems are still limited today
+1135640	1137780	to build arbitrary software.
+1137780	1140380	You can build arbitrary software in AWS,
+1140380	1143820	but that thing is not custom built for Asian consumption.
+1143820	1147160	The end-person level, custom built for Asian consumption,
+1147160	1150560	but you cannot build full breadth of those systems.
+1151560	1152700	But the world, like,
+1153620	1155840	basically is probably cheaper to build new things.
+1155840	1157920	And one thing we discovered,
+1157920	1160300	and I was talking earlier about it,
+1160300	1169300	Since the usage of NEM is consumed by, like there's an MCP in the suite, as we introduce additional services, agents just start using them.
+1169300	1175300	Like the end user, the human user, doesn't know that additional services are getting pulled in through an MCP.
+1175300	1180300	So the human doesn't need to make a decision.
+1180300	1187300	So like, oh, now I want to like, I use NEM database and now I want to use auth and I also want to use the NEM functions.
+1187300	1191300	functions, they're just part of the .
+1191300	1196020	So that speeds up the technology transition.
+1196020	1199060	So if I'm right, then everybody who's
+1199060	1200820	building factories and larger companies
+1200820	1202980	will start building factories to produce software.
+1202980	1205900	Then they will be realizing that factories
+1205900	1210460	are not as efficient on Amazon and on hyperscaler
+1210460	1211700	as they could be.
+1211700	1215220	And this will create more tailwind for the
+1215220	1217220	or sell Wildfire to the world.
+1217220	1219220	We're like, no, I'm just like,
+1219220	1222220	this infrastructure is not just going to swap it out.
+1222220	1224220	So my factory runs out.
+1224220	1226220	So that's the bet.
+1226220	1227220	Awesome.
+1227220	1231220	And as you said, Neon's consumption mainly being from agents.
+1231220	1235220	Yeah, Neon-made databases are something that software
+1235220	1238220	can basically create and insulate through an API.
+1238220	1241220	So as agents become increasingly autonomous,
+1241220	1244220	what other infrastructure do you think needs to be
+1244220	1250060	completely redone really redesigned for machines rather than humans well there's a thesis like
+1250060	1252940	we think that everything and especially everything's supposed to be right
+1254860	1258780	and well if it's branchable then you know and branchable
+1260380	1267340	branchable cheaply like cost effectively then um you know whatever your software runs on can
+1267340	1270240	and we create an isolated environment
+1270240	1271860	with forming that branch.
+1271860	1275000	Now, you would have to be careful, right?
+1275000	1278780	There's data, there's secrets, there's all of those things.
+1278780	1282360	So, I didn't know that where we're setting,
+1282360	1284400	we have a notion of an environment
+1284400	1287200	where when you branch the production environment
+1287200	1290340	into staging environment, the test environment,
+1290340	1293780	we will also apply some modification to the state.
+1293780	1295960	So it's like, say, for example,
+1295960	1302680	secret but everything should be right so now you like you have a copy of your
+1302680	1308080	complete universe and then agents can basically rip in in there without
+1308080	1314600	disrupting the main production of those things so once you have that now you
+1314600	1320480	can start building proper parallel that like basically it's a borderless war
+1320480	1322980	And what else should be there?
+1322980	1324480	What happens should be there.
+1324480	1325980	Like, message queues should be there.
+1325980	1327480	Observability should be there.
+1327480	1328480	Analytics should be there.
+1328480	1331480	So those are like all the staples and resources.
+1331480	1336480	But also like DNS and like, yeah, like the most of it.
+1336480	1338480	Yeah.
+1338480	1342480	So, you know, you've been in the infrastructure layer for a long time,
+1342480	1344480	basically throughout your entire career.
+1344480	1347480	For our hackers today and builders today,
+1347480	1353060	do you think people starting companies now should be building in the bottom layer,
+1353060	1357140	infrastructure layer, or application layer? And where would you be personally building
+1357140	1359600	starting today?
+1359600	1363600	I'd be building infrastructure because I know how to build infrastructure.
+1363600	1371600	So the function of what to do is, you know, you should apply it to a person, to a human that is there,
+1371600	1373600	and this is my set of skills.
+1373600	1379820	so I'll just keep going deeper I think that's been working for me and everyone
+1379820	1386160	was unique it's it's been working for me to like get deeper and deeper
+1386160	1391280	understanding of the database space which is again from the technology standpoint
+1391280	1395600	like storage and review but from the like products standpoint like how do you
+1395600	1400280	actually have product experiences why this works why this doesn't work in the real world so
+1400280	1407280	So I've been accumulating that knowledge and still have ideas of what to do as well.
+1407280	1412280	Master project and all that. But now I'm even like exploring those ideas deeper and deeper.
+1412280	1420280	I think that is the reward in this world. If you understand something deeper, then you can actually get to an outcome.
+1420280	1427280	Like validate the hypothesis of how that deeper knowledge can be dissolved in the real world.
+1427280	1436280	But this question is also very, very hard because you see people bitter less all the time.
+1436280	1445280	This is all the time. So yesterday I was in Utah and we had this deep discussion with Dilip, the CEO of Figma,
+1445280	1455280	where it's, you know, like, what to do with how you work with the labs is a big question, right?
+1455280	1458280	On the one hand, you want all the models working incredibly well,
+1458280	1459280	you need software.
+1459280	1462280	But the moment that front door to your service
+1462280	1466280	switches from your control to somebody else's control,
+1466280	1470280	you can be disinitiated very, very easily.
+1470280	1472280	And an analogy to put that in,
+1472280	1475280	I see a lot of people that at some point,
+1475280	1478280	Facebook and Google just destroyed media.
+1478280	1480280	They just disintegrated media.
+1480280	1482280	And media was a good business in the past,
+1482280	1484280	and now it's a terrible business.
+1484280	1488280	And the reason for that is the front door to media consumption changed.
+1488280	1492280	And it's either went to social networks where media is produced by citizens,
+1492280	1495280	like direct to the audience.
+1495280	1501280	So all this media services kind of kind of subsurvived at New York Times.
+1501280	1504280	But a lot just got completely destroyed.
+1504280	1508280	So when the front door to your product shits to something else,
+1508280	1512280	and it's actually very enticing to actually do this, right?
+1512280	1542260	this, right? Because, oh, you got all this agent traffic. Amazing. Like, you have a spike in your consumption. But then you also need to, like, really step back and see what happens and how can you modulate this. And if your service provides real value to this world, then you also have power, right? Because you have users who love your product. And that should drive your decisions about your relationship with this agent world.
+1542280	1544280	kind of like evolves over time.
+1546280	1548280	That's amazing. And last question
+1548280	1549520	we have for you is
+1549520	1552360	you've now built two major infrastructure companies
+1552360	1554280	and have seen several
+1554280	1555880	generations of technology shifts.
+1556360	1558020	For the founders and hackers here today,
+1558320	1560260	what's one contrarian bet you'd make
+1560260	1562400	about AI agents over the next three to five
+1562400	1562680	years?
+1563800	1564840	Contrarian bet?
+1572280	1584280	I don't mean like super smart to say. I keep saying the same thing which is like you can be incredibly more efficient in systems.
+1584280	1592280	And so one thing you can do is to like list all the infrastructure companies.
+1592280	1598040	companies uh like a lot of them in the south base a lot of their like cisco
+1603480	1611400	and new times uh pure storage um and uh you know you live in san francisco in your 20s and you just
+1611400	1615720	let you like oh this is like boomer companies like where my dad works or something like this
+1615720	1620720	But they are more vulnerable than you might think.
+1620720	1623720	And their defensibility is product and technology,
+1623720	1627720	and the fact that it's very hard to build systems
+1627720	1630500	and also a combination of software and hardware together,
+1630820	1633640	like all of the networks or something like this.
+1633820	1636580	But then you're like, well actually,
+1636740	1640200	the note is not that high, it's huge.
+1640460	1644340	So if you study what actually goes into
+1645940	1647100	not just the product and technology,
+1647300	1649880	but the overall thing, like how do they build
+1649880	1651660	this technology, how do they distribute this technology,
+1652000	1653940	where are their buyers, what are the problems there?
+1653940	1663040	So that becomes that knowledge of what people actually need out of those systems.
+1664880	1670160	It's very, very dangerous. Dangerous in a different way than the world is dangerous.
+1670560	1671560	So you become dangerous.
+1671560	1675560	You become dangerous because you can now see like,
+1675560	1679560	okay well, you've got like this technology
+1679560	1681560	that's like, oh it's like part of this world.
+1681560	1683560	You're pure forces.
+1683560	1685560	Like, guess what?
+1685560	1688560	You know, and agents.
+1688560	1690560	And therefore you can like go and attack either,
+1690560	1694560	sometimes either directly or like with a platform
+1694560	1700400	like a bundles of product out of them but the knowledge of how to build technology is um
+1702720	1706000	it's always been dangerous to know how the business works and how this calls for
+1706960	1711280	especially if it's really hard to build so so studying all these markets
+1713040	1716160	and the the dynamics in each one of those markets
+1719360	1719680	is
+1724560	1737760	ambitious. We need to build an operating system in a week. We need to build storage in a week. We need to build database technologies that are very good for us. So that's an interesting time to go and attack all those problems.
+1738800	1751400	Absolutely. Thank you so much. Yeah, so just, yeah, that's all the questions. I think if anyone has, like, we'll do like a quick Q&A. If anyone has any questions, please feel free to ask.
+1754560	1756560	Thank you.
+1756560	1763560	I guess my question, and you talked a little bit about this is, you know,
+1763560	1765560	both how you sort of differentiate your product.
+1765560	1770560	I guess in today's day and age where sort of everyone will have access to these agents,
+1770560	1772560	I have access to the agents, you have access to the agents,
+1772560	1776560	how do you think the entrepreneurs of today's generation should think about making a moat
+1776560	1780560	so that, you know, what they're building doesn't get, like, disrupted, like, tomorrow?
+1780560	1783560	I don't like moats. I don't like thinking about moats.
+1783560	1790560	Basically, I'm thinking about this, like, is this a good market?
+1790560	1795560	Who also participates in this market? Who is your competition?
+1795560	1804560	And do you create an advantage from first principles with a combination of your team and technology?
+1804560	1809560	And if you have an excellent team, modes doesn't matter as much.
+1809560	1811980	Sure, there are modes like network photography and all those things,
+1812080	1813620	like those that are really hard to break.
+1815020	1822880	But then, like I said earlier, a lot of the modes only have very low depth in technology.
+1823640	1825160	Those get thinner.
+1826940	1830880	And if you barrage into a large market, you will then.
+1833580	1836600	And then thinking, oh, how am I going to defend myself over time?
+1836600	1838460	I don't think that actually matters as much.
+1838460	1848460	I think it's like, this is a big market, this is a big opportunity, I have just the right team to go and like, you know, wedge in in there.
+1848460	1858460	That's the more important thing. And then, like, as you go, and if you are successful wedging in, you will keep getting additional information about what to do next.
+1858460	1862460	Because the world will tell you. And everything is expanding.
+1862460	1865960	like the world of tech is expanding.
+1865960	1872460	And in the growing market, there's always going to be competitors,
+1872460	1877960	and competitors, they're all going to participate in the same ecosystem.
+1877960	1881960	And then naturally, will choose to take different swing lanes.
+1881960	1886960	Because one is more successful in this swing lane, and the other one is more successful in that swing lane.
+1886960	1891960	So, screen loads, I don't think that matters much.
+1893400	1894220	Thank you.
+1902080	1904320	Thank you, my name is Aziz.
+1904320	1907240	If you were to look at young people growing up now
+1907240	1909560	and growing up in the Asian world and all of that,
+1909560	1911540	maybe other kids and all of that,
+1911540	1913440	what would be the things you would get them
+1913440	1915280	to do in the Asian world,
+1915280	1917280	especially in the space of communication.
+1919280	1921280	That's a tough one.
+1921280	1923280	I'm kind of like
+1923280	1925280	simple minded
+1925280	1927280	in this and follow
+1927280	1929280	like
+1929280	1931280	probably five kids
+1931280	1933280	and with my kids
+1933280	1935280	I follow kind of those three principles.
+1935280	1937280	You know,
+1937280	1939280	math is good,
+1939280	1941280	sports is good,
+1941280	1943280	love is good,
+1943280	1948280	So having them do what they want to with their OS is good.
+1948280	1952040	So let's try to do that, and then we'll figure that out.
+1954680	1956040	Take a few more questions.
+1959220	1962120	But none of those feedbacks shopped out that broad.
+1965520	1966580	Hey, thank you for the talk.
+1966580	1968300	I was super insightful.
+1968300	1970380	I wanted to check what your advice would be
+1970380	1974560	for wanting to get reverse ping customers over the weekend?
+1978600	1980940	So launch it.
+1982560	1984740	Launch it, talk about it on apps.
+1984740	1988320	I think that's how, like add payments into your app.
+1990020	1993040	And then try to promote them, talk to your friends,
+1993040	1996300	talk to your colleagues, make some phone calls,
+1996300	1999720	talk to like YC companies and try to find them
+1999720	2000940	to use your service.
+2002680	2006040	But I like building services like,
+2006040	2007720	kind of, Keith or Boyd way,
+2007720	2011220	where you think of when you first principles,
+2011220	2013620	kind of, believe a certain place needs to exist.
+2014640	2017000	And then you buy into that thinking.
+2017000	2018640	So when you tell a friend,
+2018640	2022220	that hey, this is this opportunity to build XYZ,
+2022220	2024260	this is probably the shape of XYZ,
+2024260	2027800	that it needs to, that should be clearly
+2027800	2029000	in context of the future.
+2029720	2036720	And then you just put all your effort and energy into making the best product with a set price.
+2036720	2043720	And then you launch it, and then you have a good website that clearly explains what that XYZ is.
+2043720	2047720	An example for Nia was, like when Nia launched it, it said serverless Postgres.
+2047720	2055720	So it's very clear for people who know what Postgres is, what serverless is, add two and two.
+2055720	2059720	the product, when you go in, click a button, say,
+2059720	2062220	create Postgres, you know, like, in some second,
+2062220	2063720	you get that extra stream.
+2063720	2065720	It's like, okay, well, I guess it's serverless.
+2065720	2069720	And so that was, like, the idea.
+2069720	2072720	And typically, if you, like, the way to wedge in
+2072720	2074720	is to build something that's very, very narrow,
+2074720	2079720	like a widget, and describe what it is
+2079720	2081720	in a fairly narrow way as well.
+2081720	2084720	And so what you see is what you get, kind of thing.
+2084720	2091720	So it's easy to use, very narrow, kind of plugs in into all the other things that you're
+2091720	2092720	going to use.
+2092720	2100720	And that thing doesn't exist for a sweet competition, so that allows you to break in and start getting
+2100720	2102720	some traction.
+2102720	2106720	So if you have that kind of vision, and then what can you do in a week?
+2106720	2108720	You can do a lot in a week these days.
+2108720	2113720	So you can build an M2M application there, and then you just launch it, and you see.
+2113720	2120720	Awesome, cool, we'll take two more questions. One suggestion, maybe you guys can sell some of your services that you built this weekend to each other.
+2120720	2122720	Oh yeah, that's a good one.
+2122720	2124720	Yeah, I want to take someone from that site.
+2131720	2136720	What would you say is a product or tool that you use right now that you think a lot of people don't know about?
+2136720	2147720	Well, I run big teams now, so mostly talking to people.
+2147720	2154720	So I use a lot of Signal where we discuss like, we should acquire this company or that company,
+2154720	2159720	with their responders, what tool.
+2159720	2164720	I'm not sure I'm using a particular differentiated tool.
+2164720	2176720	I'm mostly working with people. I read a lot. I was playing for Utah this morning and I read a multi-master design that was published on YouTube.
+2176720	2178720	So, I don't know.
+2178720	2180720	Alright, we'll take one more question.
+2180720	2185720	Thanks for the talk.
+2185720	2193720	How do you think about, like, there are some companies like Amazon, eBay, like straight
+2193720	2199720	up buying agents, and there are some companies that try to be as agent-native as possible,
+2199720	2200720	like DoorDash, Uber.
+2200720	2206720	It's similar to the point you were discussing in your discussion with Dylan, that how, like,
+2206720	2214120	Like, if people buy into the future where, like, people would just go to their agent and not directly interact with any of these services,
+2214780	2218600	or someone building something new today, like, would you have any advice?
+2218700	2220840	Like, try to make something that should be startable?
+2222320	2228480	Well, I think it's like, there's a huge independence on what you build exactly.
+2228480	2244480	So obviously if somebody is afraid of direct agent consumption and they're not willing to be low level APIs to agents with the fear of disremediation,
+2244480	2248480	because it might be an opportunity for you.
+2248480	2252480	So you can say, you know, I'll give you an example.
+2252480	2256480	uh, you know, me and his agent maximum, right?
+2256480	2259480	Like, we want agents to, like, really, like,
+2259480	2262480	agents say job, we say ha-ha.
+2262480	2264480	Uh, that direction is not agent maximum.
+2264480	2268480	It's agent maximum inside the database called Dart.
+2268480	2271480	Um, but in terms of, like, driving database to the cloud,
+2271480	2274480	there is, like, a health tension between the topic
+2274480	2277480	and database right now, and then, uh, you know,
+2277480	2280480	database wants the topic to, like, potentially consume some
+2280480	2282480	to the low-level API and potentially
+2282480	2284600	inform some problems to inside
+2284600	2286240	the data. There's GoldGarden, which has
+2286240	2288140	proprietary data so they can process that
+2288140	2290080	better. So I think
+2290080	2291700	that's why
+2291700	2293880	it just depends
+2293880	2295920	on what
+2295920	2298300	you're building. So it goes back to
+2298300	2300120	the earlier ones, like what's the movie that
+2300120	2302580	you're living? What's the script
+2302580	2304140	of this movie? And
+2304140	2306260	agent matching
+2306260	2308220	either makes sense or doesn't make sense
+2308220	2310300	on your specific. So I
+2310300	2312760	I haven't been so busy.
+2312760	2313260	Awesome.
+2313260	2315240	Thank you so much, Nikita, for all the questions.
+2315240	2317780	And yeah, thank you for having me here today as speaker.
+2317780	2318440	Thanks so much.
+2324980	2327640	OK.
+2327640	2331060	We're going to bring up one of the founding team members
+2331060	2332340	of the group right now.
+2335180	2336980	Please welcome Timo.
+2340300	2370280	Thank you.
+2370300	2400280	Thank you.
+2400300	2406300	Hey guys, I'm Timo from Modera.
+2406300	2414300	You probably haven't heard of Modera yet, so that's why I'll give you a quick introduction of what we are doing at Modera.
+2414300	2421300	So, basically we're trying to bridge the gap between AI agents and smartphones.
+2421300	2425300	But I'll get into more detail about that later.
+2425300	2428300	So first, a couple of things about me.
+2428300	2433300	So as I said, I'm Timo, I'm founding engineer at Mova.
+2433300	2438300	And I'm the lead of our iOS platform.
+2438300	2443300	So that's also one of the products you guys will be granted access to today.
+2443300	2448300	So I'm curious to hear your feedback about it.
+2448300	2453300	Yeah, Luke is my coworker and I will be here for all weekend.
+2453300	2460300	So if you guys need any kind of assistance or get stuck anywhere, just come find us and we'll let you know.
+2466300	2471300	So probably all of you have used computer use or browser agents before.
+2475300	2480300	But what the agents nowadays are mostly missing is a microphone.
+2480300	2494300	And since more than 50% of the screen time nowadays is spent on mobile apps, there's a gap that we're trying to close without product.
+2494300	2502300	Because a lot of apps don't have public APIs or MCPs, so you have to fall back to on-screen automation.
+2502300	2512300	So, yeah, initially we started as an open source project.
+2512300	2529300	It's a framework for LLM agents, like a loop where you can basically use any LLM to automate your smart phone and get the experience of the device from it.
+2529300	2534300	and we recently reached the 10th day GitHub stars.
+2534300	2538300	That was a big milestone for us, so if you were 10 already,
+2538300	2542300	then please feel free to give us a star as well.
+2542300	2548300	Our mobile hands also reached the first place on the iOS World Benchmark,
+2548300	2556300	and we are sharing the first place on the now satisfied Android World Benchmark with Google.
+2556300	2567300	So, yeah, the agent already, like, worked back in the day, but when we were trying to scale automation then we, like,
+2567300	2574300	at Blocker, because we need a lot of phones to actually, like, run the automation horizontally.
+2574300	2582300	So that's why we built the Nubarang Cloud, which took Pelengi, it's basically
+2582300	2591300	We know phones and we put an API on them so you get full control on the phone itself.
+2591300	2599300	You can install apps, open apps, tap type, take a screenshot, set GPS coordinates and so on.
+2599300	2605300	Also, stop and resume the device so you're not paying for it any time you don't use it.
+2605300	2615300	And the state is preserved, so you report that inside and then stop it, you need to
+2615300	2621300	sit down again, you spin the device up again, and you'll make a way to stop it.
+2621300	2634300	So, yeah, three things that a phone enables you to do, which is not possible with, like, computer use or browser use already.
+2634300	2639300	So, like, we're not trying to replace computer use and browser use, we're trying to add to it.
+2639300	2644300	Because they were great, like, for desktop apps and web already.
+2644300	2659300	But what's missing is that you can automate those native apps for like, I bet you guys know a couple of services that only offer phone movers and phone apps, and have no website you can use or no API you can use.
+2659300	2671300	So that's where this plays in. And like I said, you have persistent device state, so apps read your device identifiers and so on.
+2671300	2683300	So it's very important that you keep the identifier the same in your account, which emulators, regular emulators don't offer for you.
+2683300	2689300	And you can also get access to SMS and other parts of the phone's data.
+2689300	2693300	So yeah, that's the basic thing.
+2693300	2702300	Then to spark your creativity a little bit, here's a couple of things that you could build today.
+2702300	2713300	So, yeah, it's really common stuff. You can retrieve data, for example, like what your Facebook marketplace listing for price changes or similar.
+2713300	2727300	But you could also act for a user, like check a write-up to the write-ups and compare the price at the pickup time, which I think is cheaper or less.
+2727300	2731300	And testing is also a big part of this thing.
+2731300	2734300	So of course you can also do that with us.
+2734300	2741300	You can have your agent come to an app and generate like reports and screenshots and recording and everything.
+2741300	2746300	everything. So your other agents can know what to fix, for example.
+2746300	2752300	And very common also is publishing clips on social media.
+2752300	2758300	And today, together with Naive, this is where you can basically entirely close the loop
+2758300	2766300	between generating and writing the content and then publishing it on a different platform.
+2766300	2771300	So yeah, that's just the idea.
+2771300	2774300	So if you have something else in mind,
+2774300	2775300	that will also work.
+2778300	2783300	So yeah, then there's four ways to put on a platform.
+2783300	2787300	So the easiest is you just send your agents once you set up
+2787300	2791300	the MCP, and they can control your devices.
+2791300	2794300	Then if you need more granular control,
+2794300	2799300	you can go down to the right, which is like,
+2799300	2802300	it hosts the task agent, which is going to reload,
+2802300	2806300	or you go back to the raw device API,
+2806300	2811300	where you can do like API calls to tap your screenshot.
+2811300	2815300	And that's because you can control the phone with your own fingers,
+2815300	2818300	like remote controls do.
+2818300	2832300	Yeah, all you need is an account and a phone and that's what you'll get with the test today.
+2832300	2839300	So this is a quick example of how you can make MCPs also in Outlooks.
+2839300	2845300	This is a small example of running a task.
+2845300	2849300	So if you want to call it from code, you can give it an instruction.
+2849300	2856300	So it's pretty handy for a data retrieval because you can also define an output schema that is guaranteed to be satisfied.
+2856300	2867300	Unfortunately I can't show you guys the live demo here, but if you want to see something, then you can head over to our booth and we'll be happy to show you something there.
+2867300	2872300	So, yeah, let's go over the past two guys again.
+2872300	2878300	So you, once you claim the codes, you will have the grant for 72 hours.
+2878300	2881300	And it includes six seats for your team members.
+2881300	2889300	And you can spin up to 500 points on one iPhone on the platform.
+2889300	2895300	So if you need more, then reach out to us. We can do something here.
+2895300	2904300	and you also get 1.5k and home use agent credits that you can also use on the platform
+2904300	2913300	so yeah to get started you basically get like one person on your team has to scan the QR code
+2913300	2918300	and then you pass and then you can invite your team members to the workspace
+2918300	2937300	So if you guys are curious about the API or anything, you can find it on the box over
+2937300	2938300	under there.
+2938300	2946300	And in case you need any help, Lucia and I will be here for the whole weekend, so you
+2946300	2950300	you should always come by and say hi and we'll help you out with that.
+2963300	2966300	So if you have any questions, then yeah, bye.
+2970300	2971300	Thank you Timo.
+2971300	2975680	Yeah, next we're going to have the co-founders of Moded come up and give a talk.
+2976860	2977820	Where are you guys at?
+2977960	2978040	Okay.
+2985240	2988680	Who's the EAP people?
+2989880	2991300	Who's the EAP people?
+2992400	2993220	No, no.
+2993440	2995800	Is it someone hosting this event from EAP?
+2995880	2996780	Dennis, yeah.
+2997000	2997440	Dennis.
+2997440	3000660	Yeah, so Dennis is not here, but he was here.
+3001300	3004800	He's the guy that made what? What's his company?
+3006800	3007800	Naive.
+3007800	3008800	Not this one.
+3009800	3010800	That's cool.
+3013300	3014800	What year was he?
+3019800	3020800	Damn. It's tough.
+3033220	3034620	Dennis.
+3058760	3061280	Hello everyone, my name is Shen Kun, I'm co-founder of
+3061300	3067780	of wallet and what we are building here is that it's basically the open router for
+3067780	3072700	agent use. We connect your agent to a bunch of tools and APIs and you don't need to
+3072700	3076420	handle any integrations and you don't need to sum up for accounts or
+3076420	3080800	services and you don't need to pay for subscriptions anymore. Your agent and you
+3080800	3085300	can just directly use all the services that you have connection to. So some of the
+3085300	3089860	examples that we have is that we have Apollo, CDANs, TinyFish,
+3089860	3093540	Viroqua, Exxon, all the social media scrapers, and also
+3093540	3098340	HTML, the other sponsor today, all the different kinds of the
+3098340	3101220	tools. Normally you need to like sign up for account and pay for
+3101220	3104420	subscription so that you can get the connection to your agents,
+3104420	3106980	but right now you don't have to do that anymore because then you
+3106980	3109620	provide unified layer and unified interface for your
+3109620	3113060	agents that you can just use right away. And a lot of those
+3113060	3140060	tools I think it's gonna be helpful for you to design your HMM company today since they are directly relevant to a lot of business use cases and today we also have a lot of customers that are either running agencies or running go to market workflow on us and so some of them might be super relevant to you guys so I'm gonna share a few use cases and hopefully they're gonna help you to really brainstorm what you wanna build in the two days.
+3140060	3146060	So the first case is the go-to-market workflow. We have the connection to Apollo, people at
+3146060	3152060	data labs, employee, LinkedIn, and AsianMail, and all that stuff. And your agent can easily
+3152060	3157060	to fund the relevant list, and for example you want to look for customers, or you want
+3157060	3161060	to look for a customer who just raised money recently, you are able to fund that as well.
+3161060	3166060	And then you can do the enrichment. Like fund, let's say, what's the email address of the
+3166060	3169580	as the founder of a monitor that you can find people on jazz
+3169580	3171800	and then put up the entire workflow.
+3171800	3174440	And the second is the creator campaigns.
+3174440	3176780	We have all the social media strippers.
+3176780	3179600	Let's say you want to run a UGC campaign
+3179600	3181800	where you want to find the creators on YouTube
+3181800	3185840	and Twitter or TikTok, and then you can just tell your agent
+3185840	3190280	that, oh, I want to find recent small creators
+3190280	3194840	who has a really high engagement in the AI and tech space.
+3194840	3197660	then your agent will be able to help you fund it.
+3197660	3200100	And the third is the competitive monitoring.
+3200100	3203160	So as you're agent running a company,
+3203160	3205960	then probably there's someone might be copy you
+3205960	3208440	or they're competing with you.
+3208440	3212920	Then you can set up a monitor on how the SEO performing,
+3212920	3214980	like how they're running their social media
+3214980	3217160	and if they're running any page right now,
+3217160	3219880	and then you can set up social workflow.
+3219880	3222280	And third is the people by SEO and GEO.
+3222280	3225180	That's for sure you need to have for your company
+3225180	3227180	since you want to have the visibility
+3227180	3230420	in both Google Search, HHP, and Cloud.
+3230420	3233660	And we have the access for them as well.
+3233660	3236420	And lastly, we have all the generation models,
+3236420	3239360	like CDANs, Minimacs, Pagent,
+3239360	3242180	and you can just use them and create content.
+3243780	3245980	So it's kind of really easy to use.
+3245980	3248160	We provide skills, CLI, and SAP
+3248160	3249660	that you can just connect directly,
+3249660	3254660	to connect to your agent or the company that you build to let agent run.
+3254660	3259660	And for any projects use agents during the hackdown,
+3259660	3262660	we're going to feature you on the landing page.
+3262660	3267660	And hopefully that can bring some traffic and also bring some backlinks to your project.
+3267660	3272660	And we also put up the sponsor track.
+3272660	3274660	For the first place, the project is money.
+3274660	3279900	you're going to get $1,500 money credits plus $1,500
+3279900	3281260	base active cards.
+3281260	3283620	And for the second place, they're
+3283620	3285300	going to be $1,000 for each.
+3285300	3287840	And the third place is going to be $500 for each.
+3287840	3292660	And for anyone who uses us in the project
+3292660	3294180	and you post your project and tag
+3294180	3297200	on it on any type of social media,
+3297200	3302720	you will get 200 credits in money credits.
+3302720	3307720	and take a photo of it, and if you use the link to sign up,
+3308300	3311640	you can get $20 credits to Starbucks.
+3311640	3313640	And by the way, we are also hiring.
+3313640	3316880	That we started six months ago, we're rolling super fast.
+3316880	3319160	We right now process like millions of transactions
+3319160	3320200	every single day.
+3320200	3322960	We are hiring engineers and marketing roles as well,
+3322960	3323960	so come to say hi.
+3332720	3362700	Thank you.
+3362720	3392700	Thank you.
+3392720	3422700	Thank you.
+3500200	3501160	Are we starting?
+3502180	3502460	No.
+3502460	3504580	At one.
+3505000	3505520	Wait.
+3506680	3507140	At one?
+3507280	3508340	At one does lunch.
+3511140	3513140	I know that for a fact.
+3541140	3541840	We're moving.
+3542940	3543940	We're having a moment.
+3546740	3549460	You said we had one more speaker.
+3551460	3556100	Everyone, please welcome the co-founder and CEO of AgentMill from YCS25,
+3556320	3558640	one of the fastest growing YC companies of all time.
+3559900	3560680	Let's go, guys.
+3571140	3586820	Hi, I'm Hadi. I'm one of the co-founders of AgentMail. If you guys have heard about us, we do email for our agents. We are the inbox API. We give your agents their own address to send, receive, remember, just like we do.
+3586820	3590820	So, a little bit about the product.
+3590820	3596820	I mean, it's kind of in the name, so not anything crazy, but we give your agent an inbox of its own.
+3596820	3600820	You can create them in code, you can send, receive, reply.
+3600820	3604820	You can keep threads, attachments, all the state within an email.
+3604820	3607820	And you can build coworkers, not just agents.
+3607820	3612820	Naive, we work with them really closely in terms of autonomous businesses.
+3612820	3617320	If you are building an agent that runs a company, email becomes important.
+3617320	3620820	So I'm excited to see what you guys are going to build and how it goes.
+3620820	3624820	If you have any questions, I'll be here for a couple more hours, not be dull.
+3624820	3634820	One thing I want to point out, and what we're working on, is Agent ID, which is sign in with Google, but for agents.
+3634820	3640820	So if you think about Gmail, a lot of times you don't want to just enter in your password,
+3640820	3645280	that for every single site it's as simple as click a button and you can
+3645280	3650220	authenticate that new website so agent ID is our new offering I'd love for you
+3650220	3654800	guys to try it out with that your agents can create accounts and services like
+3654800	3660620	fire crawl context.dev super memory etc and it makes it a lot easier to have
+3660620	3664900	access to these services as opposed to signing up separately so as you guys are
+3664900	3668760	building up on this businesses I'd love for you to try out agent ID and give me
+3668760	3675400	some feedback. If you guys go on agentid.com slash docs, it'll get you set up and it's
+3675400	3681000	as easy as a prompt to let your agent sign in to all these services. And also if you're
+3681000	3685420	building something like a side project and you want initial users, we have 10 million
+3685420	3689840	active inboxes on the platform now. So if you want distribution, if you want to get
+3689840	3693420	surfaced within the HTML user base, add this to your app.
+3693420	3701620	So here's a few ideas of what you can build and what we see within our customers.
+3701620	3707660	You can build research agencies, recruiting coordinators, newsletters, transactional services,
+3707660	3709060	you name it.
+3709060	3714060	The possibilities with email are literally endless, so I'm excited to see these type
+3714060	3717100	of things and we have some prizes for you guys as well.
+3717100	3723340	First place gets six months of our start-up plan free, plus a $500 Visa gift card.
+3723340	3728340	Second place gets three months of our start-up plan free, and then third place also gets the same price.
+3731220	3737900	So this is how you're actually going to access and get credits for HTML today.
+3737900	3740860	So everyone here, I'd love if you could take a picture.
+3740860	3745620	What you're going to do is you're going to go to console.html.to,
+3745620	3749740	And then you're gonna open console.agmail.io
+3749740	3752080	slash dashboard slash hackathon.
+3752080	3754600	This is gonna let you put in a code
+3754600	3757640	and get credits without needing to put a card down.
+3757640	3759800	And then this will give you access for 30 days
+3759800	3762540	so even beyond the hackathon, you guys are good to go
+3762540	3764620	and build whatever you want
+3764620	3767060	and be able to use HTML there.
+3767060	3769460	And then this is the code you're actually gonna enter.
+3769460	3771380	That is a long one, so please take a picture.
+3771380	3775060	It's HTML hack 657x.
+3775620	3782000	And then you can redeem this by Tuesday night. So you guys have plenty of time. It's gonna be live whenever you guys need it.
+3782640	3783800	Yeah
+3783800	3788540	That covers it. I think one parting note is when we started HML
+3789000	3794540	How hard is it to build was often a turnoff. We were like, oh if it's too hard, we're not gonna build it
+3794540	3796540	I think the world has changed
+3797160	3802940	What you can build now is incredible in a day. So with this hackathon with this category
+3802940	3805380	I think every single company is going to be an autonomous company.
+3806020	3808020	So I'm excited to see what you can build.
+3808660	3812300	For us, when we look at use cases, when we look at what we want people to build,
+3812420	3817200	it should be the most ambitious, the most defining, the most scary things you can build.
+3817380	3819840	We'd love to see them because that's really where we're at.
+3820020	3821180	So thank you guys.
+3821280	3822360	I'm excited to see what you build.
+3822440	3823880	If you have any questions, reach out to me.
+3824200	3824540	Thank you.
+3827540	3828520	Thank you so much, Ali.
+3829480	3830340	HML's a great company.
+3830340	3830840	everyone.
+3831620	3833300	Even if you're Asian, use Asian mail.
+3834800	3836440	Okay, so yeah, that concludes
+3836440	3838100	all of our anchor talks, I believe.
+3839520	3840340	Separate ground rules
+3840340	3842300	I forgot to add. So yeah, this is the main
+3842300	3844180	hacking room. You can also access the
+3844180	3846320	cafeteria, and there's actually a bottom
+3846320	3847980	floor that you guys can access as well.
+3848720	3849440	You go downstairs,
+3850360	3851880	plenty of working space as well, and
+3851880	3852240	outlets.
+3854520	3856040	Yeah, happy hacking, man.
+3856040	3866200	Wait, do you guys have a team or do you guys want to, like, we're thinking of, like, maybe doing Panems, but if you guys want to join our team.
+3866740	3868180	Do you guys have a plan or no?
+3868560	3868940	I don't know.
+3869040	3869920	Do you have a team already?
+3870260	3871220	What are you guys thinking of doing?
+3871540	3871820	What?
+3872080	3873080	Have you guys thought about something?
+3874140	3874880	Like, semi.
+3875260	3875420	Yeah.
+3877120	3879320	We, like, we had Claude come up with a few ideas.
+3880320	3884020	But we're thinking, like, we have a, we have just a markdown file with a few ideas.
