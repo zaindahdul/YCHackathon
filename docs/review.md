@@ -59,3 +59,21 @@ These checks verify repository artifacts and source traceability. They do not es
 ## Final disposition
 
 **No unresolved material findings** in the reviewed transcription, research, business refinement and implementation planning package. All four initial planning findings and the later refund-arithmetic correction were repaired and rechecked. The native-team availability discrepancy has an explicit working fallback and remains a disclosed account-level experiment. Remaining ASR uncertainty and untested business/integration assumptions are stated with their practical limits; they are not presented as completed product behavior.
+
+## Follow-up acquisition-plan review — November 7, 2026
+
+Reviewed the newly added `customer-acquisition.md` and the actual README, company-plan, build-plan, demo-playbook and verifier changes for the user's request to market the idea and obtain real users within the remaining hackathon window. This review covers the written acquisition strategy and its integration; it does not establish that any outreach or customer acquisition occurred.
+
+No material finding was identified:
+
+- The plan targets an actual job, deadline, buyer and fabrication route. It directly addresses the weak fit between physical-object demand and a digital-only deliverable instead of treating free renders as validation.
+- Nearby opt-in conversations and warm introductions have bounded effort while the second founder builds. Channel access and conversions are explicitly unverified; proposed counts and timing are learning targets rather than forecasts or promised outcomes.
+- The $39 pilot is a concrete experiment within the existing digital-service range. Copy distinguishes files from printing/shipping and is conditional on an actual deliverable and agreed window. Latency, scarce slots and physical delivery are not invented.
+- The plan distinguishes previews, substantive revision, payment, digital delivery, downstream activity and physical use. Founder/team purchases and test payments are excluded from independent customer revenue.
+- The demand-based cradle/fixture alternative explicitly replaces the first template and updates scope; it does not authorize an arbitrary-CAD backlog or a simultaneous second catalog.
+- Founder-led recruiting is disclosed separately from agent operations. Draft messages remain drafts, scheduling depends on an agreed communication policy, and this planning request does not authorize sending or posting.
+- The acquisition loop stops adding leads when delivery is failing, preserves a review time before people sleep, and avoids unfulfillable commitments near judging.
+
+`python3 scripts/verify_deliverables.py plan` passed with 40 valid local links. The reviewer also checked the official Stripe Payment Links setup page: hosted checkout is a supported option, while the plan correctly retains account-readiness, test/live and payment-reconciliation requirements. The YC source URL was reachable but did not expose readable text through the browser reader; its general advice is background context, not evidence of demand or channel access.
+
+**Follow-up disposition: No unresolved material findings** in the acquisition-plan addition and its reviewed consistency edits. Real customer need, willingness to pay, delivery capability and access remain explicit experiments for execution. Existing PR updates and remote commit verification remain the lead's delivery responsibility.

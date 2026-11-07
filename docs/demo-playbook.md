@@ -34,6 +34,8 @@ For any autonomy percentage, define the denominator and sample. Example: “Of 1
 
 ## Customer conversations and offer
 
+Use [the acquisition playbook](customer-acquisition.md) for channel priorities, $39 scope, first-use flow and ready-to-use drafts. Recruitment is founder-led initially; disclose this separately from agent-handled customer operations. Likes and free previews are not paid orders or downstream use.
+
 In-person invitation the team may use: “We’re testing an agent-run shop for useful custom desk objects. Is there a real display or branded object your team needs? We can show you a dimensioned design and an exact scope before you commit.”
 
 Ask for a specific job, budget, quantity and next deadline. Let the customer approve logo use and follow-up. Do not scrape attendees and launch unsolicited email. No outreach has been sent as part of this planning task.

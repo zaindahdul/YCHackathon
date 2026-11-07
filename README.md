@@ -12,11 +12,12 @@ The recommended first product is a **custom branded QR desk display** for startu
 
 The existing [hackathon rules](hackathon-rules.md) remain the repo’s event source of truth. This package adds recording evidence and a proposed company plan without changing those rules.
 
-1. [Company and offer](docs/company-plan.md) — customer, product, pricing experiments, agent roles, differentiation and expansion.
-2. [22-hour build plan](docs/build-plan.md) — first integration spike, architecture, states, two-person schedule, failure handling and acceptance checks.
-3. [Demo playbook](docs/demo-playbook.md) — pitch, live evidence, field validation and judge questions.
-4. [Recording digest](docs/recording-digest.md) — timestamped lessons and source limitations.
-5. [Event brief](docs/hackathon-brief.md) — supplied rules, logistics, sponsors and schedule.
+1. [Get customers before judging](docs/customer-acquisition.md) — first 90 minutes, channels, actual offer, draft copy, qualification and decision gates.
+2. [Company and offer](docs/company-plan.md) — customer, product, pricing experiments, agent roles, differentiation and expansion.
+3. [22-hour build plan](docs/build-plan.md) — first integration spike, architecture, states, two-person schedule, failure handling and acceptance checks.
+4. [Demo playbook](docs/demo-playbook.md) — pitch, live evidence, field validation and judge questions.
+5. [Recording digest](docs/recording-digest.md) — timestamped lessons and source limitations.
+6. [Event brief](docs/hackathon-brief.md) — supplied rules, logistics, sponsors and schedule.
 
 The formal build window is **Saturday November 7, 13:00 → Sunday November 8, 11:00 Pacific: 22 hours**. The first useful milestone is one real brief → one real CAD export → one complete delivery loop.
 

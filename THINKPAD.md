@@ -6,7 +6,7 @@
 
 ## Goal
 
-Produce a complete local MLX Whisper transcript of the supplied 64m45s recording with timestamped machine-readable outputs and source provenance; digest the recording and pasted hackathon brief; refine the custom CAD/merch autonomous-company concept into a differentiated, feasible business and implementation-ready plan through the November 8 11am cutoff. Deliver source-backed SDK/supplier research, concrete customer and agent journeys, bounded MVP and failure handling, economics assumptions, two-person schedule, and an honest live-demo/evidence plan. This request is transcription and business/product planning, followed by the user-requested GitHub pull request so the cofounder can review everything. It does not require building or deploying the application in this turn.
+Produce a complete local MLX Whisper transcript of the supplied 64m45s recording with timestamped machine-readable outputs and source provenance; digest the recording and pasted hackathon brief; refine the custom CAD/merch autonomous-company concept into a differentiated, feasible business and implementation-ready plan through the November 8 11am cutoff. Deliver source-backed SDK/supplier research, concrete customer and agent journeys, bounded MVP and failure handling, economics assumptions, two-person schedule, and an honest live-demo/evidence plan. This request is transcription and business/product planning, followed by the user-requested GitHub pull request so the cofounder can review everything. The follow-up adds an executable short-window customer acquisition strategy, ready-to-use draft copy, measurement and decision gates, published in the same cofounder review PR. It does not require building/deploying the application or sending outreach in this turn.
 
 ## Constraints
 - **Max concurrency: 3**
@@ -41,6 +41,9 @@ Produce a complete local MLX Whisper transcript of the supplied 64m45s recording
       files: README.md, docs/pr-delivery.md
       accept: python3 scripts/verify_deliverables.py delivery
       deps: T4
+- [x] T6 · Define and review the short-window customer acquisition sprint
+      files: docs/customer-acquisition.md, README.md, docs/company-plan.md, docs/build-plan.md, docs/demo-playbook.md, docs/review.md, scripts/verify_deliverables.py
+      accept: python3 scripts/verify_deliverables.py all
 ## Log
 
 - 2026-11-07 · thinkpad created
@@ -49,3 +52,4 @@ Produce a complete local MLX Whisper transcript of the supplied 64m45s recording
 - 2026-11-07 · done T3 · Synthesize recording, business, architecture, sprint, and demo plan
 - 2026-11-07 · done T4 · Independently review and repair full deliverable package
 - 2026-11-07 · done T5 · Commit review package and open cofounder-facing GitHub PR
+- 2026-11-07 · done T6 · Define and review the short-window customer acquisition sprint

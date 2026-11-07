@@ -77,6 +77,8 @@ The sales agent should decline or reprice jobs below a configured contribution f
 
 ## Distribution and validation
 
+The [short-window acquisition plan](customer-acquisition.md) is the operational marketing playbook. It tests the actual job, buyer and fabrication route before treating free previews as demand. Use $39 as the first concrete digital-package price experiment inside the range above; this is not a physical-product price.
+
 Before adding features, talk to five opt-in founders. Ask what event/desk item they last bought, what was painful, who approved it, the quantity, the deadline, and whether they would buy this specific deliverable at the displayed price. Log exact reactions and permission to follow up; do not report conversations as sales.
 
 Offer a real brief at the event using a QR link or in-person invitation. Let the agents handle the next steps through an explicitly authorized channel. Sample designs can be labeled samples. Customer logos, testimonials, revenue, and delivery photos require actual permission and evidence.

@@ -19,6 +19,10 @@ If checkout is unavailable, show unpaid or test payment explicitly and deliver a
 
 CadQuery/OpenSCAD are fallback options if the native CAD spike fails; do not run a second geometry stack just because it appeared in research. Naïve remains the actual company runtime even with a fallback renderer.
 
+## Customer acquisition runs alongside the first spike
+
+Use the [first-90-minute acquisition plan](customer-acquisition.md): Srujan spends a bounded 30–40 minutes on relevant conversations while Zain proves CAD. Qualify the job/deadline, buyer and fabrication route. A free preview is not customer use. If the QR offer finds no current need, change the audience or explicitly replace the first supported template; do not add an arbitrary-CAD backlog. Do not sell a promised turnaround before a real run establishes it.
+
 ## First integration spike — timebox 45 minutes
 
 The preserved [hackathon rules](../hackathon-rules.md) note unresolved submission format and prebuilt-code permissibility; confirm relevant organizer requirements at kickoff. The transcription and plan are preparation, not a claim about eligible prior implementation.
