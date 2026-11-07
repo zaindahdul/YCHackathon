@@ -1,0 +1,2666 @@
+WEBVTT
+
+00:00.000 --> 00:06.000
+a door dash store run with agents so yeah and then the second uh requirement is that it's still
+
+00:06.000 --> 00:11.440
+an internet sdk for a studio so our studio is our web platform um it's all the same back end
+
+00:12.000 --> 00:19.440
+our sdk um i hope a lot of you have taken a look at it previously um but yeah that's uh pretty much
+
+00:19.440 --> 00:26.000
+it um in terms of support we'll have a couple people walking around um so if you guys have
+
+00:26.000 --> 00:30.640
+have any questions, please go up to someone with a 3A bracelet.
+
+00:32.880 --> 00:34.740
+Yeah, I don't know if we set up, like, an identity
+
+00:34.740 --> 00:35.800
+channel yet.
+
+00:36.260 --> 00:38.820
+But if we do, I'll just, like, put this down really quickly
+
+00:38.820 --> 00:40.300
+so you guys can type questions in the Slack.
+
+00:41.200 --> 00:41.560
+Yeah.
+
+00:44.700 --> 00:46.360
+A couple of rules just to go over.
+
+00:46.980 --> 00:49.720
+If you leave after midnight, you can't come back until 6 AM.
+
+00:50.460 --> 00:51.380
+So, yeah.
+
+00:52.860 --> 00:54.060
+It's an overnight hackathon.
+
+00:54.060 --> 00:57.300
+and if you leave, you have to check in again.
+
+00:59.060 --> 01:02.000
+Yeah, the first floor is essentially where you guys were just now,
+
+01:02.100 --> 01:04.520
+and this floor is essentially open to you guys,
+
+01:04.920 --> 01:06.920
+as well as the conference rooms.
+
+01:07.500 --> 01:10.400
+The main one is where our team is, so go there.
+
+01:11.120 --> 01:12.720
+Yeah, obviously, that's not a picture, but I'll go.
+
+01:15.200 --> 01:17.540
+Yeah, so here's our official sponsor list,
+
+01:18.240 --> 01:20.520
+and how much credit it's for offering.
+
+01:21.200 --> 01:23.760
+Obviously, throughout all your projects, you'll be using Naive,
+
+01:23.760 --> 01:30.160
+but here's like kind of the rest of the sponsors you can use. Great group. And yeah, the price track.
+
+01:30.600 --> 01:38.660
+So the main track is with Naive. And so first place, we're doing iPhone 18, AirPods, second place
+
+01:38.660 --> 01:42.940
+Mac minis, also like Pocket AI note takers. These have been nice. I've been using them.
+
+01:43.980 --> 01:48.340
+Mulmer is offering a lot of prizes. Agent Mel is well-invoted. So there'll be some cool prizes
+
+01:48.340 --> 01:53.600
+to be handed out. And obviously, the holy grail prize here is getting a Guaranteed YC interview.
+
+01:53.760 --> 01:57.220
+which one team in this hackathon will get.
+
+01:58.420 --> 01:58.880
+And yeah.
+
+02:00.480 --> 02:01.680
+Okay, so yeah.
+
+02:01.800 --> 02:03.460
+So it's your code to claim your credits.
+
+02:09.100 --> 02:10.700
+Yeah, this is the last slide.
+
+02:11.080 --> 02:11.300
+Okay.
+
+02:13.520 --> 02:16.380
+So I think right now we're going to invite Nikita
+
+02:16.380 --> 02:17.640
+for a fireside chat.
+
+02:17.640 --> 02:18.480
+But in the meantime,
+
+02:18.900 --> 02:22.160
+you're free to just acquaintance yourself.
+
+02:23.760 --> 02:53.740
+Thank you.
+
+02:53.760 --> 03:20.260
+All right.
+
+03:20.260 --> 03:25.680
+Hello everyone, please welcome Nikita Shemkunov, a very special guest with us today.
+
+03:27.840 --> 03:33.080
+He was the co-founder and CEO of Deon, which was eventually acquired by Database.
+
+03:33.380 --> 03:38.320
+Before that, he was actually a YC founder of SingleStore, the biggest company in the
+
+03:38.320 --> 03:39.180
+Winter 11 batch.
+
+03:40.120 --> 03:42.400
+He was a partner at Cosla, and now he's currently at Databricks.
+
+03:43.380 --> 03:46.200
+Very huge figure and influence in the tech scene.
+
+03:46.680 --> 03:47.760
+And yeah, welcome Nikita.
+
+03:50.260 --> 03:57.260
+So you spent most of your career building database infrastructure, Microsoft, Facebook,
+
+03:57.260 --> 04:05.200
+to then founding SQL, SingleStore, and then Neon. What has fundamentally changed about
+
+04:05.200 --> 04:09.200
+how software is built over the past years with the rise of agents?
+
+04:09.200 --> 04:15.200
+Well, I'm sure everybody's aware that we don't know how to write code anymore. But I think
+
+04:15.200 --> 04:18.200
+It's more interesting what this means.
+
+04:18.200 --> 04:23.200
+And I think from where I stand is we've been seeing a lot more
+
+04:23.200 --> 04:27.200
+in particularly building system projects.
+
+04:27.200 --> 04:31.200
+So I've been writing systems and
+
+04:31.200 --> 04:34.200
+thinking about systems and
+
+04:34.200 --> 04:37.200
+that are probably like engines.
+
+04:37.200 --> 04:39.200
+And engines is distortion.
+
+04:39.200 --> 04:40.200
+There's some technology.
+
+04:40.200 --> 04:42.200
+There's some computer technology.
+
+04:42.200 --> 04:44.200
+It happens to speak some language, right?
+
+04:44.200 --> 04:49.200
+So there's some compiler technology, there's some special things to date and age, there's
+
+04:49.200 --> 04:54.200
+a way called query optimization, which is like, iterate over possible ways to execute
+
+04:54.200 --> 04:57.200
+a particular query and then choose the better one.
+
+04:57.200 --> 05:01.200
+This might not be the best one, but it's going to be hard to run out of time doing this.
+
+05:01.200 --> 05:05.200
+But like, it is all system engineering.
+
+05:05.200 --> 05:09.200
+And there are like many system engineering companies that are working on like, storage,
+
+05:09.200 --> 05:16.200
+operating system, networking, all sorts of huge, obviously like, AWS is a massive place,
+
+05:16.200 --> 05:22.200
+you know, a lot of system engineering problems and building various services, analytics,
+
+05:22.200 --> 05:29.200
+you know, click-click-pile, data bridge something, all those places. This is all systems engineering.
+
+05:29.200 --> 05:36.200
+And the most profound thing is that something that used to be hard is not hard anymore.
+
+05:36.200 --> 05:44.200
+And I think we all realize that by building like software or like staff services, like so quickly it just takes together enough.
+
+05:44.200 --> 05:53.200
+But not everybody who is building system engineers realize that you can be incredibly more ambitious.
+
+05:53.200 --> 06:00.200
+So some are very, some are like very native to this. I'll start with this one.
+
+06:00.200 --> 06:03.200
+So Neon runs on micro VMs.
+
+06:03.200 --> 06:04.200
+And this is Postgres.
+
+06:04.200 --> 06:05.200
+This is in a micro VM.
+
+06:05.200 --> 06:09.200
+And the micro VM is today.
+
+06:09.200 --> 06:11.200
+So a lot of people do Firecracker,
+
+06:11.200 --> 06:14.200
+but we chose the variety of reads.
+
+06:14.200 --> 06:16.200
+There's actually no purpose.
+
+06:16.200 --> 06:18.200
+Once you run through the decision tree,
+
+06:18.200 --> 06:20.200
+you go through various stages of read.
+
+06:20.200 --> 06:24.200
+And then you do either Firecracker or you use
+
+06:24.200 --> 06:28.200
+or sometimes you just call .
+
+06:28.200 --> 06:29.620
+There's operating system.
+
+06:29.980 --> 06:32.140
+So somebody on our team,
+
+06:34.120 --> 06:36.720
+oh, and then when you start with different workloads,
+
+06:37.320 --> 06:39.760
+especially like we're partners with WebLift,
+
+06:40.300 --> 06:42.240
+and then there's like long list of partners
+
+06:42.240 --> 06:44.900
+that use NUTS to generate an app
+
+06:44.900 --> 06:46.340
+and NUTS database for the app.
+
+06:47.260 --> 06:49.360
+Some of those partners have a same old,
+
+06:50.840 --> 06:54.980
+so today NUTS launches 150,000 database per day,
+
+06:55.080 --> 06:55.900
+like that's not new,
+
+06:55.900 --> 06:59.060
+And then everything that scales to zero comes back up.
+
+06:59.060 --> 07:02.720
+So roughly 20 million starts and stops per day.
+
+07:05.800 --> 07:11.520
+And then when those light coding tools generate apps,
+
+07:11.520 --> 07:13.460
+chances are the app is not going to be used.
+
+07:13.460 --> 07:17.360
+I think it's like 99% chance the app is built once, used once,
+
+07:17.360 --> 07:18.580
+and then thrown away.
+
+07:18.580 --> 07:20.360
+And therefore, it puts a lot of pressure
+
+07:20.360 --> 07:22.640
+on the cost at the low end.
+
+07:22.640 --> 07:25.840
+So the question is, fine, if the app actually works,
+
+07:25.840 --> 07:28.240
+and scales, and people are using it,
+
+07:28.240 --> 07:29.780
+I'm OK to pay for it.
+
+07:29.780 --> 07:33.560
+But I don't want to pay for this gigantic volume of garbage
+
+07:33.560 --> 07:36.880
+apps that are one time use for this.
+
+07:36.880 --> 07:40.660
+So therefore, there's a lot of pressure to cost it a little.
+
+07:40.660 --> 07:44.760
+So where does the cost come from in this micro-DM?
+
+07:44.760 --> 07:46.600
+It actually comes from memory.
+
+07:46.600 --> 07:49.520
+So they have a memory that you allocate to micro-DM,
+
+07:49.520 --> 07:51.700
+and you can add one to those mailboxes
+
+07:51.700 --> 07:54.560
+that you buy from Amazon is the limited pack.
+
+07:54.560 --> 07:55.860
+Can you reduce the amount of memory?
+
+07:55.860 --> 07:58.520
+But like, again, at the low end,
+
+07:58.520 --> 08:01.300
+Linux consumes, just Linux by being there,
+
+08:01.300 --> 08:02.920
+consumes a bunch of memory.
+
+08:02.920 --> 08:04.680
+So, okay, what do you do?
+
+08:05.720 --> 08:08.260
+So one engineer looked at all the system calls
+
+08:08.260 --> 08:11.900
+Postgres is making, and then reimplemented it,
+
+08:13.440 --> 08:15.440
+like built a new operating system
+
+08:15.440 --> 08:17.840
+that just supports those operating system calls,
+
+08:17.840 --> 08:19.700
+and those systems calls only.
+
+08:19.700 --> 08:24.700
+And in the past that would be like,
+
+08:24.700 --> 08:28.340
+you basically go and get another operating system.
+
+08:28.340 --> 08:31.420
+And so people would just crash with agents very, very quickly.
+
+08:31.420 --> 08:34.360
+I think it took them like less than a week.
+
+08:34.360 --> 08:39.500
+And then reduce the cost of me and Ronnie and the low end by a factor of 20.
+
+08:41.260 --> 08:43.060
+Simply because there's no operating system.
+
+08:43.060 --> 08:46.220
+And by the way, there's no scheduler in this thing, so
+
+08:46.220 --> 08:48.340
+this can only run in the single core.
+
+08:48.340 --> 08:57.340
+but if the usage comes in, and then we see that the usage comes in, we fail over to a proper micro-VM with Linux inside.
+
+08:57.340 --> 09:02.340
+But then the cost of memory is less because we know this VM is actually being used.
+
+09:02.340 --> 09:04.340
+So you can do crazy things like this.
+
+09:04.340 --> 09:06.340
+Another example.
+
+09:06.340 --> 09:11.340
+In databases, so that might not resonate with many because it's like deep in the weeds,
+
+09:11.340 --> 09:23.340
+But the problem of scaling out writes for databases with like, any nodes, incrementally, and so like you can just write scale infinitely, has always been a very hard problem.
+
+09:23.340 --> 09:30.340
+And every time you go like, coach DB, flat scale, get tests, all of those systems are trying to scale, right?
+
+09:30.340 --> 09:32.340
+None of them are particularly successful.
+
+09:32.340 --> 09:38.340
+And then, again, same story, like, you have to choose an architecture.
+
+09:38.340 --> 09:42.340
+And once you've chosen an architecture plane, it's a trick for five years.
+
+09:42.340 --> 09:48.340
+And then five years later, you look back and it's like, oh man, you made the wrong architecture choices.
+
+09:48.340 --> 09:55.340
+But like, so it's one of those things where you have to choose very, very carefully.
+
+09:55.340 --> 10:01.340
+And then you get punished by the fact that you didn't think through and moving.
+
+10:01.340 --> 10:06.340
+But then the customer's writing and data movement is hard, so it's very hard to change things.
+
+10:06.340 --> 10:10.340
+There are some architectures that in the past would take five years.
+
+10:10.340 --> 10:14.340
+But now we have agents so we can build data factories.
+
+10:14.340 --> 10:20.340
+So we just get the multi-master project where we come to the levels to add right nodes to lead to the end.
+
+10:20.340 --> 10:24.340
+With a very risky architecture.
+
+10:24.340 --> 10:28.340
+So we actually don't know if it's going to work super well.
+
+10:28.340 --> 10:32.340
+But we think there's more people there. We think it's going to come from us.
+
+10:32.340 --> 10:35.340
+But we're not going to spend five years verifying that.
+
+10:35.340 --> 10:38.820
+I think, so the work I showed up at like,
+
+10:38.820 --> 10:42.360
+we had a few days by building the ad factory
+
+10:42.360 --> 10:44.900
+that implements this architecture very carefully
+
+10:44.900 --> 10:46.300
+and thought out.
+
+10:46.300 --> 10:47.260
+We've been told all the time,
+
+10:47.260 --> 10:48.720
+but we don't really get all the authority.
+
+10:48.720 --> 10:50.820
+So be more ambitious,
+
+10:50.820 --> 10:53.360
+and you can start building crazy shit
+
+10:53.360 --> 10:58.360
+and that spans not just like the regular
+
+11:00.380 --> 11:02.360
+application software that we're building,
+
+11:02.360 --> 11:05.080
+but it can go all the way down
+
+11:05.080 --> 11:07.980
+So any level of infrastructure, like all the way down,
+
+11:07.980 --> 11:10.240
+and you can still do it very very well.
+
+11:10.240 --> 11:11.840
+Awesome, it's crazy to see agencies
+
+11:11.840 --> 11:14.700
+making all the little infrastructure changes.
+
+11:14.700 --> 11:18.220
+So yeah, wow, over 150,000 databases
+
+11:18.220 --> 11:20.940
+being spanned out per day, and actually today,
+
+11:20.940 --> 11:23.400
+80% of databases created on Neon
+
+11:23.400 --> 11:27.200
+are provisioned by AI agents rather than humans.
+
+11:27.200 --> 11:29.080
+When did you first notice that shift,
+
+11:29.080 --> 11:33.080
+and what did it change about how you built the products?
+
+11:33.080 --> 11:38.080
+So we noticed that when Replit launched Replication,
+
+11:38.280 --> 11:40.820
+Replit was already a partner at the time,
+
+11:40.820 --> 11:43.960
+and we knew Replit had like 30 million accounts,
+
+11:45.880 --> 11:48.980
+and that we were very excited that Replit would have
+
+11:48.980 --> 11:51.860
+Neon database for all of their apps.
+
+11:52.740 --> 11:55.480
+And then they launched Neon integration
+
+11:55.480 --> 11:57.380
+before they launched the database,
+
+11:57.380 --> 11:59.020
+and we didn't get a lot of traffic.
+
+11:59.020 --> 12:01.000
+We got a lot more traffic from the site.
+
+12:01.000 --> 12:03.140
+So we're like, okay, well, let's just run it, yes,
+
+12:03.140 --> 12:06.800
+like you tried, and then you tried to do whatever one,
+
+12:06.800 --> 12:09.220
+but we kind of ride along, go along.
+
+12:09.220 --> 12:10.680
+And then when they launched the agent,
+
+12:10.680 --> 12:14.480
+that very launch date, it was 13,000 databases
+
+12:14.480 --> 12:15.900
+coming from the Northwestern,
+
+12:15.900 --> 12:18.720
+and it was a jump of like 10, I think.
+
+12:18.720 --> 12:20.380
+And it was like, holy shit.
+
+12:20.380 --> 12:23.560
+And I remember one of the team members jumping up and down
+
+12:23.560 --> 12:25.800
+and saying, like, the most important thing
+
+12:25.800 --> 12:29.800
+that changed in the user is an agent now.
+
+12:29.800 --> 12:33.340
+And that happened on the day of, once we saw that stop it.
+
+12:33.880 --> 12:37.380
+So that was the very critical moment when we realized that the world has changed.
+
+12:38.880 --> 12:48.040
+So what this means is, well, when we build something, anything really, you need to clearly understand who the user is.
+
+12:48.040 --> 12:49.020
+How do you have the answers?
+
+12:49.860 --> 12:52.860
+When my friends, you know, they don't drive the car.
+
+12:53.240 --> 12:56.040
+And if you use their light, you're about to...
+
+12:56.040 --> 12:57.400
+He's a pre-med rat that has all the answers.
+
+12:57.400 --> 12:58.640
+and all this stuff.
+
+12:58.640 --> 13:00.840
+It all starts with who the user is,
+
+13:00.840 --> 13:05.840
+and the clarity of who the user is is very important.
+
+13:05.840 --> 13:08.140
+Because that guides you, like, which features to build
+
+13:08.140 --> 13:09.340
+and on what to build.
+
+13:09.340 --> 13:10.800
+So agents, obviously,
+
+13:14.680 --> 13:17.740
+so there's like models, harnesses,
+
+13:18.580 --> 13:21.580
+and then just like agents that people are using.
+
+13:21.580 --> 13:25.500
+And so you understand what we call critical user journeys
+
+13:25.500 --> 13:30.500
+make sure that those are supported. And that's why we invested in the MCP, that's why we
+
+13:30.500 --> 13:38.000
+invested into GEO, and that's why all the product experiences, because it's still like
+
+13:38.000 --> 13:43.840
+usually the journey starts with a human driving an agent. So we made sure that we can close
+
+13:43.840 --> 13:45.540
+the loop on each one of those journeys.
+
+13:46.900 --> 13:50.380
+Absolutely, that's amazing. Yeah, a lot of software right now is being discovered by
+
+13:50.380 --> 13:53.260
+agents and agents are not the users, so it's amazing.
+
+13:54.780 --> 13:57.500
+Yeah, so today agents can write code,
+
+13:57.500 --> 14:00.220
+deploy applications, provision infrastructure.
+
+14:00.220 --> 14:02.920
+How far do you think we are from agents
+
+14:02.920 --> 14:05.240
+eventually independently operating entire business?
+
+14:05.240 --> 14:06.280
+There's a theme with this hackathon,
+
+14:06.280 --> 14:09.640
+but when can we see Databricks being run
+
+14:09.640 --> 14:12.040
+by almost all agents and not humans anymore?
+
+14:12.040 --> 14:16.660
+Well, I think soon.
+
+14:16.660 --> 14:20.660
+You know, Databricks is an interesting example.
+
+14:20.660 --> 14:24.660
+It's a large company, about 30,000 people.
+
+14:24.660 --> 14:28.660
+And it's a continual company.
+
+14:28.660 --> 14:32.660
+Infrastructure was built before this revolution showed up.
+
+14:32.660 --> 14:36.660
+And so everything, but it's also a very, very aggressive company.
+
+14:36.660 --> 14:40.660
+So internally, everybody is building the factories.
+
+14:40.660 --> 14:44.660
+And so trying to automate as much of the
+
+14:44.660 --> 14:47.240
+the software production is possible.
+
+14:47.240 --> 14:50.760
+So what I think we're gonna see in the future,
+
+14:51.820 --> 14:54.320
+and maybe I'm not seeing far enough,
+
+14:54.320 --> 14:58.420
+but I'm seeing kind of like a little bit far.
+
+15:00.060 --> 15:02.420
+We will, first of all, the technology.
+
+15:03.860 --> 15:06.560
+The shift to the left, to the left and the power
+
+15:06.560 --> 15:09.580
+to developers has been happening for a long time.
+
+15:09.580 --> 15:13.960
+So, but now because you can get a little more done
+
+15:13.960 --> 15:17.300
+with a smaller team, we will have smaller teams.
+
+15:17.300 --> 15:20.160
+So the rule of thumb of the past was like,
+
+15:20.160 --> 15:22.620
+okay, we'll have eight to 12 people,
+
+15:22.620 --> 15:24.760
+eight is like the golden number.
+
+15:24.760 --> 15:26.840
+I think like Romans invented this
+
+15:26.840 --> 15:28.920
+when we went to war or something,
+
+15:28.920 --> 15:31.160
+and it still carries to this day.
+
+15:31.160 --> 15:33.700
+I think that today's number is like three to five,
+
+15:33.700 --> 15:37.880
+where all of the folks are participating
+
+15:37.880 --> 15:39.380
+in the software.
+
+15:39.380 --> 15:40.800
+So there isn't like a manager
+
+15:40.800 --> 15:42.900
+that's just been doing managerial work.
+
+15:42.900 --> 15:44.860
+So that unit of like three to five people,
+
+15:44.860 --> 15:46.580
+and those people can get a lot more done
+
+15:46.580 --> 15:47.860
+than the first people in the business.
+
+15:47.860 --> 15:49.740
+So I think that's the first thing that's going to happen.
+
+15:49.740 --> 15:53.220
+The second thing, the ratio between human spend
+
+15:53.220 --> 15:58.040
+and token spend will continue getting more and more pressure
+
+15:58.040 --> 15:59.840
+towards the token spend.
+
+15:59.840 --> 16:02.440
+And tokens are getting so much cheaper.
+
+16:02.440 --> 16:07.440
+So those curves, like in the world of tokens,
+
+16:08.040 --> 16:11.140
+cost people flat, we would still kind of see
+
+16:11.140 --> 16:14.940
+how we're spending a lot more on tokens than on people.
+
+16:14.940 --> 16:16.480
+But they also dropping in price.
+
+16:16.480 --> 16:19.620
+So those are two kind of opposite forces
+
+16:19.620 --> 16:22.240
+that contribute to the ratio between the spend
+
+16:22.240 --> 16:24.580
+of humans and tokens.
+
+16:24.580 --> 16:28.920
+But we probably want to be in a situation where, well,
+
+16:28.920 --> 16:32.700
+we can spend a certain amount of capital on humans and tokens.
+
+16:32.700 --> 16:35.960
+And that equation will have higher
+
+16:35.960 --> 16:39.580
+like faster feedback loop and higher fidelity.
+
+16:39.580 --> 16:42.080
+So, in a case like that, now you're doing it a bit quicker,
+
+16:42.080 --> 16:44.580
+and therefore you can measure it more accurately.
+
+16:44.580 --> 16:47.420
+So you're not sitting on that risk for a long time,
+
+16:47.420 --> 16:48.960
+between investing into something
+
+16:48.960 --> 16:51.320
+and waiting for this thing to rise.
+
+16:51.320 --> 16:53.080
+But that thing arrives pretty quickly.
+
+16:53.080 --> 16:57.520
+So therefore, and then tokens have to be very elastic.
+
+16:57.520 --> 17:00.520
+So we'll see, everywhere you can have that,
+
+17:00.520 --> 17:02.860
+you can shortcut into that loop,
+
+17:02.860 --> 17:04.280
+where you're like, okay, I'm forwarding
+
+17:04.280 --> 17:05.820
+a couple of investments here,
+
+17:05.820 --> 17:08.780
+I invest in tokens, they do software distributed,
+
+17:08.780 --> 17:13.020
+you get revenue back, that's where people will be slamming
+
+17:13.020 --> 17:16.720
+the total to get the outcome they want.
+
+17:16.720 --> 17:18.960
+So that's kind of interesting, so that transformation.
+
+17:18.960 --> 17:22.780
+Like, fully autonomously, I don't know if the incumbents
+
+17:22.780 --> 17:24.760
+are gonna do it, or like startups.
+
+17:24.760 --> 17:27.340
+Because once you're a startup, you can engineer
+
+17:27.340 --> 17:32.340
+from principles from K-Zero, and we already see
+
+17:32.540 --> 17:35.940
+like tiny companies that are crossing the border.
+
+17:35.940 --> 17:38.040
+So I think this will just continue.
+
+17:38.040 --> 17:46.040
+But is there a point in time where models have the agency of incorporating the company,
+
+17:46.280 --> 17:49.380
+throwing this into the real world, and operating completely autonomously?
+
+17:50.240 --> 17:51.280
+Well, this will be cool.
+
+17:52.080 --> 17:53.280
+I think it will happen soon.
+
+17:53.380 --> 17:53.820
+I don't know when.
+
+17:54.980 --> 17:55.380
+Awesome.
+
+17:55.520 --> 17:56.620
+Yeah, tokens are the new payroll.
+
+17:59.060 --> 18:04.980
+So, yeah, today, Asian infrastructure needs things like isolated environments, branching, purpose-built APIs.
+
+18:04.980 --> 18:11.980
+What do you think is the biggest bottleneck preventing agents from running reliably for days or weeks without human intervention?
+
+18:11.980 --> 18:22.980
+Yeah, I think on the infrastructure side, and I think this problem is seen by us, by the cloud fair, by ourselves, and probably by hyperscaners like Amazon and whatnot.
+
+18:22.980 --> 18:27.980
+I think we're still bottlenecked on intelligence a bit.
+
+18:30.580 --> 18:33.260
+So I think if those things are models
+
+18:33.260 --> 18:36.020
+of more intelligence, that will be more effective.
+
+18:36.020 --> 18:39.400
+And then I think we bottleneck into the breadth of services
+
+18:39.400 --> 18:42.200
+and observability specifically around those services
+
+18:44.440 --> 18:47.780
+that in the system like Vercel, like VM, like Cloudflare,
+
+18:47.780 --> 18:52.540
+allows you to build any example, right?
+
+18:52.540 --> 18:55.640
+Because those systems are still limited today
+
+18:55.640 --> 18:57.780
+to build arbitrary software.
+
+18:57.780 --> 19:00.380
+You can build arbitrary software in AWS,
+
+19:00.380 --> 19:03.820
+but that thing is not custom built for Asian consumption.
+
+19:03.820 --> 19:07.160
+The end-person level, custom built for Asian consumption,
+
+19:07.160 --> 19:10.560
+but you cannot build full breadth of those systems.
+
+19:11.560 --> 19:12.700
+But the world, like,
+
+19:13.620 --> 19:15.840
+basically is probably cheaper to build new things.
+
+19:15.840 --> 19:17.920
+And one thing we discovered,
+
+19:17.920 --> 19:20.300
+and I was talking earlier about it,
+
+19:20.300 --> 19:29.300
+Since the usage of NEM is consumed by, like there's an MCP in the suite, as we introduce additional services, agents just start using them.
+
+19:29.300 --> 19:35.300
+Like the end user, the human user, doesn't know that additional services are getting pulled in through an MCP.
+
+19:35.300 --> 19:40.300
+So the human doesn't need to make a decision.
+
+19:40.300 --> 19:47.300
+So like, oh, now I want to like, I use NEM database and now I want to use auth and I also want to use the NEM functions.
+
+19:47.300 --> 19:51.300
+functions, they're just part of the .
+
+19:51.300 --> 19:56.020
+So that speeds up the technology transition.
+
+19:56.020 --> 19:59.060
+So if I'm right, then everybody who's
+
+19:59.060 --> 20:00.820
+building factories and larger companies
+
+20:00.820 --> 20:02.980
+will start building factories to produce software.
+
+20:02.980 --> 20:05.900
+Then they will be realizing that factories
+
+20:05.900 --> 20:10.460
+are not as efficient on Amazon and on hyperscaler
+
+20:10.460 --> 20:11.700
+as they could be.
+
+20:11.700 --> 20:15.220
+And this will create more tailwind for the
+
+20:15.220 --> 20:17.220
+or sell Wildfire to the world.
+
+20:17.220 --> 20:19.220
+We're like, no, I'm just like,
+
+20:19.220 --> 20:22.220
+this infrastructure is not just going to swap it out.
+
+20:22.220 --> 20:24.220
+So my factory runs out.
+
+20:24.220 --> 20:26.220
+So that's the bet.
+
+20:26.220 --> 20:27.220
+Awesome.
+
+20:27.220 --> 20:31.220
+And as you said, Neon's consumption mainly being from agents.
+
+20:31.220 --> 20:35.220
+Yeah, Neon-made databases are something that software
+
+20:35.220 --> 20:38.220
+can basically create and insulate through an API.
+
+20:38.220 --> 20:41.220
+So as agents become increasingly autonomous,
+
+20:41.220 --> 20:44.220
+what other infrastructure do you think needs to be
+
+20:44.220 --> 20:50.060
+completely redone really redesigned for machines rather than humans well there's a thesis like
+
+20:50.060 --> 20:52.940
+we think that everything and especially everything's supposed to be right
+
+20:54.860 --> 20:58.780
+and well if it's branchable then you know and branchable
+
+21:00.380 --> 21:07.340
+branchable cheaply like cost effectively then um you know whatever your software runs on can
+
+21:07.340 --> 21:10.240
+and we create an isolated environment
+
+21:10.240 --> 21:11.860
+with forming that branch.
+
+21:11.860 --> 21:15.000
+Now, you would have to be careful, right?
+
+21:15.000 --> 21:18.780
+There's data, there's secrets, there's all of those things.
+
+21:18.780 --> 21:22.360
+So, I didn't know that where we're setting,
+
+21:22.360 --> 21:24.400
+we have a notion of an environment
+
+21:24.400 --> 21:27.200
+where when you branch the production environment
+
+21:27.200 --> 21:30.340
+into staging environment, the test environment,
+
+21:30.340 --> 21:33.780
+we will also apply some modification to the state.
+
+21:33.780 --> 21:35.960
+So it's like, say, for example,
+
+21:35.960 --> 21:42.680
+secret but everything should be right so now you like you have a copy of your
+
+21:42.680 --> 21:48.080
+complete universe and then agents can basically rip in in there without
+
+21:48.080 --> 21:54.600
+disrupting the main production of those things so once you have that now you
+
+21:54.600 --> 22:00.480
+can start building proper parallel that like basically it's a borderless war
+
+22:00.480 --> 22:02.980
+And what else should be there?
+
+22:02.980 --> 22:04.480
+What happens should be there.
+
+22:04.480 --> 22:05.980
+Like, message queues should be there.
+
+22:05.980 --> 22:07.480
+Observability should be there.
+
+22:07.480 --> 22:08.480
+Analytics should be there.
+
+22:08.480 --> 22:11.480
+So those are like all the staples and resources.
+
+22:11.480 --> 22:16.480
+But also like DNS and like, yeah, like the most of it.
+
+22:16.480 --> 22:18.480
+Yeah.
+
+22:18.480 --> 22:22.480
+So, you know, you've been in the infrastructure layer for a long time,
+
+22:22.480 --> 22:24.480
+basically throughout your entire career.
+
+22:24.480 --> 22:27.480
+For our hackers today and builders today,
+
+22:27.480 --> 22:33.060
+do you think people starting companies now should be building in the bottom layer,
+
+22:33.060 --> 22:37.140
+infrastructure layer, or application layer? And where would you be personally building
+
+22:37.140 --> 22:39.600
+starting today?
+
+22:39.600 --> 22:43.600
+I'd be building infrastructure because I know how to build infrastructure.
+
+22:43.600 --> 22:51.600
+So the function of what to do is, you know, you should apply it to a person, to a human that is there,
+
+22:51.600 --> 22:53.600
+and this is my set of skills.
+
+22:53.600 --> 22:59.820
+so I'll just keep going deeper I think that's been working for me and everyone
+
+22:59.820 --> 23:06.160
+was unique it's it's been working for me to like get deeper and deeper
+
+23:06.160 --> 23:11.280
+understanding of the database space which is again from the technology standpoint
+
+23:11.280 --> 23:15.600
+like storage and review but from the like products standpoint like how do you
+
+23:15.600 --> 23:20.280
+actually have product experiences why this works why this doesn't work in the real world so
+
+23:20.280 --> 23:27.280
+So I've been accumulating that knowledge and still have ideas of what to do as well.
+
+23:27.280 --> 23:32.280
+Master project and all that. But now I'm even like exploring those ideas deeper and deeper.
+
+23:32.280 --> 23:40.280
+I think that is the reward in this world. If you understand something deeper, then you can actually get to an outcome.
+
+23:40.280 --> 23:47.280
+Like validate the hypothesis of how that deeper knowledge can be dissolved in the real world.
+
+23:47.280 --> 23:56.280
+But this question is also very, very hard because you see people bitter less all the time.
+
+23:56.280 --> 24:05.280
+This is all the time. So yesterday I was in Utah and we had this deep discussion with Dilip, the CEO of Figma,
+
+24:05.280 --> 24:15.280
+where it's, you know, like, what to do with how you work with the labs is a big question, right?
+
+24:15.280 --> 24:18.280
+On the one hand, you want all the models working incredibly well,
+
+24:18.280 --> 24:19.280
+you need software.
+
+24:19.280 --> 24:22.280
+But the moment that front door to your service
+
+24:22.280 --> 24:26.280
+switches from your control to somebody else's control,
+
+24:26.280 --> 24:30.280
+you can be disinitiated very, very easily.
+
+24:30.280 --> 24:32.280
+And an analogy to put that in,
+
+24:32.280 --> 24:35.280
+I see a lot of people that at some point,
+
+24:35.280 --> 24:38.280
+Facebook and Google just destroyed media.
+
+24:38.280 --> 24:40.280
+They just disintegrated media.
+
+24:40.280 --> 24:42.280
+And media was a good business in the past,
+
+24:42.280 --> 24:44.280
+and now it's a terrible business.
+
+24:44.280 --> 24:48.280
+And the reason for that is the front door to media consumption changed.
+
+24:48.280 --> 24:52.280
+And it's either went to social networks where media is produced by citizens,
+
+24:52.280 --> 24:55.280
+like direct to the audience.
+
+24:55.280 --> 25:01.280
+So all this media services kind of kind of subsurvived at New York Times.
+
+25:01.280 --> 25:04.280
+But a lot just got completely destroyed.
+
+25:04.280 --> 25:08.280
+So when the front door to your product shits to something else,
+
+25:08.280 --> 25:12.280
+and it's actually very enticing to actually do this, right?
+
+25:12.280 --> 25:42.260
+this, right? Because, oh, you got all this agent traffic. Amazing. Like, you have a spike in your consumption. But then you also need to, like, really step back and see what happens and how can you modulate this. And if your service provides real value to this world, then you also have power, right? Because you have users who love your product. And that should drive your decisions about your relationship with this agent world.
+
+25:42.280 --> 25:44.280
+kind of like evolves over time.
+
+25:46.280 --> 25:48.280
+That's amazing. And last question
+
+25:48.280 --> 25:49.520
+we have for you is
+
+25:49.520 --> 25:52.360
+you've now built two major infrastructure companies
+
+25:52.360 --> 25:54.280
+and have seen several
+
+25:54.280 --> 25:55.880
+generations of technology shifts.
+
+25:56.360 --> 25:58.020
+For the founders and hackers here today,
+
+25:58.320 --> 26:00.260
+what's one contrarian bet you'd make
+
+26:00.260 --> 26:02.400
+about AI agents over the next three to five
+
+26:02.400 --> 26:02.680
+years?
+
+26:03.800 --> 26:04.840
+Contrarian bet?
+
+26:12.280 --> 26:24.280
+I don't mean like super smart to say. I keep saying the same thing which is like you can be incredibly more efficient in systems.
+
+26:24.280 --> 26:32.280
+And so one thing you can do is to like list all the infrastructure companies.
+
+26:32.280 --> 26:38.040
+companies uh like a lot of them in the south base a lot of their like cisco
+
+26:43.480 --> 26:51.400
+and new times uh pure storage um and uh you know you live in san francisco in your 20s and you just
+
+26:51.400 --> 26:55.720
+let you like oh this is like boomer companies like where my dad works or something like this
+
+26:55.720 --> 27:00.720
+But they are more vulnerable than you might think.
+
+27:00.720 --> 27:03.720
+And their defensibility is product and technology,
+
+27:03.720 --> 27:07.720
+and the fact that it's very hard to build systems
+
+27:07.720 --> 27:11.720
+and also a combination of software and hardware together.
+
+27:11.720 --> 27:18.720
+But then, you're like, well actually, the node is not that high.
+
+27:18.720 --> 27:25.720
+uh...
+
+27:29.420 --> 27:36.420
+how did you lose it
+
+27:40.560 --> 27:45.560
+what people actually
+
+27:45.560 --> 27:47.560
+is very very dangerous.
+
+27:47.560 --> 27:50.560
+Dangerous like in a good way of the word dangerous.
+
+27:50.560 --> 27:51.560
+So you become dangerous.
+
+27:51.560 --> 27:55.560
+You become dangerous because you can now see like,
+
+27:55.560 --> 27:59.560
+okay well, you've got like this technology
+
+27:59.560 --> 28:01.560
+that's like, oh it's like part of this world.
+
+28:01.560 --> 28:03.560
+You're pure forces.
+
+28:03.560 --> 28:05.560
+Like, guess what?
+
+28:05.560 --> 28:08.560
+You know, and agents.
+
+28:08.560 --> 28:10.560
+And therefore you can like go and attack either,
+
+28:10.560 --> 28:14.560
+sometimes either directly or like with a platform
+
+28:14.560 --> 28:20.400
+like a bundles of product out of them but the knowledge of how to build technology is um
+
+28:22.720 --> 28:26.000
+it's always been dangerous to know how the business works and how this calls for
+
+28:26.960 --> 28:31.280
+especially if it's really hard to build so so studying all these markets
+
+28:33.040 --> 28:36.160
+and the the dynamics in each one of those markets
+
+28:39.360 --> 28:39.680
+is
+
+28:44.560 --> 28:57.760
+ambitious. We need to build an operating system in a week. We need to build storage in a week. We need to build database technologies that are very good for us. So that's an interesting time to go and attack all those problems.
+
+28:58.800 --> 29:11.400
+Absolutely. Thank you so much. Yeah, so just, yeah, that's all the questions. I think if anyone has, like, we'll do like a quick Q&A. If anyone has any questions, please feel free to ask.
+
+29:14.560 --> 29:16.560
+Thank you.
+
+29:16.560 --> 29:23.560
+I guess my question, and you talked a little bit about this is, you know,
+
+29:23.560 --> 29:25.560
+both how you sort of differentiate your product.
+
+29:25.560 --> 29:30.560
+I guess in today's day and age where sort of everyone will have access to these agents,
+
+29:30.560 --> 29:32.560
+I have access to the agents, you have access to the agents,
+
+29:32.560 --> 29:36.560
+how do you think the entrepreneurs of today's generation should think about making a moat
+
+29:36.560 --> 29:40.560
+so that, you know, what they're building doesn't get, like, disrupted, like, tomorrow?
+
+29:40.560 --> 29:43.560
+I don't like moats. I don't like thinking about moats.
+
+29:43.560 --> 29:50.560
+Basically, I'm thinking about this, like, is this a good market?
+
+29:50.560 --> 29:55.560
+Who also participates in this market? Who is your competition?
+
+29:55.560 --> 30:04.560
+And do you create an advantage from first principles with a combination of your team and technology?
+
+30:04.560 --> 30:09.560
+And if you have an excellent team, modes doesn't matter as much.
+
+30:09.560 --> 30:11.980
+Sure, there are modes like network photography and all those things,
+
+30:12.080 --> 30:13.620
+like those that are really hard to break.
+
+30:15.020 --> 30:22.880
+But then, like I said earlier, a lot of the modes only have very low depth in technology.
+
+30:23.640 --> 30:25.160
+Those get thinner.
+
+30:26.940 --> 30:30.880
+And if you barrage into a large market, you will then.
+
+30:33.580 --> 30:36.600
+And then thinking, oh, how am I going to defend myself over time?
+
+30:36.600 --> 30:38.460
+I don't think that actually matters as much.
+
+30:38.460 --> 30:48.460
+I think it's like, this is a big market, this is a big opportunity, I have just the right team to go and like, you know, wedge in in there.
+
+30:48.460 --> 30:58.460
+That's the more important thing. And then, like, as you go, and if you are successful wedging in, you will keep getting additional information about what to do next.
+
+30:58.460 --> 31:02.460
+Because the world will tell you. And everything is expanding.
+
+31:02.460 --> 31:05.960
+like the world of tech is expanding.
+
+31:05.960 --> 31:12.460
+And in the growing market, there's always going to be competitors,
+
+31:12.460 --> 31:17.960
+and competitors, they're all going to participate in the same ecosystem.
+
+31:17.960 --> 31:21.960
+And then naturally, will choose to take different swing lanes.
+
+31:21.960 --> 31:26.960
+Because one is more successful in this swing lane, and the other one is more successful in that swing lane.
+
+31:26.960 --> 31:31.960
+So, screen loads, I don't think that matters much.
+
+31:33.400 --> 31:34.220
+Thank you.
+
+31:42.080 --> 31:44.320
+Thank you, my name is Aziz.
+
+31:44.320 --> 31:47.240
+If you were to look at young people growing up now
+
+31:47.240 --> 31:49.560
+and growing up in the Asian world and all of that,
+
+31:49.560 --> 31:51.540
+maybe other kids and all of that,
+
+31:51.540 --> 31:53.440
+what would be the things you would get them
+
+31:53.440 --> 31:55.280
+to do in the Asian world,
+
+31:55.280 --> 31:57.280
+especially in the space of communication.
+
+31:59.280 --> 32:01.280
+That's a tough one.
+
+32:01.280 --> 32:03.280
+I'm kind of like
+
+32:03.280 --> 32:05.280
+simple minded
+
+32:05.280 --> 32:07.280
+in this and follow
+
+32:07.280 --> 32:09.280
+like
+
+32:09.280 --> 32:11.280
+probably five kids
+
+32:11.280 --> 32:13.280
+and with my kids
+
+32:13.280 --> 32:15.280
+I follow kind of those three principles.
+
+32:15.280 --> 32:17.280
+You know,
+
+32:17.280 --> 32:19.280
+math is good,
+
+32:19.280 --> 32:21.280
+sports is good,
+
+32:21.280 --> 32:23.280
+love is good,
+
+32:23.280 --> 32:28.280
+So having them do what they want to with their OS is good.
+
+32:28.280 --> 32:32.040
+So let's try to do that, and then we'll figure that out.
+
+32:34.680 --> 32:36.040
+Take a few more questions.
+
+32:39.220 --> 32:42.120
+But none of those feedbacks shopped out that broad.
+
+32:45.520 --> 32:46.580
+Hey, thank you for the talk.
+
+32:46.580 --> 32:48.300
+I was super insightful.
+
+32:48.300 --> 32:50.380
+I wanted to check what your advice would be
+
+32:50.380 --> 32:54.560
+for wanting to get reverse ping customers over the weekend?
+
+32:58.600 --> 33:00.940
+So launch it.
+
+33:02.560 --> 33:04.740
+Launch it, talk about it on apps.
+
+33:04.740 --> 33:08.320
+I think that's how, like add payments into your app.
+
+33:10.020 --> 33:13.040
+And then try to promote them, talk to your friends,
+
+33:13.040 --> 33:16.300
+talk to your colleagues, make some phone calls,
+
+33:16.300 --> 33:19.720
+talk to like YC companies and try to find them
+
+33:19.720 --> 33:20.940
+to use your service.
+
+33:22.680 --> 33:26.040
+But I like building services like,
+
+33:26.040 --> 33:27.720
+kind of, Keith or Boyd way,
+
+33:27.720 --> 33:31.220
+where you think of when you first principles,
+
+33:31.220 --> 33:33.620
+kind of, believe a certain place needs to exist.
+
+33:34.640 --> 33:37.000
+And then you buy into that thinking.
+
+33:37.000 --> 33:38.640
+So when you tell a friend,
+
+33:38.640 --> 33:42.220
+that hey, this is this opportunity to build XYZ,
+
+33:42.220 --> 33:44.260
+this is probably the shape of XYZ,
+
+33:44.260 --> 33:47.800
+that it needs to, that should be clearly
+
+33:47.800 --> 33:49.000
+in context of the future.
+
+33:49.720 --> 33:56.720
+And then you just put all your effort and energy into making the best product with a set price.
+
+33:56.720 --> 34:03.720
+And then you launch it, and then you have a good website that clearly explains what that XYZ is.
+
+34:03.720 --> 34:07.720
+An example for Nia was, like when Nia launched it, it said serverless Postgres.
+
+34:07.720 --> 34:15.720
+So it's very clear for people who know what Postgres is, what serverless is, add two and two.
+
+34:15.720 --> 34:19.720
+the product, when you go in, click a button, say,
+
+34:19.720 --> 34:22.220
+create Postgres, you know, like, in some second,
+
+34:22.220 --> 34:23.720
+you get that extra stream.
+
+34:23.720 --> 34:25.720
+It's like, okay, well, I guess it's serverless.
+
+34:25.720 --> 34:29.720
+And so that was, like, the idea.
+
+34:29.720 --> 34:32.720
+And typically, if you, like, the way to wedge in
+
+34:32.720 --> 34:34.720
+is to build something that's very, very narrow,
+
+34:34.720 --> 34:39.720
+like a widget, and describe what it is
+
+34:39.720 --> 34:41.720
+in a fairly narrow way as well.
+
+34:41.720 --> 34:44.720
+And so what you see is what you get, kind of thing.
+
+34:44.720 --> 34:51.720
+So it's easy to use, very narrow, kind of plugs in into all the other things that you're
+
+34:51.720 --> 34:52.720
+going to use.
+
+34:52.720 --> 35:00.720
+And that thing doesn't exist for a sweet competition, so that allows you to break in and start getting
+
+35:00.720 --> 35:02.720
+some traction.
+
+35:02.720 --> 35:06.720
+So if you have that kind of vision, and then what can you do in a week?
+
+35:06.720 --> 35:08.720
+You can do a lot in a week these days.
+
+35:08.720 --> 35:13.720
+So you can build an M2M application there, and then you just launch it, and you see.
+
+35:13.720 --> 35:20.720
+Awesome, cool, we'll take two more questions. One suggestion, maybe you guys can sell some of your services that you built this weekend to each other.
+
+35:20.720 --> 35:22.720
+Oh yeah, that's a good one.
+
+35:22.720 --> 35:24.720
+Yeah, I want to take someone from that site.
+
+35:31.720 --> 35:36.720
+What would you say is a product or tool that you use right now that you think a lot of people don't know about?
+
+35:36.720 --> 35:47.720
+Well, I run big teams now, so mostly talking to people.
+
+35:47.720 --> 35:54.720
+So I use a lot of Signal where we discuss like, we should acquire this company or that company,
+
+35:54.720 --> 35:59.720
+with their responders, what tool.
+
+35:59.720 --> 36:04.720
+I'm not sure I'm using a particular differentiated tool.
+
+36:04.720 --> 36:16.720
+I'm mostly working with people. I read a lot. I was playing for Utah this morning and I read a multi-master design that was published on YouTube.
+
+36:16.720 --> 36:18.720
+So, I don't know.
+
+36:18.720 --> 36:20.720
+Alright, we'll take one more question.
+
+36:20.720 --> 36:25.720
+Thanks for the talk.
+
+36:25.720 --> 36:33.720
+How do you think about, like, there are some companies like Amazon, eBay, like straight
+
+36:33.720 --> 36:39.720
+up buying agents, and there are some companies that try to be as agent-native as possible,
+
+36:39.720 --> 36:40.720
+like DoorDash, Uber.
+
+36:40.720 --> 36:46.720
+It's similar to the point you were discussing in your discussion with Dylan, that how, like,
+
+36:46.720 --> 36:54.120
+Like, if people buy into the future where, like, people would just go to their agent and not directly interact with any of these services,
+
+36:54.780 --> 36:58.600
+or someone building something new today, like, would you have any advice?
+
+36:58.700 --> 37:00.840
+Like, try to make something that should be startable?
+
+37:02.320 --> 37:08.480
+Well, I think it's like, there's a huge independence on what you build exactly.
+
+37:08.480 --> 37:24.480
+So obviously if somebody is afraid of direct agent consumption and they're not willing to be low level APIs to agents with the fear of disremediation,
+
+37:24.480 --> 37:28.480
+because it might be an opportunity for you.
+
+37:28.480 --> 37:32.480
+So you can say, you know, I'll give you an example.
+
+37:32.480 --> 37:36.480
+uh, you know, me and his agent maximum, right?
+
+37:36.480 --> 37:39.480
+Like, we want agents to, like, really, like,
+
+37:39.480 --> 37:42.480
+agents say job, we say ha-ha.
+
+37:42.480 --> 37:44.480
+Uh, that direction is not agent maximum.
+
+37:44.480 --> 37:48.480
+It's agent maximum inside the database called Dart.
+
+37:48.480 --> 37:51.480
+Um, but in terms of, like, driving database to the cloud,
+
+37:51.480 --> 37:54.480
+there is, like, a health tension between the topic
+
+37:54.480 --> 37:57.480
+and database right now, and then, uh, you know,
+
+37:57.480 --> 38:00.480
+database wants the topic to, like, potentially consume some
+
+38:00.480 --> 38:02.480
+to the low-level API and potentially
+
+38:02.480 --> 38:04.600
+inform some problems to inside
+
+38:04.600 --> 38:06.240
+the data. There's GoldGarden, which has
+
+38:06.240 --> 38:08.140
+proprietary data so they can process that
+
+38:08.140 --> 38:10.080
+better. So I think
+
+38:10.080 --> 38:11.700
+that's why
+
+38:11.700 --> 38:13.880
+it just depends
+
+38:13.880 --> 38:15.920
+on what
+
+38:15.920 --> 38:18.300
+you're building. So it goes back to
+
+38:18.300 --> 38:20.120
+the earlier ones, like what's the movie that
+
+38:20.120 --> 38:22.580
+you're living? What's the script
+
+38:22.580 --> 38:24.140
+of this movie? And
+
+38:24.140 --> 38:26.260
+agent matching
+
+38:26.260 --> 38:28.220
+either makes sense or doesn't make sense
+
+38:28.220 --> 38:30.300
+on your specific. So I
+
+38:30.300 --> 38:32.760
+I haven't been so busy.
+
+38:32.760 --> 38:33.260
+Awesome.
+
+38:33.260 --> 38:35.240
+Thank you so much, Nikita, for all the questions.
+
+38:35.240 --> 38:37.780
+And yeah, thank you for having me here today as speaker.
+
+38:37.780 --> 38:38.440
+Thanks so much.
+
+38:44.980 --> 38:47.640
+OK.
+
+38:47.640 --> 38:51.060
+We're going to bring up one of the founding team members
+
+38:51.060 --> 38:52.340
+of the group right now.
+
+38:55.180 --> 38:56.980
+Please welcome Timo.
+
+39:00.300 --> 39:30.280
+Thank you.
+
+39:30.300 --> 40:00.280
+Thank you.
+
+40:00.300 --> 40:06.300
+Hey guys, I'm Timo from Modera.
+
+40:06.300 --> 40:14.300
+You probably haven't heard of Modera yet, so that's why I'll give you a quick introduction of what we are doing at Modera.
+
+40:14.300 --> 40:21.300
+So, basically we're trying to bridge the gap between AI agents and smartphones.
+
+40:21.300 --> 40:25.300
+But I'll get into more detail about that later.
+
+40:25.300 --> 40:28.300
+So first, a couple of things about me.
+
+40:28.300 --> 40:33.300
+So as I said, I'm Timo, I'm founding engineer at Mova.
+
+40:33.300 --> 40:38.300
+And I'm the lead of our iOS platform.
+
+40:38.300 --> 40:43.300
+So that's also one of the products you guys will be granted access to today.
+
+40:43.300 --> 40:48.300
+So I'm curious to hear your feedback about it.
+
+40:48.300 --> 40:53.300
+Yeah, Luke is my coworker and I will be here for all weekend.
+
+40:53.300 --> 41:00.300
+So if you guys need any kind of assistance or get stuck anywhere, just come find us and we'll let you know.
+
+41:06.300 --> 41:11.300
+So probably all of you have used computer use or browser agents before.
+
+41:15.300 --> 41:20.300
+But what the agents nowadays are mostly missing is a microphone.
+
+41:20.300 --> 41:34.300
+And since more than 50% of the screen time nowadays is spent on mobile apps, there's a gap that we're trying to close without product.
+
+41:34.300 --> 41:42.300
+Because a lot of apps don't have public APIs or MCPs, so you have to fall back to on-screen automation.
+
+41:42.300 --> 41:52.300
+So, yeah, initially we started as an open source project.
+
+41:52.300 --> 42:09.300
+It's a framework for LLM agents, like a loop where you can basically use any LLM to automate your smart phone and get the experience of the device from it.
+
+42:09.300 --> 42:14.300
+and we recently reached the 10th day GitHub stars.
+
+42:14.300 --> 42:18.300
+That was a big milestone for us, so if you were 10 already,
+
+42:18.300 --> 42:22.300
+then please feel free to give us a star as well.
+
+42:22.300 --> 42:28.300
+Our mobile hands also reached the first place on the iOS World Benchmark,
+
+42:28.300 --> 42:36.300
+and we are sharing the first place on the now satisfied Android World Benchmark with Google.
+
+42:36.300 --> 42:47.300
+So, yeah, the agent already, like, worked back in the day, but when we were trying to scale automation then we, like,
+
+42:47.300 --> 42:54.300
+at Blocker, because we need a lot of phones to actually, like, run the automation horizontally.
+
+42:54.300 --> 43:02.300
+So that's why we built the Nubarang Cloud, which took Pelengi, it's basically
+
+43:02.300 --> 43:11.300
+We know phones and we put an API on them so you get full control on the phone itself.
+
+43:11.300 --> 43:19.300
+You can install apps, open apps, tap type, take a screenshot, set GPS coordinates and so on.
+
+43:19.300 --> 43:25.300
+Also, stop and resume the device so you're not paying for it any time you don't use it.
+
+43:25.300 --> 43:35.300
+And the state is preserved, so you report that inside and then stop it, you need to
+
+43:35.300 --> 43:41.300
+sit down again, you spin the device up again, and you'll make a way to stop it.
+
+43:41.300 --> 43:54.300
+So, yeah, three things that a phone enables you to do, which is not possible with, like, computer use or browser use already.
+
+43:54.300 --> 43:59.300
+So, like, we're not trying to replace computer use and browser use, we're trying to add to it.
+
+43:59.300 --> 44:04.300
+Because they were great, like, for desktop apps and web already.
+
+44:04.300 --> 44:19.300
+But what's missing is that you can automate those native apps for like, I bet you guys know a couple of services that only offer phone movers and phone apps, and have no website you can use or no API you can use.
+
+44:19.300 --> 44:31.300
+So that's where this plays in. And like I said, you have persistent device state, so apps read your device identifiers and so on.
+
+44:31.300 --> 44:43.300
+So it's very important that you keep the identifier the same in your account, which emulators, regular emulators don't offer for you.
+
+44:43.300 --> 44:49.300
+And you can also get access to SMS and other parts of the phone's data.
+
+44:49.300 --> 44:53.300
+So yeah, that's the basic thing.
+
+44:53.300 --> 45:02.300
+Then to spark your creativity a little bit, here's a couple of things that you could build today.
+
+45:02.300 --> 45:13.300
+So, yeah, it's really common stuff. You can retrieve data, for example, like what your Facebook marketplace listing for price changes or similar.
+
+45:13.300 --> 45:27.300
+But you could also act for a user, like check a write-up to the write-ups and compare the price at the pickup time, which I think is cheaper or less.
+
+45:27.300 --> 45:31.300
+And testing is also a big part of this thing.
+
+45:31.300 --> 45:34.300
+So of course you can also do that with us.
+
+45:34.300 --> 45:41.300
+You can have your agent come to an app and generate like reports and screenshots and recording and everything.
+
+45:41.300 --> 45:46.300
+everything. So your other agents can know what to fix, for example.
+
+45:46.300 --> 45:52.300
+And very common also is publishing clips on social media.
+
+45:52.300 --> 45:58.300
+And today, together with Naive, this is where you can basically entirely close the loop
+
+45:58.300 --> 46:06.300
+between generating and writing the content and then publishing it on a different platform.
+
+46:06.300 --> 46:11.300
+So yeah, that's just the idea.
+
+46:11.300 --> 46:14.300
+So if you have something else in mind,
+
+46:14.300 --> 46:15.300
+that will also work.
+
+46:18.300 --> 46:23.300
+So yeah, then there's four ways to put on a platform.
+
+46:23.300 --> 46:27.300
+So the easiest is you just send your agents once you set up
+
+46:27.300 --> 46:31.300
+the MCP, and they can control your devices.
+
+46:31.300 --> 46:34.300
+Then if you need more granular control,
+
+46:34.300 --> 46:39.300
+you can go down to the right, which is like,
+
+46:39.300 --> 46:42.300
+it hosts the task agent, which is going to reload,
+
+46:42.300 --> 46:46.300
+or you go back to the raw device API,
+
+46:46.300 --> 46:51.300
+where you can do like API calls to tap your screenshot.
+
+46:51.300 --> 46:55.300
+And that's because you can control the phone with your own fingers,
+
+46:55.300 --> 46:58.300
+like remote controls do.
+
+46:58.300 --> 47:12.300
+Yeah, all you need is an account and a phone and that's what you'll get with the test today.
+
+47:12.300 --> 47:19.300
+So this is a quick example of how you can make MCPs also in Outlooks.
+
+47:19.300 --> 47:25.300
+This is a small example of running a task.
+
+47:25.300 --> 47:29.300
+So if you want to call it from code, you can give it an instruction.
+
+47:29.300 --> 47:36.300
+So it's pretty handy for a data retrieval because you can also define an output schema that is guaranteed to be satisfied.
+
+47:36.300 --> 47:47.300
+Unfortunately I can't show you guys the live demo here, but if you want to see something, then you can head over to our booth and we'll be happy to show you something there.
+
+47:47.300 --> 47:52.300
+So, yeah, let's go over the past two guys again.
+
+47:52.300 --> 47:58.300
+So you, once you claim the codes, you will have the grant for 72 hours.
+
+47:58.300 --> 48:01.300
+And it includes six seats for your team members.
+
+48:01.300 --> 48:09.300
+And you can spin up to 500 points on one iPhone on the platform.
+
+48:09.300 --> 48:15.300
+So if you need more, then reach out to us. We can do something here.
+
+48:15.300 --> 48:24.300
+and you also get 1.5k and home use agent credits that you can also use on the platform
+
+48:24.300 --> 48:33.300
+so yeah to get started you basically get like one person on your team has to scan the QR code
+
+48:33.300 --> 48:38.300
+and then you pass and then you can invite your team members to the workspace
+
+48:38.300 --> 48:57.300
+So if you guys are curious about the API or anything, you can find it on the box over
+
+48:57.300 --> 48:58.300
+under there.
+
+48:58.300 --> 49:06.300
+And in case you need any help, Lucia and I will be here for the whole weekend, so you
+
+49:06.300 --> 49:10.300
+you should always come by and say hi and we'll help you out with that.
+
+49:23.300 --> 49:26.300
+So if you have any questions, then yeah, bye.
+
+49:30.300 --> 49:31.300
+Thank you Timo.
+
+49:31.300 --> 49:35.680
+Yeah, next we're going to have the co-founders of Moded come up and give a talk.
+
+49:36.860 --> 49:37.820
+Where are you guys at?
+
+49:37.960 --> 49:38.040
+Okay.
+
+49:45.240 --> 49:48.680
+Who's the EAP people?
+
+49:49.880 --> 49:51.300
+Who's the EAP people?
+
+49:52.400 --> 49:53.220
+No, no.
+
+49:53.440 --> 49:55.800
+Is it someone hosting this event from EAP?
+
+49:55.880 --> 49:56.780
+Dennis, yeah.
+
+49:57.000 --> 49:57.440
+Dennis.
+
+49:57.440 --> 50:00.660
+Yeah, so Dennis is not here, but he was here.
+
+50:01.300 --> 50:04.800
+He's the guy that made what? What's his company?
+
+50:06.800 --> 50:07.800
+Naive.
+
+50:07.800 --> 50:08.800
+Not this one.
+
+50:09.800 --> 50:10.800
+That's cool.
+
+50:13.300 --> 50:14.800
+What year was he?
+
+50:19.800 --> 50:20.800
+Damn. It's tough.
+
+50:31.300 --> 50:32.300
+Thanks.
+
+50:32.300 --> 50:33.300
+Hello, everyone.
+
+50:33.300 --> 50:34.300
+My name is Shen Kun.
+
+50:34.300 --> 50:33.440
+I'm a co-founder of the
+
+51:01.300 --> 51:07.780
+of wallet and what we are building here is that it's basically the open router for
+
+51:07.780 --> 51:12.700
+agent use. We connect your agent to a bunch of tools and APIs and you don't need to
+
+51:12.700 --> 51:16.420
+handle any integrations and you don't need to sum up for accounts or
+
+51:16.420 --> 51:20.800
+services and you don't need to pay for subscriptions anymore. Your agent and you
+
+51:20.800 --> 51:25.300
+can just directly use all the services that you have connection to. So some of the
+
+51:25.300 --> 51:29.860
+examples that we have is that we have Apollo, CDANs, TinyFish,
+
+51:29.860 --> 51:33.540
+Viroqua, Exxon, all the social media scrapers, and also
+
+51:33.540 --> 51:38.340
+HTML, the other sponsor today, all the different kinds of the
+
+51:38.340 --> 51:41.220
+tools. Normally you need to like sign up for account and pay for
+
+51:41.220 --> 51:44.420
+subscription so that you can get the connection to your agents,
+
+51:44.420 --> 51:46.980
+but right now you don't have to do that anymore because then you
+
+51:46.980 --> 51:49.620
+provide unified layer and unified interface for your
+
+51:49.620 --> 51:53.060
+agents that you can just use right away. And a lot of those
+
+51:53.060 --> 52:20.060
+tools I think it's gonna be helpful for you to design your HMM company today since they are directly relevant to a lot of business use cases and today we also have a lot of customers that are either running agencies or running go to market workflow on us and so some of them might be super relevant to you guys so I'm gonna share a few use cases and hopefully they're gonna help you to really brainstorm what you wanna build in the two days.
+
+52:20.060 --> 52:26.060
+So the first case is the go-to-market workflow. We have the connection to Apollo, people at
+
+52:26.060 --> 52:32.060
+data labs, employee, LinkedIn, and AsianMail, and all that stuff. And your agent can easily
+
+52:32.060 --> 52:37.060
+to fund the relevant list, and for example you want to look for customers, or you want
+
+52:37.060 --> 52:41.060
+to look for a customer who just raised money recently, you are able to fund that as well.
+
+52:41.060 --> 52:46.060
+And then you can do the enrichment. Like fund, let's say, what's the email address of the
+
+52:46.060 --> 52:49.580
+as the founder of a monitor that you can find people on jazz
+
+52:49.580 --> 52:51.800
+and then put up the entire workflow.
+
+52:51.800 --> 52:54.440
+And the second is the creator campaigns.
+
+52:54.440 --> 52:56.780
+We have all the social media strippers.
+
+52:56.780 --> 52:59.600
+Let's say you want to run a UGC campaign
+
+52:59.600 --> 53:01.800
+where you want to find the creators on YouTube
+
+53:01.800 --> 53:05.840
+and Twitter or TikTok, and then you can just tell your agent
+
+53:05.840 --> 53:10.280
+that, oh, I want to find recent small creators
+
+53:10.280 --> 53:14.840
+who has a really high engagement in the AI and tech space.
+
+53:14.840 --> 53:17.660
+then your agent will be able to help you fund it.
+
+53:17.660 --> 53:20.100
+And the third is the competitive monitoring.
+
+53:20.100 --> 53:23.160
+So as you're agent running a company,
+
+53:23.160 --> 53:25.960
+then probably there's someone might be copy you
+
+53:25.960 --> 53:28.440
+or they're competing with you.
+
+53:28.440 --> 53:32.920
+Then you can set up a monitor on how the SEO performing,
+
+53:32.920 --> 53:34.980
+like how they're running their social media
+
+53:34.980 --> 53:37.160
+and if they're running any page right now,
+
+53:37.160 --> 53:39.880
+and then you can set up social workflow.
+
+53:39.880 --> 53:42.280
+And third is the people by SEO and GEO.
+
+53:42.280 --> 53:45.180
+That's for sure you need to have for your company
+
+53:45.180 --> 53:47.180
+since you want to have the visibility
+
+53:47.180 --> 53:50.420
+in both Google Search, HHP, and Cloud.
+
+53:50.420 --> 53:53.660
+And we have the access for them as well.
+
+53:53.660 --> 53:56.420
+And lastly, we have all the generation models,
+
+53:56.420 --> 53:59.360
+like CDANs, Minimacs, Pagent,
+
+53:59.360 --> 54:02.180
+and you can just use them and create content.
+
+54:03.780 --> 54:05.980
+So it's kind of really easy to use.
+
+54:05.980 --> 54:08.160
+We provide skills, CLI, and SAP
+
+54:08.160 --> 54:09.660
+that you can just connect directly,
+
+54:09.660 --> 54:14.660
+to connect to your agent or the company that you build to let agent run.
+
+54:14.660 --> 54:19.660
+And for any projects use agents during the hackdown,
+
+54:19.660 --> 54:22.660
+we're going to feature you on the landing page.
+
+54:22.660 --> 54:27.660
+And hopefully that can bring some traffic and also bring some backlinks to your project.
+
+54:27.660 --> 54:32.660
+And we also put up the sponsor track.
+
+54:32.660 --> 54:34.660
+For the first place, the project is money.
+
+54:34.660 --> 54:39.900
+you're going to get $1,500 money credits plus $1,500
+
+54:39.900 --> 54:41.260
+base active cards.
+
+54:41.260 --> 54:43.620
+And for the second place, they're
+
+54:43.620 --> 54:45.300
+going to be $1,000 for each.
+
+54:45.300 --> 54:47.840
+And the third place is going to be $500 for each.
+
+54:47.840 --> 54:52.660
+And for anyone who uses us in the project
+
+54:52.660 --> 54:54.180
+and you post your project and tag
+
+54:54.180 --> 54:57.200
+on it on any type of social media,
+
+54:57.200 --> 55:02.720
+you will get 200 credits in money credits.
+
+55:02.720 --> 55:07.720
+and take a photo of it, and if you use the link to sign up,
+
+55:08.300 --> 55:11.640
+you can get $20 credits to Starbucks.
+
+55:11.640 --> 55:13.640
+And by the way, we are also hiring.
+
+55:13.640 --> 55:16.880
+That we started six months ago, we're rolling super fast.
+
+55:16.880 --> 55:19.160
+We right now process like millions of transactions
+
+55:19.160 --> 55:20.200
+every single day.
+
+55:20.200 --> 55:22.960
+We are hiring engineers and marketing roles as well,
+
+55:22.960 --> 55:23.960
+so come to say hi.
+
+55:32.720 --> 56:02.700
+Thank you.
+
+56:02.720 --> 56:32.700
+Thank you.
+
+56:32.720 --> 57:02.700
+Thank you.
+
+57:32.720 --> 57:35.180
+I'm going to go ahead and get my hands dirty.
+
+57:35.180 --> 57:38.140
+I'm going to get my hands dirty.
+
+57:38.140 --> 57:41.140
+I'm going to get my hands dirty.
+
+57:41.140 --> 57:43.140
+I'm going to get my hands dirty.
+
+57:43.140 --> 57:45.140
+I'm going to get my hands dirty.
+
+57:45.140 --> 57:47.140
+I'm going to get my hands dirty.
+
+57:47.140 --> 57:49.140
+I'm going to get my hands dirty.
+
+57:49.140 --> 57:51.140
+I'm going to get my hands dirty.
+
+57:51.140 --> 57:53.140
+I'm going to get my hands dirty.
+
+57:53.140 --> 57:55.140
+I'm going to get my hands dirty.
+
+57:55.140 --> 57:57.140
+I'm going to get my hands dirty.
+
+57:57.140 --> 57:59.140
+I'm going to get my hands dirty.
+
+57:59.140 --> 58:01.140
+I'm going to get my hands dirty.
+
+58:01.140 --> 58:21.320
+Are we starting?
+
+58:22.180 --> 58:22.460
+No.
+
+58:22.460 --> 58:24.580
+At one.
+
+58:25.000 --> 58:25.520
+Wait.
+
+58:26.680 --> 58:27.140
+At one?
+
+58:27.280 --> 58:28.340
+At one does lunch.
+
+58:31.140 --> 58:33.140
+I know that for a fact.
+
+59:01.140 --> 59:01.840
+We're moving.
+
+59:02.940 --> 59:03.940
+We're having a moment.
+
+59:06.740 --> 59:09.460
+You said we had one more speaker.
+
+59:11.460 --> 59:16.100
+Everyone, please welcome the co-founder and CEO of AgentMill from YCS25,
+
+59:16.320 --> 59:18.640
+one of the fastest growing YC companies of all time.
+
+59:19.900 --> 59:20.680
+Let's go, guys.
+
+59:31.140 --> 59:46.820
+Hi, I'm Hadi. I'm one of the co-founders of AgentMail. If you guys have heard about us, we do email for our agents. We are the inbox API. We give your agents their own address to send, receive, remember, just like we do.
+
+59:46.820 --> 59:50.820
+So, a little bit about the product.
+
+59:50.820 --> 59:56.820
+I mean, it's kind of in the name, so not anything crazy, but we give your agent an inbox of its own.
+
+59:56.820 --> 01:00:00.820
+You can create them in code, you can send, receive, reply.
+
+01:00:00.820 --> 01:00:04.820
+You can keep threads, attachments, all the state within an email.
+
+01:00:04.820 --> 01:00:07.820
+And you can build coworkers, not just agents.
+
+01:00:07.820 --> 01:00:12.820
+Naive, we work with them really closely in terms of autonomous businesses.
+
+01:00:12.820 --> 01:00:17.320
+If you are building an agent that runs a company, email becomes important.
+
+01:00:17.320 --> 01:00:20.820
+So I'm excited to see what you guys are going to build and how it goes.
+
+01:00:20.820 --> 01:00:24.820
+If you have any questions, I'll be here for a couple more hours, not be dull.
+
+01:00:24.820 --> 01:00:34.820
+One thing I want to point out, and what we're working on, is Agent ID, which is sign in with Google, but for agents.
+
+01:00:34.820 --> 01:00:40.820
+So if you think about Gmail, a lot of times you don't want to just enter in your password,
+
+01:00:40.820 --> 01:00:45.280
+that for every single site it's as simple as click a button and you can
+
+01:00:45.280 --> 01:00:50.220
+authenticate that new website so agent ID is our new offering I'd love for you
+
+01:00:50.220 --> 01:00:54.800
+guys to try it out with that your agents can create accounts and services like
+
+01:00:54.800 --> 01:01:00.620
+fire crawl context.dev super memory etc and it makes it a lot easier to have
+
+01:01:00.620 --> 01:01:04.900
+access to these services as opposed to signing up separately so as you guys are
+
+01:01:04.900 --> 01:01:08.760
+building up on this businesses I'd love for you to try out agent ID and give me
+
+01:01:08.760 --> 01:01:15.400
+some feedback. If you guys go on agentid.com slash docs, it'll get you set up and it's
+
+01:01:15.400 --> 01:01:21.000
+as easy as a prompt to let your agent sign in to all these services. And also if you're
+
+01:01:21.000 --> 01:01:25.420
+building something like a side project and you want initial users, we have 10 million
+
+01:01:25.420 --> 01:01:29.840
+active inboxes on the platform now. So if you want distribution, if you want to get
+
+01:01:29.840 --> 01:01:33.420
+surfaced within the HTML user base, add this to your app.
+
+01:01:33.420 --> 01:01:41.620
+So here's a few ideas of what you can build and what we see within our customers.
+
+01:01:41.620 --> 01:01:47.660
+You can build research agencies, recruiting coordinators, newsletters, transactional services,
+
+01:01:47.660 --> 01:01:49.060
+you name it.
+
+01:01:49.060 --> 01:01:54.060
+The possibilities with email are literally endless, so I'm excited to see these type
+
+01:01:54.060 --> 01:01:57.100
+of things and we have some prizes for you guys as well.
+
+01:01:57.100 --> 01:02:03.340
+First place gets six months of our start-up plan free, plus a $500 Visa gift card.
+
+01:02:03.340 --> 01:02:08.340
+Second place gets three months of our start-up plan free, and then third place also gets the same price.
+
+01:02:11.220 --> 01:02:17.900
+So this is how you're actually going to access and get credits for HTML today.
+
+01:02:17.900 --> 01:02:20.860
+So everyone here, I'd love if you could take a picture.
+
+01:02:20.860 --> 01:02:25.620
+What you're going to do is you're going to go to console.html.to,
+
+01:02:25.620 --> 01:02:29.740
+And then you're gonna open console.agmail.io
+
+01:02:29.740 --> 01:02:32.080
+slash dashboard slash hackathon.
+
+01:02:32.080 --> 01:02:34.600
+This is gonna let you put in a code
+
+01:02:34.600 --> 01:02:37.640
+and get credits without needing to put a card down.
+
+01:02:37.640 --> 01:02:39.800
+And then this will give you access for 30 days
+
+01:02:39.800 --> 01:02:42.540
+so even beyond the hackathon, you guys are good to go
+
+01:02:42.540 --> 01:02:44.620
+and build whatever you want
+
+01:02:44.620 --> 01:02:47.060
+and be able to use HTML there.
+
+01:02:47.060 --> 01:02:49.460
+And then this is the code you're actually gonna enter.
+
+01:02:49.460 --> 01:02:51.380
+That is a long one, so please take a picture.
+
+01:02:51.380 --> 01:02:55.060
+It's HTML hack 657x.
+
+01:02:55.620 --> 01:03:02.000
+And then you can redeem this by Tuesday night. So you guys have plenty of time. It's gonna be live whenever you guys need it.
+
+01:03:02.640 --> 01:03:03.800
+Yeah
+
+01:03:03.800 --> 01:03:08.540
+That covers it. I think one parting note is when we started HML
+
+01:03:09.000 --> 01:03:14.540
+How hard is it to build was often a turnoff. We were like, oh if it's too hard, we're not gonna build it
+
+01:03:14.540 --> 01:03:16.540
+I think the world has changed
+
+01:03:17.160 --> 01:03:22.940
+What you can build now is incredible in a day. So with this hackathon with this category
+
+01:03:22.940 --> 01:03:25.380
+I think every single company is going to be an autonomous company.
+
+01:03:26.020 --> 01:03:28.020
+So I'm excited to see what you can build.
+
+01:03:28.660 --> 01:03:32.300
+For us, when we look at use cases, when we look at what we want people to build,
+
+01:03:32.420 --> 01:03:37.200
+it should be the most ambitious, the most defining, the most scary things you can build.
+
+01:03:37.380 --> 01:03:39.840
+We'd love to see them because that's really where we're at.
+
+01:03:40.020 --> 01:03:41.180
+So thank you guys.
+
+01:03:41.280 --> 01:03:42.360
+I'm excited to see what you build.
+
+01:03:42.440 --> 01:03:43.880
+If you have any questions, reach out to me.
+
+01:03:44.200 --> 01:03:44.540
+Thank you.
+
+01:03:47.540 --> 01:03:48.520
+Thank you so much, Ali.
+
+01:03:49.480 --> 01:03:50.340
+HML's a great company.
+
+01:03:50.340 --> 01:03:50.840
+everyone.
+
+01:03:51.620 --> 01:03:53.300
+Even if you're Asian, use Asian mail.
+
+01:03:54.800 --> 01:03:56.440
+Okay, so yeah, that concludes
+
+01:03:56.440 --> 01:03:58.100
+all of our anchor talks, I believe.
+
+01:03:59.520 --> 01:04:00.340
+Separate ground rules
+
+01:04:00.340 --> 01:04:02.300
+I forgot to add. So yeah, this is the main
+
+01:04:02.300 --> 01:04:04.180
+hacking room. You can also access the
+
+01:04:04.180 --> 01:04:06.320
+cafeteria, and there's actually a bottom
+
+01:04:06.320 --> 01:04:07.980
+floor that you guys can access as well.
+
+01:04:08.720 --> 01:04:09.440
+You go downstairs,
+
+01:04:10.360 --> 01:04:11.880
+plenty of working space as well, and
+
+01:04:11.880 --> 01:04:12.240
+outlets.
+
+01:04:14.520 --> 01:04:16.040
+Yeah, happy hacking, man.
+
+01:04:16.040 --> 01:04:26.200
+Wait, do you guys have a team or do you guys want to, like, we're thinking of, like, maybe doing Panems, but if you guys want to join our team.
+
+01:04:26.740 --> 01:04:28.180
+Do you guys have a plan or no?
+
+01:04:28.560 --> 01:04:28.940
+I don't know.
+
+01:04:29.040 --> 01:04:29.920
+Do you have a team already?
+
+01:04:30.260 --> 01:04:31.220
+What are you guys thinking of doing?
+
+01:04:31.540 --> 01:04:31.820
+What?
+
+01:04:32.080 --> 01:04:33.080
+Have you guys thought about something?
+
+01:04:34.140 --> 01:04:34.880
+Like, semi.
+
+01:04:35.260 --> 01:04:35.420
+Yeah.
+
+01:04:37.120 --> 01:04:39.320
+We, like, we had Claude come up with a few ideas.
+
+01:04:40.320 --> 01:04:44.020
+But we're thinking, like, we have a, we have just a markdown file with a few ideas.
+

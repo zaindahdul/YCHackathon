@@ -1,0 +1,27 @@
+{
+  "model": "mlx-community/whisper-large-v3-mlx",
+  "preprocessing": "ffmpeg mono 16kHz, loudnorm I=-20 TP=-2 LRA=11",
+  "options": {
+    "language": "en",
+    "condition_on_previous_text": false,
+    "word_timestamps": true,
+    "hallucination_silence_threshold": 2.0
+  },
+  "clips": [
+    {
+      "start": 1627.72,
+      "end": 1670.56,
+      "name": "clip-1627p72-1670p56"
+    },
+    {
+      "start": 3020.8,
+      "end": 3061.3,
+      "name": "clip-3020p8-3061p3"
+    },
+    {
+      "start": 3422.7,
+      "end": 3501.32,
+      "name": "clip-3422p7-3501p32"
+    }
+  ]
+}
