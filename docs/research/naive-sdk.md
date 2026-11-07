@@ -1,5 +1,7 @@
 # Naïve SDK research for an autonomous fabrication company
 
+> **Current scope:** the [merch-first plan](../merch-first.md) supersedes the CAD-first weekend offer. This file retains capability/market research; CAD generation is a later option, not a prerequisite for the merch loop.
+
 Verified against official documentation on November 7, 2026. These are documented capabilities, not a live account test. No package was installed, account accessed, credential used, or paid request made during this research.
 
 ## Availability conflict: do not depend on native teams

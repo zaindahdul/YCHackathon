@@ -1,5 +1,7 @@
 # Demo and field playbook
 
+> **Superseded weekend scope:** Srujan has chosen a simpler merch-first delivery path. Use [the current merch plan](merch-first.md). The CAD/QR-display material below is retained as an earlier alternative and later expansion; it is not the current build or sales instruction.
+
 ## The two-to-four-minute demonstration
 
 Use real completed work for the long-running evidence, then one small live action. Verify the final allotted demo duration with organizers.

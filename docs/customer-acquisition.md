@@ -1,5 +1,7 @@
 # Get the first real customers before judging
 
+> **Superseded weekend scope:** Srujan has chosen a simpler merch-first delivery path. Use [the current merch plan](merch-first.md). The CAD/QR-display material below is retained as an earlier alternative and later expansion; it is not the current build or sales instruction.
+
 Decision date: Saturday, November 7, 2026, approximately 13:40 Pacific. About 21 hours remain before the Sunday 11am cutoff, including rest and verification. This is an executable marketing plan, not evidence that outreach has been sent or customers acquired. No messages or posts were sent as part of this work.
 
 ## The recommendation

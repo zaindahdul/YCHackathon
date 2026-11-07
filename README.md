@@ -1,32 +1,19 @@
 # Formshop
 
-**An agent-run custom-object shop: a founder describes what they need; the company designs it, checks it, quotes it, and runs the job.**
+**An agent-run merch shop: send your company’s logo; the company handles the design, approval, production order and delivery.**
 
-This repository currently contains the hackathon recording, research, and an implementation-ready company plan. It does **not** contain a built storefront, connected agents, checkout, or supplier integration.
-
-**First offer:** one QR-display product family; test $29–$49 for an approved digital design package with one revision. Physical production requires a confirmed separate quote. Native Naïve build123d is the first CAD path.
-
-The recommended first product is a **custom branded QR desk display** for startup teams. CAD and merch meet in a useful physical object. Expand into phone stands, organizers and noncritical custom fixtures after the first order loop works. “Formshop” is a working name, not a cleared brand.
+The current weekend priority is **one simple physical merch item delivered to a real customer**. Start with a standard mug or other SKU that a local provider confirms it can produce in time. CAD/custom parts are a later upgrade. A store-specific SKU, price and ready time are still unconfirmed; no application, checkout or supplier connection is implemented yet.
 
 ## Start here
 
-The existing [hackathon rules](hackathon-rules.md) remain the repo’s event source of truth. This package adds recording evidence and a proposed company plan without changing those rules.
+1. **[Current merch-first plan](docs/merch-first.md)** — offer, production-first check, first buyer, minimal agent loop and physical delivery evidence.
+2. [Hackathon rules](hackathon-rules.md) and [event brief](docs/hackathon-brief.md) — mandatory Naïve SDK, live operating business and Sunday 11am cutoff.
+3. [SDK research](docs/research/naive-sdk.md) — verified documented primitives and account-level uncertainties. Use ordinary SDK sessions first.
+4. [Recording digest](docs/recording-digest.md) — lessons and timestamped source context.
 
-1. [Get customers before judging](docs/customer-acquisition.md) — first 90 minutes, channels, actual offer, draft copy, qualification and decision gates.
-2. [Company and offer](docs/company-plan.md) — customer, product, pricing experiments, agent roles, differentiation and expansion.
-3. [22-hour build plan](docs/build-plan.md) — first integration spike, architecture, states, two-person schedule, failure handling and acceptance checks.
-4. [Demo playbook](docs/demo-playbook.md) — pitch, live evidence, field validation and judge questions.
-5. [Recording digest](docs/recording-digest.md) — timestamped lessons and source limitations.
-6. [Event brief](docs/hackathon-brief.md) — supplied rules, logistics, sponsors and schedule.
+The earlier [CAD company plan](docs/company-plan.md), [CAD build plan](docs/build-plan.md), [acquisition playbook](docs/customer-acquisition.md) and [demo script](docs/demo-playbook.md) remain labeled historical alternatives. Their QR-display-first and paid-CAD-file recommendations are superseded by the simpler merch offer. Do not run both plans in parallel.
 
-The formal build window is **Saturday November 7, 13:00 → Sunday November 8, 11:00 Pacific: 22 hours**. The first useful milestone is one real brief → one real CAD export → one complete delivery loop.
-
-## Findings that shape the plan
-
-- Naïve documents native `build_3d` CAD generation with build123d, STEP/STL exports, previews and geometry checks. Use it before creating separate CAD infrastructure. [Verified SDK research](docs/research/naive-sdk.md)
-- A company must own revisions, quality, pricing, approval and delivery. A prompt-to-CAD viewer alone does not establish an operating business. [Company plan](docs/company-plan.md)
-- Local printer access is unconfirmed. Standard remote merch fulfillment does not support a guaranteed weekend arrival. Sell an explicitly scoped digital design package first; promise physical fulfillment only after a provider confirms it. [Supplier research and alternatives](docs/research/business-landscape.md)
-- Current research describes documented capabilities; authenticated SDK runs, customer demand and supplier availability remain build-time checks. All price points and unit economics are labeled experiments/assumptions.
+The source recording and research remain available below. “Formshop” is a working name, not a cleared brand. No customer outreach, supplier purchase or physical fulfillment has occurred as part of this planning work.
 
 ## Recording
 
@@ -51,4 +38,4 @@ This checks transcript structure, coverage, repetition, source linkage and local
 
 ## First build session
 
-Pair on a 45-minute Naïve access/CAD spike. In parallel, obtain one consenting customer's actual request and confirm printer access. Build one supported product through revision and delivery before adding email, additional templates or mobile automation. The detailed [build plan](docs/build-plan.md) defines honest fallbacks and the integration checks the application must pass.
+Confirm the exact product and local ready time first. In parallel, prove one Naïve session and prepare a provider-compatible logo layout. Recruit one independent customer, agree the exact total/artwork, submit an authorized order, collect it and hand it over. Record human checkout/pickup as human work. Follow the [current merch plan](docs/merch-first.md).

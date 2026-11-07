@@ -1,5 +1,7 @@
 # Formshop — an agent-run company that makes useful branded objects
 
+> **Superseded weekend scope:** Srujan has chosen a simpler merch-first delivery path. Use [the current merch plan](merch-first.md). The CAD/QR-display material below is retained as an earlier alternative and later expansion; it is not the current build or sales instruction.
+
 Working name only; availability and trademark status have not been checked.
 
 ## The idea in one sentence

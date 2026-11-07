@@ -77,3 +77,20 @@ No material finding was identified:
 `python3 scripts/verify_deliverables.py plan` passed with 40 valid local links. The reviewer also checked the official Stripe Payment Links setup page: hosted checkout is a supported option, while the plan correctly retains account-readiness, test/live and payment-reconciliation requirements. The YC source URL was reachable but did not expose readable text through the browser reader; its general advice is background context, not evidence of demand or channel access.
 
 **Follow-up disposition: No unresolved material findings** in the acquisition-plan addition and its reviewed consistency edits. Real customer need, willingness to pay, delivery capability and access remain explicit experiments for execution. Existing PR updates and remote commit verification remain the lead's delivery responsibility.
+
+## Merch-first correction review — November 7, 2026
+
+Reviewed the current `merch-first.md`, rewritten README, superseded banners in the former CAD company/build/acquisition/demo documents, and the planning-reference check. Scope is the latest short-window business plan and PR documentation update, not an implemented shop or authorization to contact suppliers or place orders.
+
+**No unresolved material findings** in this correction:
+
+- One simple standard physical item replaces the CAD-file offer; no CAD exporter, viewer, custom geometry or separate hardware need remains on the critical path.
+- Default completion is the actual physical handoff to an independent customer before judging. A mockup, approved layout, payment, accepted order and later-delivery promise are explicitly distinct from that outcome.
+- Supplier selection precedes customization work. Exact store/SKU, equipment, stock, cutoff, ready time, collection and customer receipt must all be checked; generic same-day advertising is expressly insufficient.
+- The standard Staples noon cutoff is correctly described as passed. An independent check of the same official page additionally found paid express pickup for limited quantities, with a stated three-hour turnaround and a cutoff three hours before closing. This was sent to the lead as an optional route to verify, not confirmation that a given mug/store supports it.
+- CVS remained inaccessible to this reviewer on the attempted page fetch. The plan treats it as a candidate requiring store-specific confirmation, not guaranteed capacity, and does not require CVS to succeed.
+- The first buyer can be a nearby hackathon team with a real merch need. The price is based on actual supplier/handling cost; the former $39 digital offer no longer governs this plan.
+- Human supplier checkout, collection and exception handling are allowed but explicitly counted as human work; ordinary Naïve SDK sessions handle the measurable agent work. Assisted fulfillment is not presented as unattended autonomy.
+- README precedence and all four historical-plan banners consistently point to the merch-first plan. CAD is a later option, not a parallel weekend commitment. Existing research and transcript remain supporting context rather than evidence of live orders.
+
+`python3 scripts/verify_deliverables.py plan` passed with 43 valid local links. This disposition does not verify store capacity, order placement, actual customer demand, public deployment, or physical delivery; those remain explicit execution checks. The lead retains responsibility for the updated PR commit and remote verification.

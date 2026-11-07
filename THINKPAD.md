@@ -6,7 +6,7 @@
 
 ## Goal
 
-Produce a complete local MLX Whisper transcript of the supplied 64m45s recording with timestamped machine-readable outputs and source provenance; digest the recording and pasted hackathon brief; refine the custom CAD/merch autonomous-company concept into a differentiated, feasible business and implementation-ready plan through the November 8 11am cutoff. Deliver source-backed SDK/supplier research, concrete customer and agent journeys, bounded MVP and failure handling, economics assumptions, two-person schedule, and an honest live-demo/evidence plan. This request is transcription and business/product planning, followed by the user-requested GitHub pull request so the cofounder can review everything. The follow-up adds an executable short-window customer acquisition strategy, ready-to-use draft copy, measurement and decision gates, published in the same cofounder review PR. It does not require building/deploying the application or sending outreach in this turn.
+Produce a complete local MLX Whisper transcript of the supplied 64m45s recording with timestamped machine-readable outputs and source provenance; digest the recording and pasted hackathon brief; refine the custom CAD/merch autonomous-company concept into a differentiated, feasible business and implementation-ready plan through the November 8 11am cutoff. Deliver source-backed SDK/supplier research, concrete customer and agent journeys, bounded MVP and failure handling, economics assumptions, two-person schedule, and an honest live-demo/evidence plan. This request is transcription and business/product planning, followed by the user-requested GitHub pull request so the cofounder can review everything. The follow-up adds an executable short-window customer acquisition strategy, ready-to-use draft copy, measurement and decision gates, published in the same cofounder review PR. The latest correction supersedes the CAD-file/QR-first weekend offer: use one simple merch SKU and prioritize an actual customer handoff, with store-specific production checked before promising it. Preserve the earlier plans as labeled alternatives and update the same PR. It does not require building/deploying the application or sending outreach in this turn.
 
 ## Constraints
 - **Max concurrency: 3**
@@ -18,7 +18,7 @@ Produce a complete local MLX Whisper transcript of the supplied 64m45s recording
 
 ## Open questions
 
-- Printer access is optional clarification, pending; assume no confirmed printer and plan a credible digital fulfillment fallback.
+- Exact local merch SKU, stock, cost and ready time are unconfirmed. Default to physical handoff as the target; the user has been asked whether later-delivery orders are acceptable. Do not count digital files as physical delivery.
 - Confirm event details against the recording; supplied schedule has only 22 hacking hours, Saturday 13:00 to Sunday 11:00.
 
 ## Tasks
@@ -44,6 +44,9 @@ Produce a complete local MLX Whisper transcript of the supplied 64m45s recording
 - [x] T6 · Define and review the short-window customer acquisition sprint
       files: docs/customer-acquisition.md, README.md, docs/company-plan.md, docs/build-plan.md, docs/demo-playbook.md, docs/review.md, scripts/verify_deliverables.py
       accept: python3 scripts/verify_deliverables.py all
+- [x] T7 · Replace CAD-first offer with a simple merch delivery plan and update PR
+      files: README.md, docs/merch-first.md, docs/company-plan.md, docs/build-plan.md, docs/customer-acquisition.md, docs/demo-playbook.md, docs/review.md, scripts/verify_deliverables.py
+      accept: python3 scripts/verify_deliverables.py all
 ## Log
 
 - 2026-11-07 · thinkpad created
@@ -53,3 +56,4 @@ Produce a complete local MLX Whisper transcript of the supplied 64m45s recording
 - 2026-11-07 · done T4 · Independently review and repair full deliverable package
 - 2026-11-07 · done T5 · Commit review package and open cofounder-facing GitHub PR
 - 2026-11-07 · done T6 · Define and review the short-window customer acquisition sprint
+- 2026-11-07 · done T7 · Replace CAD-first offer with a simple merch delivery plan and update PR

@@ -1,5 +1,7 @@
 # Weekend implementation plan
 
+> **Superseded weekend scope:** Srujan has chosen a simpler merch-first delivery path. Use [the current merch plan](merch-first.md). The CAD/QR-display material below is retained as an earlier alternative and later expansion; it is not the current build or sales instruction.
+
 This is an implementation-ready proposal, not a built or deployed application. Research was checked November 7, 2026; no SDK sessions, payments, or supplier orders were executed for this planning work. Start from [the company offer](company-plan.md) and [verified SDK notes](research/naive-sdk.md).
 
 ## Finish line at Sunday 11am
