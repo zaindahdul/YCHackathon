@@ -485,7 +485,7 @@ export function renderOps(d: { overview: Overview; launches: Launch[]; decisions
   const o = d.overview;
   const reports = d.reports.filter((r) => r.listed);
   const launches = d.launches.length === 0 ? `<p class="empty">None yet.</p>` : `<div class="tablewrap"><table class="t"><thead><tr><th>Company</th><th>Status</th><th>Asked</th><th>Kit ready</th><th>Launched</th></tr></thead><tbody>${[...d.launches].reverse().map((l) => `<tr><td>${esc(l.listed ? l.company : "Unlisted launch")}</td><td><span class="status ${l.status === "launched" || l.status === "reported" ? "live" : ""}">${esc(l.status)}</span></td><td class="muted">${esc(time(l.created_at))}</td><td class="muted">${l.ready_at ? esc(time(l.ready_at)) : "—"}</td><td class="muted">${l.launched_at ? esc(time(l.launched_at)) : "—"}</td></tr>`).join("")}</tbody></table></div>`;
-  /* Only real actions: runs that skipped or found nothing to do stay in the full log. */ const recent = d.decisions.filter((x) => !/^(skip|no[-_ ]?op|idle|nothing)/i.test(x.decision)).slice(0, 4);
+  /* Only work done for founders (kits, boosts, reports). Scout and inbox housekeeping stays in the full log. */ const recent = d.decisions.filter((x) => (x.launch_id !== null || x.agent === "producer" || x.agent === "booster") && !/^(skip|no[-_ ]?op|idle|nothing)/i.test(x.decision)).slice(0, 4);
   const steps: [string, string, string][] = [
     ["You", "Tell us about the launch", "One short form: what you're launching, the link, and which channels you want."],
     ["Producer", "Writes your launch kit", "A time for every channel and every post written in its voice. In your inbox in about ten minutes."],
