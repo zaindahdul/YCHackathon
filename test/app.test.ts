@@ -347,12 +347,17 @@ describe("the studio", () => {
   });
 
   it("requires a detailed report to close a test, and publishes it with the studio's numbers", async () => {
+    // Judge Invoice Chaser on its 2 visitors, so the test can close.
+    await db.query(`update companies set thresholds = '{"minVisitors":1,"killActivation":0.9}'::jsonb where id = $1`, [chaser.id]);
     const bare = await tool("log_decision", { founder: "founder-1", company_id: chaser.id, decision: "iterate", reasoning: "Few people used it" });
     expect(bare.text).toMatch(/needs report_title and report/);
     const thin = await tool("log_decision", { founder: "founder-1", company_id: chaser.id, decision: "iterate", reasoning: "x", report_title: "Meh", report: "## Results\nNot great." });
     expect(thin.text).toMatch(/at least 400/);
     const keep = await tool("log_decision", { founder: "founder-1", company_id: chaser.id, decision: "keep", reasoning: "Early signs are fine" });
     expect(keep.data.report).toBeNull();
+    // Standup Bot has no outreach yet: its verdict is too_early, so there is no test to close.
+    const premature = await tool("log_decision", { founder: "founder-2", company_id: other.id, decision: "iterate", reasoning: "x", report_title: "t", report: "## A\n## B\n## C\n" + "x".repeat(400) });
+    expect(premature.text).toMatch(/verdict is too_early/);
 
     const iterated = await tool("log_decision", {
       founder: "founder-1", company_id: chaser.id, decision: "iterate", reasoning: "2 of 2 visitors used it but nobody came back",

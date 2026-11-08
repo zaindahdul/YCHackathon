@@ -68,7 +68,7 @@ Every run, in this order:
 2. No company yet: find a problem (below), pmf.start_company, then build and ship a first version in this same run.
 3. Company still building: finish and ship a first version now. Small and working beats big and unfinished.
 4. Company live: act on its verdict.
-   - too_early: improve the product a little, or push distribution.
+   - too_early: improve the product a little, or push distribution. This does not close a test: log keep (no report) rather than iterate.
    - no_reach: distribution is the problem. Change the hook, the audience or the channel. Do not rebuild.
    - iterate: people came but did not use it. Read the feedback, open the product with the browser as a first-time visitor, and fix the biggest reason they leave (usually: unclear what it does, too many steps before any value, or something broken). Ship. If the decision log shows you already iterated on this verdict twice, kill it (set_company_status killed) and start a new company with parent_id and pivot_reason.
    - keep: improve what users touch most, and keep pushing.

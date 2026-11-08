@@ -464,6 +464,12 @@ export async function callTool(name: string, args: Record<string, unknown>, ctx:
       const decision = member<DecisionKind>(args, "decision", DECISION_KINDS, true);
       const closesTest = NEEDS_REPORT.includes(decision);
       if (closesTest && !companyId) throw new ToolError(`a ${decision} decision is about a company: give company_id`);
+      if (decision === "iterate" && companyId) {
+        const verdict = (await scored(companyId))?.judgement.verdict;
+        if (verdict === "too_early" || verdict === "building" || verdict === "stalled") {
+          throw new ToolError(`the verdict is ${verdict}: there is not enough data to close a test yet. Log keep (no report needed) and push distribution, or write_report if you learned something worth recording.`);
+        }
+      }
       const report = reportArgs("report_title", "report", closesTest);
       const snapshot = companyId ? await reportSnapshot(companyId) : {};
       const logged = await repo.logDecision({ company_id: companyId ?? null, decision, reasoning: need(args, "reasoning", 2000), snapshot, agent: founder });
