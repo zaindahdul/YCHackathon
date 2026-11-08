@@ -138,8 +138,10 @@ textarea{min-height:104px;resize:vertical}
 .timeline .t{font-weight:550}.timeline .c{color:var(--muted)}
 .timeline a{text-decoration:none}
 .todo{list-style:none;margin:0;padding:0;font-size:13.5px;color:var(--ink-2)}
-.todo li{padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--rule)}.todo li:last-child{border-bottom:0}
-.todo li::before{content:"";position:absolute;left:0;top:12px;width:11px;height:11px;border:1.5px solid var(--muted);border-radius:3px}
+.todo li{padding:7px 0;border-bottom:1px solid var(--rule)}.todo li:last-child{border-bottom:0}
+.todo label{display:grid;grid-template-columns:18px 1fr;gap:8px;align-items:start;cursor:pointer}
+.todo input{width:14px;height:14px;margin:4px 0 0;accent-color:var(--ink)}
+.todo input:checked+span{color:var(--muted);text-decoration:line-through}
 .prose{max-width:62ch;color:var(--ink-2);font-size:15px}
 .prose p+p{margin-top:12px}.prose strong{color:var(--ink);font-weight:600}
 .prose h2{font-size:17px;color:var(--ink);margin:26px 0 8px}.prose h3{font-size:15px;color:var(--ink);margin:18px 0 6px}
@@ -202,10 +204,12 @@ table.t td{padding:12px 12px 12px 0;border-bottom:1px solid var(--rule);vertical
 `;
 
 const FONT = `<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;550;600;650&display=swap" rel="stylesheet">`;
+const TODO_JS = `<script>(function(){var u=document.querySelector(".todo[data-kit]");if(!u)return;var k="lp-todo-"+u.getAttribute("data-kit"),d={};try{d=JSON.parse(localStorage.getItem(k)||"{}")}catch(e){}u.querySelectorAll("input[data-step]").forEach(function(i){i.checked=!!d[i.getAttribute("data-step")];i.addEventListener("change",function(){d[i.getAttribute("data-step")]=i.checked;try{localStorage.setItem(k,JSON.stringify(d))}catch(e){}})})})();</script>`;
 const COPY_JS = `<script>document.addEventListener("click",function(e){var b=e.target.closest("[data-copy]");if(!b)return;navigator.clipboard.writeText(b.getAttribute("data-copy")).then(function(){var o=b.textContent;b.textContent="Copied";setTimeout(function(){b.textContent=o},1400)})});</script>`;
 
+const ICON = `<link rel="icon" href="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect x="7" y="7" width="18" height="18" rx="3" transform="rotate(45 16 16)" fill="#141413"/></svg>')}">`;
 const page = (title: string, body: string, head = "") =>
-  `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title>${FONT}${head}<style>${CSS}</style></head><body>${body}</body></html>`;
+  `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title>${ICON}${FONT}${head}<style>${CSS}</style></head><body>${body}</body></html>`;
 
 const header = (cta = true) => `<header class="top wrap"><a class="mark" href="/"><i></i>Launchpad</a><nav><a class="link" href="/ops">How it runs</a>${cta ? `<a class="btn sm" href="/new">Plan a launch</a>` : ""}</nav></header>`;
 const footer = `<footer class="wrap"><p>Launchpad is run by AI agents and is not affiliated with Y Combinator. No bots or fake engagement: every boost is a real founder choosing to share. <a href="/ops">See what the agents do</a>.</p></footer>`;
@@ -353,8 +357,10 @@ ${d.reports.length ? `<div style="margin-top:18px">${d.reports.map((r) => `<p><a
 </section><hr class="rule">` : "";
 
   const launchPanel = launched
-    ? `<div class="panel"><span class="status live">You're live</span><p style="margin-top:8px">${esc(plural(s.boosts.sent, "squad founder was", "squad founders were"))} asked to share it, and ${esc(plural(s.boosts.shared, "has", "have"))} so far.</p></div>`
-    : `<div class="panel"><h3>When your first post is up</h3><p>${d.squad > 0 ? `Press Launch now and ${esc(plural(d.squad, "founder", "founders"))} in the squad get a one-tap request to share it.` : "Press Launch now. You're the first in the squad, so every founder who joins after you will be asked to share it."}</p><form method="post" action="/k/${esc(l.slug)}/go${esc(t)}"><button class="btn" type="submit">Launch now</button></form></div>`;
+    ? `<div class="panel"><span class="status live">You're live</span><p style="margin-top:8px">${s.boosts.total === 0
+      ? "Nobody else is in the squad yet. Founders who join in the next 48 hours will be asked to share it."
+      : `${s.boosts.pending > 0 ? `${esc(plural(s.boosts.pending, "squad founder is", "squad founders are"))} being asked to share it now.` : ""}${s.boosts.sent > 0 ? ` ${esc(plural(s.boosts.sent, "founder was", "founders were"))} asked, and ${esc(String(s.boosts.shared))} ${s.boosts.shared === 1 ? "has" : "have"} shared it so far.` : ""}`}</p></div>`
+    : `<div class="panel"><h3>When your first post is up</h3><p>${d.squad > 0 ? `Press Launch now and ${esc(plural(d.squad, "founder", "founders"))} in the squad get a one-tap request to share it.` : "Press Launch now. Nobody else is in the squad yet, so founders who join in the next 48 hours will be asked to share it."}</p><form method="post" action="/k/${esc(l.slug)}/go${esc(t)}"><button class="btn" type="submit">Launch now</button></form></div>`;
 
   return page(`${l.company} launch kit · Launchpad`, `${header(false)}
 <main class="wrap">
@@ -371,10 +377,10 @@ ${sections.join("")}
 <aside class="side">
 <div class="launch">${launchPanel}</div>
 <div><p class="eyebrow" style="margin-bottom:6px">When to post</p><ul class="timeline">${[...kit.timing].map((x) => `<li><a href="#ch-${esc(x.channel)}"><span class="t">${esc(x.when)}</span></a><span class="c">${esc(CHANNEL_NAMES[x.channel])}</span></li>`).join("")}</ul></div>
-${kit.checklist.length ? `<div><p class="eyebrow" style="margin-bottom:6px">Launch day</p><ul class="todo">${kit.checklist.map((c) => `<li>${esc(c)}</li>`).join("")}</ul></div>` : ""}
+${kit.checklist.length ? `<div><p class="eyebrow" style="margin-bottom:6px">Launch day</p><ul class="todo" data-kit="${esc(l.slug)}">${kit.checklist.map((c, i) => `<li><label><input type="checkbox" data-step="${i}"><span>${esc(c)}</span></label></li>`).join("")}</ul></div>` : ""}
 </aside>
 </div>
-</main>${footer}${COPY_JS}`, `<meta name="robots" content="noindex">${launched ? `<meta http-equiv="refresh" content="120">` : ""}`);
+</main>${footer}${COPY_JS}${TODO_JS}`, `<meta name="robots" content="noindex">${launched ? `<meta http-equiv="refresh" content="120">` : ""}`);
 }
 
 // ------------------------------------------------------------------- boost page
@@ -393,8 +399,8 @@ ${done ? `<p class="status live" style="margin-top:18px">Thanks for boosting. Th
 </main>${footer}${COPY_JS}`, `<meta name="robots" content="noindex">`);
 }
 
-export const renderMessage = (title: string, text: string) =>
-  page(`${title} · Launchpad`, `${header()}<main class="wrap narrow" style="padding:80px 20px"><h1 style="font-size:30px;letter-spacing:-.03em">${esc(title)}</h1><p class="muted" style="margin-top:10px;font-size:16px">${esc(text)}</p></main>${footer}`);
+export const renderMessage = (title: string, text: string, confirm?: { label: string; action: string }) =>
+  page(`${title} · Launchpad`, `${header()}<main class="wrap narrow" style="padding:80px 20px"><h1 style="font-size:30px;letter-spacing:-.03em">${esc(title)}</h1><p class="muted" style="margin-top:10px;font-size:16px">${esc(text)}</p>${confirm ? `<form method="post" action="${esc(confirm.action)}" style="margin-top:24px"><button class="btn" type="submit">${esc(confirm.label)}</button></form>` : ""}</main>${footer}`, confirm ? `<meta name="robots" content="noindex">` : "");
 
 const SOURCE_NAMES: Record<string, string> = { launch_yc: "Launch YC", show_hn: "Show HN", product_hunt: "Product Hunt", x: "X", other: "Other" };
 
@@ -410,7 +416,7 @@ export function renderOps(d: { overview: Overview; launches: Launch[]; decisions
 <main class="wrap">
 <section style="padding:48px 0 8px"><p class="eyebrow">The live record</p><h1 style="font-size:36px;letter-spacing:-.03em;margin:12px 0 12px">How Launchpad runs</h1>
 <p class="prose" style="font-size:16px">No human staff. A <b>producer</b> writes each kit and the report afterwards. A <b>booster</b> asks squad founders to share each launch. A <b>scout</b> finds YC founders who are launching and offers them a kit. A <b>concierge</b> answers the inbox. Everything they do lands here. Updated ${esc(time(d.now))}.</p></section>
-<div class="numbers"><span><b>${o.launches}</b> launches planned</span><span><b>${o.launched}</b> launched</span><span><b>${o.clicks}</b> people clicked through</span><span><b>${o.boosts_sent}</b> ${o.boosts_sent === 1 ? "boost" : "boosts"} asked</span><span><b>${o.boosts_shared}</b> shared</span><span><b>${o.squad}</b> in the squad</span><span><b>${d.interventions.length}</b> human step-ins</span></div>
+<div class="numbers"><span><b>${o.launches}</b> launches planned</span><span><b>${o.launched}</b> launched</span><span><b>${o.clicks}</b> people clicked through</span><span><b>${o.boosts_sent}</b> ${o.boosts_sent === 1 ? "boost" : "boosts"} asked</span><span><b>${o.boosts_shared}</b> shared</span><span><b>${o.squad}</b> in the squad</span><span><b>${d.interventions.length}</b> human ${d.interventions.length === 1 ? "step-in" : "step-ins"}</span></div>
 <section class="section"><h2>Launches</h2>${d.launches.length === 0 ? `<p class="empty">None yet.</p>` : `<div class="tablewrap"><table class="t"><thead><tr><th>Company</th><th>Status</th><th>Asked</th><th>Kit ready</th><th>Launched</th></tr></thead><tbody>${[...d.launches].reverse().map((l) => `<tr><td>${esc(l.listed ? l.company : "Unlisted launch")}</td><td><span class="status ${l.status === "launched" || l.status === "reported" ? "live" : ""}">${esc(l.status)}</span></td><td class="muted">${esc(time(l.created_at))}</td><td class="muted">${l.ready_at ? esc(time(l.ready_at)) : "—"}</td><td class="muted">${l.launched_at ? esc(time(l.launched_at)) : "—"}</td></tr>`).join("")}</tbody></table></div>`}</section>
 <section class="section"><h2>Reports</h2>${feed(reports, "None yet. The producer writes one about two hours after each launch.", (r) => `<li><div class="meta"><b>${esc(name(r.launch_id))}</b> · ${esc(time(r.created_at))}</div><p><a href="/r/${esc(r.id)}">${esc(r.title)}</a></p></li>`)}</section>
 <section class="section"><h2>Decisions</h2>${feed(d.decisions, "None yet.", (x) => `<li><div class="meta"><b>${esc(name(x.launch_id))}</b> · ${esc(x.decision)} · ${esc(x.agent)} · ${esc(time(x.created_at))}</div><p>${esc(x.reasoning)}</p></li>`)}</section>
