@@ -129,7 +129,7 @@ export async function handleRequest(req: ApiRequest, ctx: Context): Promise<ApiR
       if (method !== "POST") return redirect(`/k/${l.slug}?t=${l.token}`);
       try {
         const { boosts } = await r.markLaunched(l.id, now(), caps);
-        await r.logDecision({ launch_id: l.id, decision: "launch", reasoning: `The founder pressed Launch now; ${boosts} squad boosts queued.`, agent: "app" });
+        await r.logDecision({ launch_id: l.id, decision: "launch", reasoning: `The founder pressed Launch now; ${boosts} squad ${boosts === 1 ? "boost" : "boosts"} queued.`, agent: "app" });
       } catch (error) {
         if (error instanceof RepoError) return html(409, renderMessage("Not yet", error.message));
         throw error;
