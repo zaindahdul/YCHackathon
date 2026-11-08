@@ -145,10 +145,10 @@ export function buildCommunities(l: Launch, f: Facts): Community[] {
     const hits = e.tags.filter((t) => words.has(t));
     return { e, hits, score: hits.length * 3 + (f.b2b && e.b2b ? 2 : 0) + (e.general ? 1 : 0) };
   }).filter((x) => x.hits.length > 0 || x.e.general || (f.b2b && x.e.b2b)).sort((a, b) => b.score - a.score).slice(0, 7);
-  const who = f.audience ? ` You said you're building for ${clean(f.audience)}.` : " Add your audience to sharpen this.";
+  const who = f.audience ? ` Your audience: ${clean(f.audience)}.` : " Add your audience to sharpen this.";
   return scored.map(({ e, hits }) => ({
     name: e.name, url: e.url, kind: e.kind, rules: e.rules, rules_url: e.rules_url, angle: e.angle, reviewed: CATALOG_DATE,
-    why: `${hits.length ? `Your description mentions ${hits.slice(0, 4).map((h) => `"${h}"`).join(", ")}.` : f.b2b && e.b2b ? "You marked this as B2B." : "A general builder audience, with no specific keyword match."}${who}`,
+    why: `${hits.length ? `Matched on ${hits.filter((h) => !hits.includes(`${h}s`)).slice(0, 4).join(", ")} in your description.` : f.b2b && e.b2b ? "You marked this as B2B." : "A general builder audience, with no specific keyword match."}${who}`,
     draft_title: clip(`${clean(l.company)}: ${clean(l.one_liner)}`, 120),
     draft_body: `${clean(f.problem) || firstSentence(clean(l.description))}\n\n${clean(l.description)}\n\n${l.url}\n\nWhat would you change?`,
   }));
@@ -201,7 +201,7 @@ export function adviseWave(checks: WaveCheck[], f: Facts): WaveAdvice[] {
     const perHour = Math.round(c.impressions / (Math.max(c.minutes_since_post, 15) / 60));
     const verdict: WaveAdvice["verdict"] = perHour >= 500 ? "ahead" : perHour >= 150 ? "on_track" : "behind";
     const action = verdict === "ahead" ? "Keep replying. Post the follow-up on schedule, and don't boost yet." : verdict === "on_track" ? `Answer every open reply. If it's still under 500 an hour at 90 minutes, press Launch now for the squad.` : `Press Launch now to ask the squad to share. Reply to everyone who engaged. Prepare a follow-up that will ${angle} rather than reposting.`;
-    return { channel: c.channel, verdict, reading: `${c.impressions} impressions, ${c.likes} likes and ${c.replies} replies at ${c.minutes_since_post} minutes: about ${perHour} impressions an hour.`, action, rule: WAVE_RULE };
+    return { channel: c.channel, verdict, reading: `${c.impressions} impressions, ${c.likes} ${c.likes === 1 ? "like" : "likes"} and ${c.replies} ${c.replies === 1 ? "reply" : "replies"} at ${c.minutes_since_post} minutes, about ${perHour} impressions an hour.`, action, rule: WAVE_RULE };
   });
 }
 
@@ -220,8 +220,9 @@ export function roleOutreach(l: Launch, f: Facts): { name: string; why: string; 
   ].map((x) => ({ ...x, draft: draftOutreach(l, f, x.name, "[Why you're writing to this person in particular.]") }));
 }
 
+const lowerFirst = (t: string) => t.charAt(0).toLowerCase() + t.slice(1);
 export const followupFor = (person: string, context: string, promise: string) =>
-  `Hi ${person.split(/\s+/)[0]},\n\n${context ? `Following up from ${context}. ` : ""}I said I'd ${promise.replace(/^i('ll| will)\s+/i, "")}, so here it is: [add it here].\n\nAnything else useful from my side?`;
+  `Hi ${person.split(/\s+/)[0]},\n\n${context ? `Following up on our last exchange (${lowerFirst(context.replace(/\.$/, ""))}). ` : ""}I promised to ${lowerFirst(promise.replace(/^i('ll| will)\s+/i, "").replace(/\.$/, ""))}.\n\n[Add it here]\n\nAnything else useful from my side?`;
 
 // ------------------------------------------------------------------------------- comments
 

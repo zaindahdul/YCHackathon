@@ -17,6 +17,8 @@ const safeHref = (u: string | null | undefined) => (u && /^https?:\/\//i.test(u)
 /** Keeps the producer's link placeholder intact in an editable field without printing it literally in the page source. */
 const rawField = (s: string) => esc(s).replace(/\{link\}/g, "&#123;link&#125;");
 const empty = (title: string, text: string) => `<div class="empty-state"><b>${esc(title)}</b>${esc(text)}</div>`;
+/** Opens company context when linked to it, and keeps the active tab visible on narrow screens. */
+const UX_JS = `<script>(function(){var c=document.getElementById("context");function o(){if(c&&location.hash==="#context"){c.open=true;c.scrollIntoView({block:"start"})}}addEventListener("hashchange",o);o();var t=document.querySelector(".tabs"),a=t&&t.querySelector("[aria-current]");if(a)t.scrollLeft=a.offsetLeft-(t.clientWidth-a.offsetWidth)/2})();</script>`;
 const SAVE_JS = `<script>document.addEventListener("submit",function(e){var b=e.submitter;if(b)setTimeout(function(){b.disabled=true;b.textContent="Saving…"},0)});</script>`;
 
 const CATEGORY_LABELS: Record<CommentCategory, string> = { question: "Question", buying_intent: "Buying intent", objection: "Objection", support: "Support", praise: "Praise", low_value: "Low value" };
@@ -73,15 +75,15 @@ export function renderWorkspace(v: WorkspaceView): string {
 <nav class="tabs" aria-label="Workspace">${TAB_ORDER.map((t) => `<a href="${tabUrl(t)}"${t === v.tab ? ` aria-current="page"` : ""}>${esc(TAB_LABELS[t])}${counts[t] ? `<span class="count" aria-label="${counts[t]} need attention">${counts[t]}</span>` : ""}</a>`).join("")}</nav>
 </div></header>`;
 
-  const banners = `${v.is_sample ? `<div class="banner" role="note"><b>Sample data, not real users.</b> <span>Numbers and people here were seeded to show the workflow.</span></div>` : ""}
-${v.missing.length ? `<div class="banner" role="note"><b>Missing facts:</b> <span>${esc(v.missing.map((m) => m.replace(/\.$/, "")).join(", "))}. We won't invent these. <a href="${tabUrl("kit", "#context")}">Add them</a>.</span></div>` : ""}`;
+  const banners = v.is_sample ? `<p class="sample-note" role="note"><span class="tag warn">Sample</span>Sample data, not real users. Numbers and people here were seeded to show the workflow.</p>` : "";
+  const missingCallout = v.missing.length ? `<div class="callout" role="note"><b>Still missing:</b> ${esc(v.missing.map((m) => m.replace(/\.$/, "")).join(" "))}. We won't invent these. <a href="#context">Add them</a>.</div>` : "";
 
   const panes: Record<Tab, () => string> = { kit: kitTab, reach: reachTab, demo: demoTab, replies: repliesTab, results: resultsTab, network: networkTab, follow: followTab };
 
   return page(`${l.company} launch kit · Launchpad`, `${head}
 <main class="wrap">${banners}${panes[v.tab]()}</main>
 ${v.notice ? `<div class="toast" role="status">${esc(v.notice)}</div>` : ""}
-${footer}${COPY_JS}${SAVE_JS}`, `<meta name="robots" content="noindex">`);
+${footer}${COPY_JS}${SAVE_JS}${UX_JS}`, `<meta name="robots" content="noindex">`);
 
   // ---------------------------------------------------------------- Kit
   function kitTab(): string {
@@ -140,7 +142,7 @@ ${raw.includes("{link}") ? `<p class="note">Keep &#123;link&#125; where the trac
     const f = v.facts;
     const faqText = f.faq.map((x) => `Q: ${x.q}\nA: ${x.a}`).join("\n\n");
     const textField = (name: string, label: string, value: string, hint: string) => `<label class="field"><span>${esc(label)} <em>${esc(hint)}</em></span><textarea name="${name}" rows="2" style="min-height:64px">${esc(value)}</textarea></label>`;
-    const context = `<details class="context" id="context"${v.missing.length ? " open" : ""}><summary>Company context</summary>
+    const context = `<details class="context" id="context"${v.notice && /context|facts/i.test(v.notice) ? " open" : ""}><summary>Company context</summary>
 <form method="post" action="${act("/facts")}"><div class="fields">
 <p class="small muted">Replies, outreach and demos only use what's written here. Leave a field empty and we'll ask rather than guess.</p>
 ${textField("audience", "Audience", f.audience, "who it's for")}${textField("problem", "Problem", f.problem, "what hurts today")}${textField("proof", "Proof", f.proof, "real numbers, customers, results")}
@@ -155,9 +157,10 @@ ${textField("audience", "Audience", f.audience, "who it's for")}${textField("pro
       : `<div class="panel"><h3>When your first post is up</h3><p>${v.squad > 0 ? `Launch now asks ${v.squad} opted-in squad ${v.squad === 1 ? "founder" : "founders"} to share it.` : "Launch now marks you live. No one else is in the squad yet."} Launchpad doesn't post for you.</p><form method="post" action="${act("/go")}"><button class="btn" type="submit">Launch now</button></form></div>`;
 
     return `<section class="pane"><div class="split"><div>
-<div class="pane-head"><h1>${esc(l.one_liner)}</h1></div>
-${context}
+<div class="pane-head" style="margin-bottom:24px"><h1>${esc(l.one_liner)}</h1></div>
+${missingCallout}
 <p class="eyebrow" style="margin-bottom:10px">The plan</p><div class="prose">${renderMarkdown(kit.strategy)}</div>
+${context}
 ${sections.join("") || empty("No channels selected", "This launch has no channel posts.")}
 </div>
 <aside class="side">${launchPanel}
@@ -171,7 +174,7 @@ ${kit.checklist.length ? `<div><p class="eyebrow" style="margin-bottom:6px">Laun
     const communities = v.communities.length
       ? `<div class="grid2">${v.communities.map((c) => `<article class="card"><div class="line"><h3><a href="${safeHref(c.url)}" target="_blank" rel="noopener nofollow">${esc(c.name)}</a></h3><span class="tag">${esc(c.kind.replace("_", " "))}</span></div>
 <dl class="kv"><dt>Why</dt><dd>${esc(c.why)}</dd><dt>Angle</dt><dd>${esc(c.angle)}</dd><dt>Rules</dt><dd>${esc(c.rules)} <a href="${safeHref(c.rules_url)}" target="_blank" rel="noopener nofollow">Source</a></dd></dl>
-<p class="small muted" style="margin-top:8px">Rules reviewed ${esc(c.reviewed)}. Re-check before posting.</p>
+<p class="small muted" style="margin-top:8px">Catalog entry ${esc(c.reviewed)}. Check the live rules before posting.</p>
 <details class="edit"><summary>Draft post</summary><p style="margin-top:8px"><b style="font-weight:600">${esc(c.draft_title)}</b></p><p style="white-space:pre-wrap">${esc(c.draft_body)}</p><div class="actions">${copyBtn(`${c.draft_title}\n\n${c.draft_body}`, "Copy draft")}</div></details></article>`).join("")}</div>`
       : empty("No communities yet", "Add your audience in Company context and the shortlist will follow.");
 

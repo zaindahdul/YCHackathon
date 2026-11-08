@@ -115,7 +115,7 @@ async function main(): Promise<void> {
   console.log("Added 3 outreach drafts and approved 1. Nothing was sent");
 
   await act(lp, "wave", { channel: "x", minutes: "30", impressions: "180", likes: "2", replies: "0" });
-  await act(lp, "wave", { channel: "x", minutes: "90", impressions: "420", likes: "5", replies: "1" });
+  await act(lp, "wave", { channel: "x", minutes: "90", impressions: "190", likes: "3", replies: "1" });
 
   for (const peer of [
     { company: "Harbor Evals (sample)", one_liner: "Regression tests for LLM agents before they reach production", slug: "harbor-evals", description: "Harbor Evals runs agent regression suites in CI so infra teams catch tool-call breakage before deploy. Fictional sample company used to demonstrate squad matching." },

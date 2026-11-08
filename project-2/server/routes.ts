@@ -14,12 +14,54 @@ import type { Db } from "./db.ts";
 import { capsFromEnv, handleMcp } from "./mcp.ts";
 import { renderBoost, renderHome, renderMessage, renderNew, renderOps, renderReport } from "./pages.ts";
 import { emptyFacts, parseFaq } from "./producer.ts";
-import { Repo, RepoError, type Launch } from "./repo.ts";
-import { CHANNELS, KitError, isBot, isEmail, isUrl, share, validateKit, visitorKey, withLink } from "./rules.ts";
+import { Repo, RepoError, type Decision, type Launch, type RadarItem, type Report, type Touch } from "./repo.ts";
+import { CHANNELS, KitError, isBot, isEmail, isUrl, maskEmail, share, validateKit, visitorKey, withLink } from "./rules.ts";
 import { TRACK_JS } from "./video-client.ts";
 import { Workspace } from "./workspace.ts";
 import { renderWorkspace, renderWriting } from "./workspace-pages.ts";
 import type { Facts } from "./workspace-types.ts";
+
+// ---------------------------------------------------------------- what public pages may see
+
+const EMAIL_IN_TEXT = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
+/** Free text written by agents or people can name an address; public pages show it masked. */
+export const redact = (text: string): string => text.replace(EMAIL_IN_TEXT, (address) => maskEmail(address));
+const firstLine = (text: string): string => (text.split(/\r?\n/).find((line) => line.trim() !== "") ?? "").trim().slice(0, 160);
+
+/**
+ * A launch as an unauthenticated page may see it. Listed launches keep what the founder chose to
+ * show (name, one-liner, link); an unlisted one keeps only its status and times. Contact details,
+ * the kit and the private token never leave the server on a public page.
+ */
+export function publicLaunch(l: Launch): Launch {
+  const base = { ...l, token: "", email: "", x_handle: null, linkedin_url: null, kit: null };
+  return l.listed ? base : { ...base, company: "Unlisted launch", one_liner: "", description: "", url: "", video_url: null, batch: null, launch_when: null, timezone: null };
+}
+
+/** An email shows only its subject: an explicit "Subject:" line, or the first line of a logged subject-then-body. A one-line body stays private. */
+const publicTouch = (t: Touch): string => {
+  const line = firstLine(t.content);
+  if (t.channel !== "email" && t.kind !== "email") return redact(line);
+  return /^subject:/i.test(line) || t.content.trim().includes("\n") ? redact(line) : "An email was sent. Its contents are private.";
+};
+
+/**
+ * Everything /ops receives, filtered before rendering so the page code cannot leak what it never
+ * gets: nothing tied to an unlisted launch, outreach as its subject line only (the exact email body
+ * stays private), and every address in free text masked.
+ */
+export function publicOps(d: { launches: Launch[]; decisions: Decision[]; touches: Touch[]; radar: RadarItem[]; reports: Omit<Report, "body">[]; interventions: { id: string; description: string; created_at: Date }[] }) {
+  const listed = new Set(d.launches.filter((l) => l.listed).map((l) => l.id));
+  const visible = (launchId: string | null) => launchId === null || listed.has(launchId);
+  return {
+    launches: d.launches.map(publicLaunch),
+    decisions: d.decisions.filter((x) => visible(x.launch_id)).slice(0, 50).map((x) => ({ ...x, reasoning: redact(x.reasoning) })),
+    touches: d.touches.filter((t) => visible(t.launch_id)).slice(0, 20).map((t) => ({ ...t, target: t.target ? maskEmail(t.target) : null, content: publicTouch(t) })),
+    radar: d.radar.map((x) => ({ ...x, contact: null })),
+    reports: d.reports.filter((x) => listed.has(x.launch_id)).map((x) => ({ ...x, title: redact(x.title), listed: true })),
+    interventions: d.interventions.map((x) => ({ ...x, description: redact(x.description) })),
+  };
+}
 
 export interface ApiRequest { method: string; path: string; query: URLSearchParams; headers: Record<string, string | undefined>; body: unknown; raw?: string }
 export interface ApiReply { status: number; headers?: Record<string, string>; html?: string; json?: unknown; text?: string }
@@ -120,19 +162,15 @@ export async function handleRequest(req: ApiRequest, ctx: Context): Promise<ApiR
   // ---------------------------------------------------------------- public pages
   if (path === "/" && method === "GET") {
     const r = await repo();
-    return html(200, renderHome({ overview: await r.overview(), launches: await r.listLaunches({ limit: 200 }) }));
+    return html(200, renderHome({ overview: await r.overview(), launches: (await r.listLaunches({ limit: 200 })).map(publicLaunch) }));
   }
 
   if (path === "/ops" && method === "GET") {
     const r = await repo();
-    const launches = await r.listLaunches({ limit: 200 });
-    const listed = new Map(launches.map((l) => [l.id, l.listed]));
-    const reports = (await r.listReports()).map((x) => ({ ...x, listed: listed.get(x.launch_id) ?? false }));
-    // Public record: nothing written about an unlisted launch, and no email body, ever reaches this page.
-    const isListed = (launchId: string | null) => launchId === null || listed.get(launchId) === true;
-    const decisions = (await r.listDecisions(50)).map((x) => (isListed(x.launch_id) ? x : { ...x, reasoning: "Details are private for an unlisted launch." }));
-    const touches = (await r.listTouches(20)).map((x) => ({ ...x, content: x.channel === "email" || x.kind === "email" ? `A ${x.kind} was sent. Its contents are private.` : isListed(x.launch_id) ? x.content : "Details are private for an unlisted launch." }));
-    return html(200, renderOps({ overview: await r.overview(), launches, decisions, touches, radar: await r.listRadar(20), reports, interventions: await r.listInterventions(), now: now() }));
+    const [launches, decisions, touches, radar, reports, interventions] = await Promise.all([
+      r.listLaunches({ limit: 200 }), r.listDecisions(80), r.listTouches(40), r.listRadar(20), r.listReports(), r.listInterventions(),
+    ]);
+    return html(200, renderOps({ overview: await r.overview(), now: now(), ...publicOps({ launches, decisions, touches, radar, reports, interventions }) }));
   }
 
   // ---------------------------------------------------------------- the launch form
@@ -295,7 +333,9 @@ export async function handleRequest(req: ApiRequest, ctx: Context): Promise<ApiR
     const token = req.query.get("t") ?? "";
     const owner = token !== "" && same(token, l.token);
     if (!l.listed && !owner) return html(404, renderMessage("Not found", "No such report."));
-    return html(200, renderReport(report, l.listed || owner ? l.company : "A launch", owner || l.listed ? await r.stats(l.id) : null));
+    // A listed launch's report is public, so addresses in it are masked for everyone but its founder.
+    const shown = owner ? report : { ...report, title: redact(report.title), body: redact(report.body) };
+    return html(200, renderReport(shown, l.listed || owner ? l.company : "A launch", owner || l.listed ? await r.stats(l.id) : null));
   }
 
   return html(404, renderMessage("Not found", "Nothing lives at this address."));
