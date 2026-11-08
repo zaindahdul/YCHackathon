@@ -1,0 +1,835 @@
+{
+  "baseRefName": "master",
+  "body": "PR #4 adds a live venture-studio direction while `main` contains the separate service fulfillment/payment runtime. This integration keeps both histories and systems, puts the studio in an npm workspace, and gives the repository one install/check/build entry point.\n\nThe studio repairs address concurrent publishing and partial writes, stale founder/upload authority, private document exposure, generated-code origin escapes, report integrity, and unintended paid execution during setup. Structured reports and browser counters remain evidence inputs rather than independently verified customers or PMF. The current guide is `docs/STUDIO_UPDATE.md`; independent findings and rechecks are in `docs/STUDIO_REVIEW.md`.\n\nValidation: 77 service tests and 77 studio tests pass (154 total), both typechecks/builds and formatting pass, and the eleven-task durable plan passed fresh acceptance checks. Actual Chromium checks verified XML isolation, ES-module loading, private storage add/get/reload and a second browser's isolation. Original deployed migrations 0001\u20130003 are unchanged; repairs add forward migration 0004. Dependency audit reports zero known vulnerabilities.\n\nThe collaborator's existing public dashboard was inspected read-only. These repairs have not been deployed; no paid sessions, outreach or organization changes were performed. Before a production rollout, inspect historical rows against migration 0004 and adapt existing generated products that use direct localStorage/fetch to the scoped product bridge. The integration intentionally preserves existing evidence instead of silently converting old public browser IDs into secret credentials.\n\nLocal startup cleanup adds `npm start`, ignored .env loading with exported-variable priority, and `npm run doctor` without provider calls or credential output. The local studio is running; no Naive key or authorized credit envelope is configured on this machine, so no paid founder was started.\n",
+  "comments": [],
+  "commits": [
+    {
+      "authoredDate": "2026-11-07T21:19:32Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T21:19:32Z",
+      "messageBody": "",
+      "messageHeadline": "Plan agent-run custom fabrication company and transcribe hackathon talks",
+      "oid": "53b9f726d3e4b385fc9eb8d1cf74eb1ef965e2dc"
+    },
+    {
+      "authoredDate": "2026-11-07T21:19:56Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T21:19:56Z",
+      "messageBody": "",
+      "messageHeadline": "Record cofounder review PR and completed delivery checks",
+      "oid": "fc244235d2961cf2d54f8a814e2f032b8e823a93"
+    },
+    {
+      "authoredDate": "2026-11-07T21:41:32Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T21:41:32Z",
+      "messageBody": "",
+      "messageHeadline": "Add a focused customer acquisition sprint for the hackathon",
+      "oid": "714c3e55dd6db91053856c9d95423f65d1a9fb18"
+    },
+    {
+      "authoredDate": "2026-11-07T21:45:31Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T21:45:31Z",
+      "messageBody": "",
+      "messageHeadline": "Prioritize simple merch and physical customer delivery",
+      "oid": "37893409b49186a6811932ca20d417d8114987a9"
+    },
+    {
+      "authoredDate": "2026-11-07T21:55:18Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T21:55:18Z",
+      "messageBody": "",
+      "messageHeadline": "Recommend Fire Drill after independent hackathon business selection",
+      "oid": "bd2a83017e28570d5be8c6697d5139d70e13846d"
+    },
+    {
+      "authoredDate": "2026-11-07T22:05:58Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T22:05:58Z",
+      "messageBody": "",
+      "messageHeadline": "Integrate cofounder experiment shortlist",
+      "oid": "20a825d1f1818d4256cf0dab860e81fe476b490b"
+    },
+    {
+      "authoredDate": "2026-11-07T22:05:58Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T22:05:58Z",
+      "messageBody": "",
+      "messageHeadline": "Preserve hackathon research and transcript history",
+      "oid": "7afc79a851f88e2f726ae1a6882fa62b765b1c4a"
+    },
+    {
+      "authoredDate": "2026-11-07T22:31:43Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T22:31:43Z",
+      "messageBody": "\u2026nd commerce",
+      "messageHeadline": "Build autonomous multi-experiment company with verified fulfillment a\u2026",
+      "oid": "69fb2da5766bce21c241e6b7b8c7144d074c6f91"
+    },
+    {
+      "authoredDate": "2026-11-07T22:32:32Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T22:32:32Z",
+      "messageBody": "",
+      "messageHeadline": "Record verified main delivery and remaining live account gates",
+      "oid": "26d74bef3335f346c7e4404e675086e104c6e263"
+    },
+    {
+      "authoredDate": "2026-11-07T23:54:24Z",
+      "authors": [
+        {
+          "email": "pmf-engine@users.noreply.github.com",
+          "id": "",
+          "login": "",
+          "name": "PMF Engine"
+        },
+        {
+          "email": "noreply@anthropic.com",
+          "id": "MDQ6VXNlcjgxODQ3",
+          "login": "claude",
+          "name": "Claude Opus 5.5"
+        }
+      ],
+      "committedDate": "2026-11-07T23:54:24Z",
+      "messageBody": "Several founder agents each run their own company in parallel: find a\nreal problem in public complaints, build and ship a working web product,\nfind users, and iterate, kill or pivot on what users actually do.\n\n- Studio app: public dashboard, per-company pages with a per-version\n  test table, required detailed reports (/r/<id>, /reports), products\n  served at /p/<slug>/ with a small JSON backend and analytics\n- Founders ship straight from their sandbox through short-lived upload\n  links; placeholders are refused and broken live products flagged\n- Run lock so two runs of one founder never overlap; founders' own\n  test visits (?qa=1) excluded from user counts\n- Concierge owns the shared inbox; agents keep the studio anonymous\n- fence-ceo script keeps the org's orchestrator out of studio tools\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+      "messageHeadline": "Rebuild PMF Engine as an AI venture studio, live on Na\u00efve",
+      "oid": "fc49da215f799e221675a1aba7a6f9c103cd3bc9"
+    },
+    {
+      "authoredDate": "2026-11-08T00:14:38Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-08T00:14:38Z",
+      "messageBody": "\u2026roduct storage",
+      "messageHeadline": "Integrate venture studio with transactional publishing and isolated p\u2026",
+      "oid": "1c32a2436c20ddc70e28e9aa7655b18e8a713d31"
+    },
+    {
+      "authoredDate": "2026-11-08T00:14:38Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-08T00:14:38Z",
+      "messageBody": "",
+      "messageHeadline": "Preserve merged master history in integrated main",
+      "oid": "90f005be63efb1f7953bcc2bc04893198a32a158"
+    },
+    {
+      "authoredDate": "2026-11-08T00:16:01Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-08T00:16:01Z",
+      "messageBody": "",
+      "messageHeadline": "Record studio integration review and verified delivery",
+      "oid": "bf4a69fba79385deeb9514bae48fa7e47d2588dc"
+    },
+    {
+      "authoredDate": "2026-11-08T00:31:26Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-08T00:31:26Z",
+      "messageBody": "",
+      "messageHeadline": "Simplify studio startup and add private local setup diagnostics",
+      "oid": "17c9556de6e58b9b85f75b28bd07cbec5da6fcaa"
+    }
+  ],
+  "files": [
+    {
+      "path": ".env.example",
+      "additions": 11,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": ".gitattributes",
+      "additions": 6,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": ".gitignore",
+      "additions": 21,
+      "deletions": 4,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "AGENTS.md",
+      "additions": 18,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "README.md",
+      "additions": 47,
+      "deletions": 86,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "THINKPAD.md",
+      "additions": 93,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "config/experiments.seed.json",
+      "additions": 118,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "config/policy.example.json",
+      "additions": 20,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "crew/crew.ts",
+      "additions": 0,
+      "deletions": 163,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "additions": 110,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/DELIVERY.md",
+      "additions": 56,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/NAIVE_SETUP.md",
+      "additions": 85,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/OPERATING_MODEL.md",
+      "additions": 58,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/REVIEW.md",
+      "additions": 52,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/STUDIO_REVIEW.md",
+      "additions": 58,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/STUDIO_UPDATE.md",
+      "additions": 53,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/archive/README.md",
+      "additions": 11,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/archive/THINKPAD-ideation.md",
+      "additions": 64,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/archive/build-plan.md",
+      "additions": 146,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/archive/company-plan.md",
+      "additions": 106,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/archive/customer-acquisition.md",
+      "additions": 117,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/archive/demo-playbook.md",
+      "additions": 61,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/archive/fresh-recommendation.md",
+      "additions": 129,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/archive/ideas-shortlist.md",
+      "additions": 35,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/archive/ideation-review.md",
+      "additions": 117,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/archive/merch-first.md",
+      "additions": 73,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/archive/pr-delivery.md",
+      "additions": 11,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/hackathon-brief.md",
+      "additions": 61,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/recording-digest.md",
+      "additions": 67,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/research/business-landscape.md",
+      "additions": 99,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/research/naive-sdk.md",
+      "additions": 149,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "ideas.md",
+      "additions": 21,
+      "deletions": 29,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "naive.config.ts",
+      "additions": 0,
+      "deletions": 47,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "package-lock.json",
+      "additions": 1144,
+      "deletions": 666,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "package.json",
+      "additions": 38,
+      "deletions": 23,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "scripts/finalize_transcript.py",
+      "additions": 91,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "scripts/intervene.ts",
+      "additions": 0,
+      "deletions": 25,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "scripts/kickoff.ts",
+      "additions": 0,
+      "deletions": 30,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "scripts/recover_transcript_clips.py",
+      "additions": 31,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "scripts/verify_deliverables.py",
+      "additions": 147,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "server/db.ts",
+      "additions": 0,
+      "deletions": 33,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "server/dev.ts",
+      "additions": 0,
+      "deletions": 46,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "server/entry.ts",
+      "additions": 0,
+      "deletions": 89,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "server/mcp.ts",
+      "additions": 0,
+      "deletions": 424,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "server/pages.ts",
+      "additions": 0,
+      "deletions": 240,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "server/repo.ts",
+      "additions": 0,
+      "deletions": 382,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "server/routes.ts",
+      "additions": 0,
+      "deletions": 189,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "server/rules.ts",
+      "additions": 0,
+      "deletions": 153,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "sql/0001_init.sql",
+      "additions": 0,
+      "deletions": 103,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "src/adapters/fixture.ts",
+      "additions": 18,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "src/adapters/naive.ts",
+      "additions": 468,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "src/cli.ts",
+      "additions": 307,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "src/company.ts",
+      "additions": 504,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "src/domain.ts",
+      "additions": 289,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "src/fulfillment.ts",
+      "additions": 694,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "src/payments.ts",
+      "additions": 344,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "src/portfolio.ts",
+      "additions": 308,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "src/reconcile.ts",
+      "additions": 252,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "src/server.ts",
+      "additions": 804,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "src/store.ts",
+      "additions": 611,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/.env.example",
+      "additions": 15,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/README.md",
+      "additions": 101,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/build.mjs",
+      "additions": 3,
+      "deletions": 1,
+      "changeType": "RENAMED"
+    },
+    {
+      "path": "studio/crew/crew.ts",
+      "additions": 237,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/ideas.md",
+      "additions": 47,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/naive.config.ts",
+      "additions": 79,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/package.json",
+      "additions": 35,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/scripts/doctor.ts",
+      "additions": 71,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/scripts/env.ts",
+      "additions": 37,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/scripts/fence-ceo.ts",
+      "additions": 130,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/scripts/intervene.ts",
+      "additions": 68,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/scripts/kickoff-budget.ts",
+      "additions": 147,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/scripts/kickoff.ts",
+      "additions": 219,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/server/db.ts",
+      "additions": 96,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/server/dev.ts",
+      "additions": 92,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/server/entry.ts",
+      "additions": 158,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/server/local-db.ts",
+      "additions": 18,
+      "deletions": 8,
+      "changeType": "RENAMED"
+    },
+    {
+      "path": "studio/server/mcp.ts",
+      "additions": 1226,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/server/pages.ts",
+      "additions": 569,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/server/repo.ts",
+      "additions": 1157,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/server/routes.ts",
+      "additions": 691,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/server/rules.ts",
+      "additions": 319,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/sql/0001_init.sql",
+      "additions": 149,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/sql/0002_runs.sql",
+      "additions": 9,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/sql/0003_uploads.sql",
+      "additions": 17,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/sql/0004_integrity.sql",
+      "additions": 21,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/test/app.test.ts",
+      "additions": 961,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/test/config.test.ts",
+      "additions": 211,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/test/http-security.test.ts",
+      "additions": 461,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/test/integrity.test.ts",
+      "additions": 350,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/test/kickoff-budget.test.ts",
+      "additions": 258,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/test/mcp-fencing.test.ts",
+      "additions": 235,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/test/rules.test.ts",
+      "additions": 138,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/test/setup.test.ts",
+      "additions": 73,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "studio/tsconfig.json",
+      "additions": 17,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "test/app.test.ts",
+      "additions": 0,
+      "deletions": 223,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "test/config.test.ts",
+      "additions": 0,
+      "deletions": 35,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "test/rules.test.ts",
+      "additions": 0,
+      "deletions": 74,
+      "changeType": "DELETED"
+    },
+    {
+      "path": "tests/company.test.ts",
+      "additions": 1457,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "tests/fulfillment.test.ts",
+      "additions": 472,
+      "deletions": 0,
+      "changeType": "ADDED"
+    }
+  ],
+  "headRefName": "main",
+  "headRefOid": "17c9556de6e58b9b85f75b28bd07cbec5da6fcaa",
+  "isDraft": true,
+  "mergedAt": null,
+  "number": 5,
+  "reviews": [],
+  "state": "OPEN",
+  "title": "Integrate venture studio and repair publishing, storage and execution boundaries",
+  "updatedAt": "2026-11-08T00:31:51Z",
+  "url": "https://github.com/zaindahdul/YCHackathon/pull/5"
+}

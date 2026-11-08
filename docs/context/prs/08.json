@@ -1,0 +1,47 @@
+{
+  "baseRefName": "launchpad-ui",
+  "body": "## Summary\nThe scout's outreach is working: **25 personal emails to 25 different Fall 2026 YC founders** since about 7 PM. It found them on the Launch YC feed and used only public business addresses. Each email is short, opens with one specific, true line about the founder's own Launch YC post, makes no invented claims, is signed \"Launchpad\", and has the opt-out line.\n\nOne problem: it logged one-line summaries (\"Sent: OpenLake outreach offering free kit\") instead of the exact text, so the public log at `/ops` didn't show what founders actually received. This changes the scout's instructions to log the subject and body word for word.\n\n**Stacked on #7** (base `launchpad-ui`). Merge #6, then #7, then this.\n\n### Also verified tonight\n- **The live producer works end to end.** Launchpad's own launch was submitted at 6:35 PM, and the kit was written by 6:41 PM.\n- **Kit quality is high:**\n  - It checked the day's Show HN queue for competition.\n  - It's honest that there's no traction yet.\n  - It gives concrete times: Product Hunt at 12:01 AM PT Sunday, Show HN at 6:30 AM, X at 7:00, LinkedIn at 8:00, and the email at 9:30.\n  - The copy fits each channel, and the Show HN text says the squad never touches voting.\n\n## What we need from you\n1. **Decide whether we launch Launchpad itself tonight on that schedule.** Product Hunt would go up at 12:01 AM PT. The kit is ready; the kit link is in the operator's local notes, not in this PR.\n2. Same open asks as #6: a **full-permission Na\u00efve key** saved only in `key.txt`, and a **fresh anonymous X account**.\n\n## Test plan\n- [x] `npm test`: 11 pass; `npm run typecheck`\n- [ ] Deployed: `naive up` is retrying in the background, because Na\u00efve has been answering \"at capacity\" or 429 all evening\n\n\ud83e\udd16 Generated with [Claude Code](https://claude.com/claude-code)",
+  "comments": [],
+  "commits": [
+    {
+      "authoredDate": "2026-11-08T06:50:45Z",
+      "authors": [
+        {
+          "email": "pmf-engine@users.noreply.github.com",
+          "id": "",
+          "login": "",
+          "name": "PMF Engine"
+        },
+        {
+          "email": "noreply@anthropic.com",
+          "id": "MDQ6VXNlcjgxODQ3",
+          "login": "claude",
+          "name": "Claude Opus 5.5"
+        }
+      ],
+      "committedDate": "2026-11-08T06:50:45Z",
+      "messageBody": "The public log is the record of what founders received; the scout had\nbeen logging one-line summaries.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+      "messageHeadline": "Scout logs the exact email it sent, not a summary",
+      "oid": "8d87f944cd6ebccce9975bcbffb568c263a36d5a"
+    }
+  ],
+  "files": [
+    {
+      "path": "project-2/crew/crew.ts",
+      "additions": 1,
+      "deletions": 1,
+      "changeType": "MODIFIED"
+    }
+  ],
+  "headRefName": "scout-exact-log",
+  "headRefOid": "8d87f944cd6ebccce9975bcbffb568c263a36d5a",
+  "isDraft": false,
+  "mergedAt": null,
+  "number": 8,
+  "reviews": [],
+  "state": "OPEN",
+  "title": "Scout logs the exact email it sent, not a summary",
+  "updatedAt": "2026-11-08T06:50:49Z",
+  "url": "https://github.com/zaindahdul/YCHackathon/pull/8",
+  "capturedAt": "2026-11-08T08:45:56.128199+00:00"
+}

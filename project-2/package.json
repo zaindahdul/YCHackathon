@@ -1,0 +1,33 @@
+{
+  "name": "launchpad",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Launchpad: one-click launches for YC founders. Agents plan the timing, write every channel post, rally a real opt-in boost group and report the results. Built on the Naïve SDK.",
+  "scripts": {
+    "dev": "tsx server/dev.ts",
+    "build": "node build.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "naive:dry": "npm run build && naive up --dry-run",
+    "naive:up": "npm run build && naive up",
+    "seed:demo": "tsx scripts/seed-demo.ts",
+    "agent": "tsx scripts/run-agent.ts",
+    "intervene": "tsx scripts/intervene.ts"
+  },
+  "dependencies": {
+    "@usenaive-sdk/managed-agents": "^0.12.3",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.15",
+    "@types/node": "^22.20.1",
+    "@types/pg": "^8.15.6",
+    "@usenaive-sdk/blueprints": "^0.18.0",
+    "@usenaive-sdk/cli": "^1.0.3",
+    "esbuild": "0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "^5.1.0"
+  }
+}

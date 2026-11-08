@@ -1,0 +1,205 @@
+{
+  "baseRefName": "master",
+  "body": "## Summary\nPMF Engine is an autonomous company built on the Na\u00efve SDK. It runs free offers as experiments: it launches each one with its own landing page, does outreach on X and by email, delivers to every signup, and kills or pivots based on numbers the app records itself. Its first three experiments are ideas 1 to 3 from `ideas.md`.\n\n- **Three agents** (`crew/crew.ts`). The **strategist** runs every 2h: it launches, kills, pivots and scales experiments and logs why. **Growth** runs every 30 min and does X posts plus short, personal emails. The **operator** runs every 10 min and also wakes on inbound email; it delivers to every signup and handles replies and opt-outs.\n- **The `pmf` app** (`server/`, `sql/`) is a Na\u00efve fullstack app with Postgres:\n  - `/` is a public dashboard listing experiments, the decision log, outreach, deliveries and human interventions. Email addresses are masked.\n  - `/x/<slug>` is one landing page per experiment. It counts visitors, ignoring link-preview crawlers, and takes signups.\n  - `/mcp` serves the agents' `pmf.*` tools.\n- **Decisions are grounded in data** (`server/rules.ts`). Each experiment gets a verdict: `too_early`, `no_reach`, `keep`, `scale` or `kill`. \"Nobody saw it\" (no_reach) is kept apart from \"people saw it and didn't want it\" (kill). Each decision automatically records the numbers at that moment.\n- **Guardrails are enforced in the app:** daily email and X quotas, no contacting anyone twice in 7 days, an opt-out list, at most 3 live experiments, and daily budgets per agent ($75/day total at most).\n- **Scripts:** `npm run kickoff` starts the company through the SDK, and `npm run intervene -- \"...\"` logs a human step-in to the dashboard.\n\nThis PR is based on `add-ideas` (#2), so it also contains that commit.\n\n## Test plan\n- [x] `npm test`: 29 tests, including the whole loop against an in-process Postgres (PGlite)\n- [x] `npm run typecheck`\n- [x] `npm run build`, plus a smoke test of the built function (`/health` 200, 503 when the database is missing)\n- [x] Local end to end with `npm run dev`: launch through MCP, landing page, signup, dashboard\n- [ ] `npm run naive:dry` and `npm run naive:up` with a real API key (not run yet: needs the key)\n- [ ] Connect X (`naive identity social portal --identity Scout --platform x`), then `npm run kickoff`\n- [ ] Check that the first agent runs can reach the `pmf.*` tools and that a test signup gets delivered by email\n\nSetup steps are in `README.md`.\n\n\ud83e\udd16 Generated with [Claude Code](https://claude.com/claude-code)",
+  "comments": [],
+  "commits": [
+    {
+      "authoredDate": "2026-11-07T21:59:32Z",
+      "authors": [
+        {
+          "email": "zaindahdul@berkeley.edu",
+          "id": "U_kgDOD6GjCw",
+          "login": "zaindahdul",
+          "name": "Zain"
+        },
+        {
+          "email": "noreply@anthropic.com",
+          "id": "MDQ6VXNlcjgxODQ3",
+          "login": "claude",
+          "name": "Claude Opus 5.5"
+        }
+      ],
+      "committedDate": "2026-11-07T21:59:32Z",
+      "messageBody": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+      "messageHeadline": "Add shortlist of hackathon ideas",
+      "oid": "b46bfe1cc2dc36de1b8feea00026bb5297c4061e"
+    },
+    {
+      "authoredDate": "2026-11-07T22:40:41Z",
+      "authors": [
+        {
+          "email": "zaindahdul@berkeley.edu",
+          "id": "U_kgDOD6GjCw",
+          "login": "zaindahdul",
+          "name": "Zain"
+        },
+        {
+          "email": "noreply@anthropic.com",
+          "id": "MDQ6VXNlcjgxODQ3",
+          "login": "claude",
+          "name": "Claude Opus 5.5"
+        }
+      ],
+      "committedDate": "2026-11-07T22:40:41Z",
+      "messageBody": "Three Na\u00efve agents (strategist, growth, operator) run experiments\nend to end. A fullstack Na\u00efve app holds the state and serves a public\ndashboard, a landing page per experiment, and the agents' MCP tools.\nKeep/kill/scale verdicts come from counts the app records itself.\nQuotas, the 7-day no-repeat rule, opt-outs and the live-experiment\ncap are enforced in the app.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+      "messageHeadline": "Build PMF Engine: an autonomous company that finds its own PMF",
+      "oid": "13db2766c18bb4ba4776b335a50aca6b8d39c30e"
+    }
+  ],
+  "files": [
+    {
+      "path": ".gitignore",
+      "additions": 7,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "README.md",
+      "additions": 110,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "build.mjs",
+      "additions": 47,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "crew/crew.ts",
+      "additions": 163,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "ideas.md",
+      "additions": 42,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "naive.config.ts",
+      "additions": 47,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "package-lock.json",
+      "additions": 1905,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "package.json",
+      "additions": 32,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "scripts/intervene.ts",
+      "additions": 25,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "scripts/kickoff.ts",
+      "additions": 30,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "server/db.ts",
+      "additions": 33,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "server/dev.ts",
+      "additions": 46,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "server/entry.ts",
+      "additions": 89,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "server/local-db.ts",
+      "additions": 31,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "server/mcp.ts",
+      "additions": 424,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "server/pages.ts",
+      "additions": 240,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "server/repo.ts",
+      "additions": 382,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "server/routes.ts",
+      "additions": 189,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "server/rules.ts",
+      "additions": 153,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "sql/0001_init.sql",
+      "additions": 103,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "test/app.test.ts",
+      "additions": 223,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "test/config.test.ts",
+      "additions": 35,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "test/rules.test.ts",
+      "additions": 74,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "tsconfig.json",
+      "additions": 17,
+      "deletions": 0,
+      "changeType": "ADDED"
+    }
+  ],
+  "headRefName": "pmf-engine",
+  "headRefOid": "13db2766c18bb4ba4776b335a50aca6b8d39c30e",
+  "isDraft": false,
+  "mergedAt": "2026-11-07T22:43:50Z",
+  "number": 3,
+  "reviews": [],
+  "state": "MERGED",
+  "title": "Build PMF Engine: an autonomous company that finds its own PMF",
+  "updatedAt": "2026-11-07T22:43:50Z",
+  "url": "https://github.com/zaindahdul/YCHackathon/pull/3"
+}

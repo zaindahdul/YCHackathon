@@ -1,0 +1,208 @@
+{
+  "baseRefName": "master",
+  "body": "## Summary\nPMF Engine is now an **AI venture studio**. Several founder agents each run their own company at the same time: each one finds a real problem in public complaints, builds and ships a working web product, finds users, and keeps it, iterates on it, or kills it and pivots based on what users actually do. The goal is real users.\n\n**It is deployed and running now:** https://pmf-2rdynba3hkaq.vercel.app\n\n| Founder | Market | Company (so far) |\n|---|---|---|\n| founder-1 | developers and indie hackers | CORSfix: paste a CORS error, get the fix for your backend (live) |\n| founder-2 | freelancers and small businesses | PayNudge: payment-reminder emails that escalate as an invoice gets more overdue (live) |\n| founder-3 | students and creators | CramPlan (building) |\n\n### What's in it\n- **Studio app** (`server/`, `sql/`):\n  - `/` is the public dashboard of every company, user counts, versions, decisions, reports and human step-ins.\n  - `/c/<slug>` is each company's page: the problem with links to the real threads, a **Tests** table with each shipped version's own numbers, decisions, outreach and feedback.\n  - Products are served at `/p/<slug>/` with a small JSON backend (`window.pmf.db`) and analytics (`/t.js`).\n- **Required detailed reports** (`/r/<id>`, `/reports`): the app refuses an iterate, scale or kill decision unless it comes with a structured write-up (hypothesis, what we built, how we tested it, results, what users said, what we learned, and the decision). The studio's own numbers are attached to every report.\n- **Decision rules** (`server/rules.ts`): each company gets a verdict of `stalled`, `too_early`, `no_reach`, `iterate`, `keep` or `scale`, computed from unique visitors, people who did the core action, and people who came back.\n- **Crew** (`crew/crew.ts`): 3 founders on staggered 30-minute schedules, plus a concierge that owns the shared inbox.\n- **Fixes from the first live run:**\n  - Founders ship straight from their sandbox through short-lived upload links (`get_upload_link`). This was tested in production with a 150 KB file.\n  - Placeholder files are refused, and a broken live product is flagged to its founder.\n  - A run lock stops two runs of one founder from overlapping.\n  - Founders' own test visits (`?qa=1`) are left out of the user counts.\n  - There's a fallback for when web search is rate-limited.\n- **Anonymity:** agents never reveal who runs the studio, and this repository now commits under a neutral identity.\n- `scripts/fence-ceo.ts` keeps the organization's built-in CEO orchestrator out of the studio's tools. It needs an admin key, see below.\n\nNote: `sql/0001_init.sql` changed before its first deploy. It's now applied in production, so later schema changes go in new numbered files (as `0002` and `0003` already do).\n\n## What we need from you\n1. **A new Na\u00efve API key with every permission**, including `billing:read`, `billing:write` and `admin`, created in the Studio (app.usenaive.ai). The current key can only manage agents and sessions, so it can't turn on social posting, read the credit balance, or fence the CEO agent. **Never paste the key in this PR, in chat, or in a commit.** Save it locally in `key.txt`, which git ignores.\n2. **A fresh, anonymous X account** for the studio, plus Bluesky, Threads, LinkedIn or Mastodon if possible. Once the new key is in, we'll generate a sign-in link, and the account owner signs in once. Please don't use a personal account: every post goes out under it. Until something is connected, founders can only reach people by email.\n3. **Confirm the ~$250 of Na\u00efve credit** shows in the Studio. Agent spending is capped at about $130/day in total (`BUDGETS` in `crew/crew.ts`).\n4. **Review**, especially the founder prompt in `crew/crew.ts` and the guardrails in `server/mcp.ts`: quotas, the 7-day no-repeat rule, opt-outs, one company per founder, and size limits.\n\n## Test plan\n- [x] `npm test`: 35 tests covering the whole studio against an in-process Postgres, including the real tracker script running in a browser-like sandbox\n- [x] `npm run typecheck` and `npm run build`\n- [x] Deployed with `naive up`: persona, inbox, app with database and 3 migrations, 4 agents, 3 schedules\n- [x] Production checks: dashboard, MCP auth (401 without the platform token), upload path end to end (the test data was removed)\n- [x] Live: two products shipped and working within ~15 minutes of kickoff\n- [ ] Turn on social posting and connect X (needs the new key and the account)\n- [ ] Fence the CEO agent (`npm run fence-ceo`, needs the admin key)\n- [ ] First real users, and the first iterate, scale or kill reports\n\n\ud83e\udd16 Generated with [Claude Code](https://claude.com/claude-code)",
+  "comments": [],
+  "commits": [
+    {
+      "authoredDate": "2026-11-07T23:54:24Z",
+      "authors": [
+        {
+          "email": "pmf-engine@users.noreply.github.com",
+          "id": "",
+          "login": "",
+          "name": "PMF Engine"
+        },
+        {
+          "email": "noreply@anthropic.com",
+          "id": "MDQ6VXNlcjgxODQ3",
+          "login": "claude",
+          "name": "Claude Opus 5.5"
+        }
+      ],
+      "committedDate": "2026-11-07T23:54:24Z",
+      "messageBody": "Several founder agents each run their own company in parallel: find a\nreal problem in public complaints, build and ship a working web product,\nfind users, and iterate, kill or pivot on what users actually do.\n\n- Studio app: public dashboard, per-company pages with a per-version\n  test table, required detailed reports (/r/<id>, /reports), products\n  served at /p/<slug>/ with a small JSON backend and analytics\n- Founders ship straight from their sandbox through short-lived upload\n  links; placeholders are refused and broken live products flagged\n- Run lock so two runs of one founder never overlap; founders' own\n  test visits (?qa=1) excluded from user counts\n- Concierge owns the shared inbox; agents keep the studio anonymous\n- fence-ceo script keeps the org's orchestrator out of studio tools\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+      "messageHeadline": "Rebuild PMF Engine as an AI venture studio, live on Na\u00efve",
+      "oid": "fc49da215f799e221675a1aba7a6f9c103cd3bc9"
+    },
+    {
+      "authoredDate": "2026-11-08T00:29:17Z",
+      "authors": [
+        {
+          "email": "pmf-engine@users.noreply.github.com",
+          "id": "",
+          "login": "",
+          "name": "PMF Engine"
+        },
+        {
+          "email": "noreply@anthropic.com",
+          "id": "MDQ6VXNlcjgxODQ3",
+          "login": "claude",
+          "name": "Claude Opus 5.5"
+        }
+      ],
+      "committedDate": "2026-11-08T00:29:17Z",
+      "messageBody": "- Rule 7: founders never create accounts, sign up or log in on other\n  sites; the founders' browser also pauses on login and saved logins\n- Every studio answer carries a test_url (?qa=1) so founders' own\n  checks never count as users\n- Events record the browser's user agent (migration 0004) to tell\n  automated visits from people\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+      "messageHeadline": "Block account sign-ups, add founder test links, record user agents",
+      "oid": "ba0d35f04d75c0d021df87f5fb1815ba268afd8b"
+    },
+    {
+      "authoredDate": "2026-11-08T00:31:09Z",
+      "authors": [
+        {
+          "email": "pmf-engine@users.noreply.github.com",
+          "id": "",
+          "login": "",
+          "name": "PMF Engine"
+        },
+        {
+          "email": "noreply@anthropic.com",
+          "id": "MDQ6VXNlcjgxODQ3",
+          "login": "claude",
+          "name": "Claude Opus 5.5"
+        }
+      ],
+      "committedDate": "2026-11-08T00:31:09Z",
+      "messageBody": "The app refuses an iterate decision while a company's verdict is still\ntoo_early, building or stalled; founders log keep and push distribution.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+      "messageHeadline": "Only close a test with iterate once there is data to judge it",
+      "oid": "f5404506bbe1ebac713ad2323dac7a0c07c18ca8"
+    }
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "additions": 42,
+      "deletions": 37,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "crew/crew.ts",
+      "additions": 148,
+      "deletions": 143,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "ideas.md",
+      "additions": 5,
+      "deletions": 4,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "naive.config.ts",
+      "additions": 13,
+      "deletions": 10,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "package.json",
+      "additions": 2,
+      "deletions": 1,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "scripts/fence-ceo.ts",
+      "additions": 43,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "scripts/kickoff.ts",
+      "additions": 21,
+      "deletions": 18,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "server/dev.ts",
+      "additions": 3,
+      "deletions": 2,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "server/entry.ts",
+      "additions": 37,
+      "deletions": 33,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "server/mcp.ts",
+      "additions": 360,
+      "deletions": 194,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "server/pages.ts",
+      "additions": 287,
+      "deletions": 160,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "server/repo.ts",
+      "additions": 438,
+      "deletions": 221,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "server/routes.ts",
+      "additions": 223,
+      "deletions": 71,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "server/rules.ts",
+      "additions": 139,
+      "deletions": 63,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "sql/0001_init.sql",
+      "additions": 104,
+      "deletions": 58,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "sql/0002_runs.sql",
+      "additions": 9,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "sql/0003_uploads.sql",
+      "additions": 17,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "sql/0004_event_ua.sql",
+      "additions": 3,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "test/app.test.ts",
+      "additions": 378,
+      "deletions": 145,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "test/config.test.ts",
+      "additions": 16,
+      "deletions": 9,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "test/rules.test.ts",
+      "additions": 44,
+      "deletions": 37,
+      "changeType": "MODIFIED"
+    }
+  ],
+  "headRefName": "studio",
+  "headRefOid": "f5404506bbe1ebac713ad2323dac7a0c07c18ca8",
+  "isDraft": false,
+  "mergedAt": null,
+  "number": 4,
+  "reviews": [],
+  "state": "OPEN",
+  "title": "Rebuild PMF Engine as an AI venture studio, live on Na\u00efve",
+  "updatedAt": "2026-11-08T00:31:11Z",
+  "url": "https://github.com/zaindahdul/YCHackathon/pull/4"
+}

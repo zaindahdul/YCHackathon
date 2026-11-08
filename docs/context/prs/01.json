@@ -1,0 +1,508 @@
+{
+  "baseRefName": "master",
+  "body": "This repo packages the hackathon recording, research and successive business proposals for cofounder review. The latest user request called for a fresh search independent of the earlier concepts.\n\n**Current recommendation: Fire Drill**, an autonomous company selling adversarial test orders to other agent-run businesses. A buyer defines business rules on a consenting staging target; agents scope the job, establish a legitimate baseline, explore bounded synthetic customer cases, independently replay findings, deliver evidence and retest after a customer change. A proposed $29 small-job price remains unvalidated.\n\n**Read first:** `README.md` \u2192 `docs/fresh-recommendation.md`. The recommendation compares the strongest alternatives, cites current official competitors, states why novelty is a positioning hypothesis, defines a real-customer commitment gate, and gives a two-person minimal build/demo plan. Forbidden promises, attempted actions and completed staging state changes are separate evidence levels.\n\nAlso included:\n- Local MLX Whisper transcription, timestamped digest, provenance, quality report and retained recovery attempts.\n- Preserved `hackathon-rules.md`, event context and SDK capability/access research.\n- Earlier merch/CAD/acquisition plans, explicitly retained as historical alternatives rather than simultaneous build instructions.\n- Independent ideation, red-team and document review evidence in the recommendation and `docs/review.md`.\n\nValidation: `python3 scripts/verify_deliverables.py all`; the delivery check verifies this PR contains the pushed local HEAD. These checks establish transcript/document consistency and references, not application behavior or demand.\n\nNo application implementation, customer outreach, authenticated SDK session, payment, adversarial target test, supplier order or fulfillment occurred. Live account access, reachable consenting targets and paying buyers remain unverified. No promise of first-ever novelty, security certification or winning is made. The original audio remains outside Git.\n",
+  "comments": [],
+  "commits": [
+    {
+      "authoredDate": "2026-11-07T21:19:32Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T21:19:32Z",
+      "messageBody": "",
+      "messageHeadline": "Plan agent-run custom fabrication company and transcribe hackathon talks",
+      "oid": "53b9f726d3e4b385fc9eb8d1cf74eb1ef965e2dc"
+    },
+    {
+      "authoredDate": "2026-11-07T21:19:56Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T21:19:56Z",
+      "messageBody": "",
+      "messageHeadline": "Record cofounder review PR and completed delivery checks",
+      "oid": "fc244235d2961cf2d54f8a814e2f032b8e823a93"
+    },
+    {
+      "authoredDate": "2026-11-07T21:41:32Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T21:41:32Z",
+      "messageBody": "",
+      "messageHeadline": "Add a focused customer acquisition sprint for the hackathon",
+      "oid": "714c3e55dd6db91053856c9d95423f65d1a9fb18"
+    },
+    {
+      "authoredDate": "2026-11-07T21:45:31Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T21:45:31Z",
+      "messageBody": "",
+      "messageHeadline": "Prioritize simple merch and physical customer delivery",
+      "oid": "37893409b49186a6811932ca20d417d8114987a9"
+    },
+    {
+      "authoredDate": "2026-11-07T21:55:18Z",
+      "authors": [
+        {
+          "email": "136523182+Srujyama@users.noreply.github.com",
+          "id": "U_kgDOCCMtrg",
+          "login": "Srujyama",
+          "name": "srujyama"
+        }
+      ],
+      "committedDate": "2026-11-07T21:55:18Z",
+      "messageBody": "",
+      "messageHeadline": "Recommend Fire Drill after independent hackathon business selection",
+      "oid": "bd2a83017e28570d5be8c6697d5139d70e13846d"
+    }
+  ],
+  "files": [
+    {
+      "path": ".gitattributes",
+      "additions": 6,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": ".gitignore",
+      "additions": 9,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "README.md",
+      "additions": 41,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "THINKPAD.md",
+      "additions": 64,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/build-plan.md",
+      "additions": 146,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/company-plan.md",
+      "additions": 106,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/customer-acquisition.md",
+      "additions": 117,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/demo-playbook.md",
+      "additions": 61,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/fresh-recommendation.md",
+      "additions": 129,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/hackathon-brief.md",
+      "additions": 61,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/merch-first.md",
+      "additions": 73,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/pr-delivery.md",
+      "additions": 11,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/recording-digest.md",
+      "additions": 67,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/research/business-landscape.md",
+      "additions": 99,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/research/naive-sdk.md",
+      "additions": 149,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "docs/review.md",
+      "additions": 117,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "scripts/finalize_transcript.py",
+      "additions": 91,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "scripts/recover_transcript_clips.py",
+      "additions": 31,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "scripts/verify_deliverables.py",
+      "additions": 139,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/README.md",
+      "additions": 23,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/full-unconditioned/hackathon-recording-35.json",
+      "additions": 1,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/full-unconditioned/hackathon-recording-35.srt",
+      "additions": 3552,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/full-unconditioned/hackathon-recording-35.tsv",
+      "additions": 889,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/full-unconditioned/hackathon-recording-35.txt",
+      "additions": 888,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/full-unconditioned/hackathon-recording-35.vtt",
+      "additions": 2666,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-1627p72-1670p56.json",
+      "additions": 1,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-1627p72-1670p56.srt",
+      "additions": 44,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-1627p72-1670p56.tsv",
+      "additions": 12,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-1627p72-1670p56.txt",
+      "additions": 11,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-1627p72-1670p56.vtt",
+      "additions": 35,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-1630-1670.json",
+      "additions": 1,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-1630-1670.srt",
+      "additions": 40,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-1630-1670.tsv",
+      "additions": 11,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-1630-1670.txt",
+      "additions": 10,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-1630-1670.vtt",
+      "additions": 32,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3020-3050.json",
+      "additions": 1,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3020-3050.srt",
+      "additions": 8,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3020-3050.tsv",
+      "additions": 3,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3020-3050.txt",
+      "additions": 2,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3020-3050.vtt",
+      "additions": 8,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3020p8-3061p3.json",
+      "additions": 1,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3020p8-3061p3.srt",
+      "additions": 8,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3020p8-3061p3.tsv",
+      "additions": 3,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3020p8-3061p3.txt",
+      "additions": 2,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3020p8-3061p3.vtt",
+      "additions": 8,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3422p7-3501p32.json",
+      "additions": 1,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3422p7-3501p32.srt",
+      "additions": 4,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3422p7-3501p32.tsv",
+      "additions": 2,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3422p7-3501p32.txt",
+      "additions": 1,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3422p7-3501p32.vtt",
+      "additions": 5,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3440-3490.json",
+      "additions": 1,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3440-3490.srt",
+      "additions": 4,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3440-3490.tsv",
+      "additions": 2,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3440-3490.txt",
+      "additions": 1,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/clip-3440-3490.vtt",
+      "additions": 5,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/initial-manifest.json",
+      "additions": 27,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/recovered-clips/manifest.json",
+      "additions": 27,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/turbo/hackathon-recording-35.json",
+      "additions": 1,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/turbo/hackathon-recording-35.srt",
+      "additions": 16984,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/turbo/hackathon-recording-35.tsv",
+      "additions": 4247,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/turbo/hackathon-recording-35.txt",
+      "additions": 4246,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/attempts/turbo/hackathon-recording-35.vtt",
+      "additions": 12740,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/hackathon-recording-35.json",
+      "additions": 1,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/hackathon-recording-35.srt",
+      "additions": 3508,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/hackathon-recording-35.tsv",
+      "additions": 878,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/hackathon-recording-35.txt",
+      "additions": 877,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/hackathon-recording-35.vtt",
+      "additions": 2633,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/quality-report.json",
+      "additions": 128,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "transcripts/source.json",
+      "additions": 22,
+      "deletions": 0,
+      "changeType": "ADDED"
+    }
+  ],
+  "headRefName": "codex/formshop-plan",
+  "headRefOid": "bd2a83017e28570d5be8c6697d5139d70e13846d",
+  "isDraft": false,
+  "mergedAt": null,
+  "number": 1,
+  "reviews": [],
+  "state": "OPEN",
+  "title": "Hackathon research and Fire Drill business recommendation",
+  "updatedAt": "2026-11-07T21:55:21Z",
+  "url": "https://github.com/zaindahdul/YCHackathon/pull/1"
+}

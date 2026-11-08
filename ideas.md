@@ -1,42 +1,38 @@
-# Hackathon Ideas
+# Ideas and current implementation
 
-Shortlist for the Naïve Autonomous Company Hackathon (Nov 7-8, 2026). See `hackathon-rules.md` for the rules and judging criteria.
+**Newest evidence and candidate:** [BOT_HANDOFF.md](BOT_HANDOFF.md) maps the Launchpad PRs and [both founder replies](docs/customer-research/README.md). Aditya adds a distribution-first, per-launch hypothesis; Jesai prioritizes company-aware comment support. Choose one real founder trial rather than building both entire workflows; neither is proven PMF. No final pivot approval is recorded.
 
-**Why these ideas:**
-- Each one sells to a real market outside the hackathon, so the growth story is credible.
-- In each one the agent makes the product before contacting the customer. The outreach shows them finished work instead of asking for a meeting, which is how strangers become users within 20 hours.
+## Implemented on main: autonomous venture studio
 
----
+Build one company whose job is to discover and operate useful small software products. Three founder agents work in different markets, each owns one active product, and they share publishing, analytics, feedback, reports and the studio inbox. Each founder can improve its company or kill it and start a child hypothesis from what it learned.
 
-## 4. PMF Engine: a company that finds its own product-market fit (building this)
+The concrete user promise is simple: open one of the products, paste your problem or enter a few inputs, and get a useful result immediately. No signup wall should stand between a visitor and the core value.
 
-One company runs offers as experiments and keeps or kills them by itself. It launches a free offer with its own landing page, does outreach on X and by email, delivers to every signup, and kills or pivots based on numbers it counted itself. Ideas 1 to 3 below are its first three experiments. See `README.md`.
+## First three products
 
-- **Pitch:** "We didn't pick our idea. Our company did."
-- **Guardrails:** it can only pivot to offers an agent can deliver by email within 30 minutes. Kill and pivot calls run on fixed rules (`server/rules.ts`) that separate "nobody saw it" from "people saw it and didn't want it".
+| Market | Current product observed in the collaborator's deployment | Useful outcome |
+|---|---|---|
+| Developers and indie makers | **CORSfix** | Paste a CORS error, choose a backend, get a diagnosis and suggested fix |
+| Freelancers and small businesses | **PayNudge** | Enter an overdue invoice and generate a suitable payment reminder |
+| Students and creators | **CramPlan** | Enter exams and available hours, get a weighted study plan |
 
-## 1. A QA agency that tests new mobile apps
+These products are live artifacts, not proof of PMF. Public counters at the earlier integration check had very small samples and founder QA history. The studio's `scale`, `iterate` and `no_reach` labels are operational hypotheses based on browser telemetry, not independent validation of people, revenue or retention.
 
-Agents find newly launched apps, test them on real cloud iPhones and Androids, and send the developer a free bug report with a screen recording. A recurring test plan is the paid upsell.
+## What makes the company autonomous
 
-- **Finding customers:** new apps from Product Hunt, Show HN, r/SideProject and recent Play Store releases (Apify has scrapers for these). Play Store listings show the developer's email publicly, so the agent gets a contact without any scraping tricks.
-- **The standout feature:** the agent reads the app's 1-star reviews first, then tries to reproduce what users complain about. "We reproduced the crash your users are reporting, here's the video" is a very convincing first email.
-- **Decisions to show:** which apps to test (recent updates plus complaints in reviews), how severe each bug is, and which developers get a follow-up.
-- **Why it wins:** "testing apps" is in the Mobilerun track description, so it targets that $8.5k prize directly. QA is a large market, and indie developers are online on weekends. Hackathon teams can also use it to test their demos before 11 AM.
-- **Risk:** you don't know yet whether the cloud phones can install apps from the stores. Test that first.
+Each founder discovers complaints, cites source threads, ships a working browser product, inspects its version's activity and feedback, and records its next decision. Required reports explain the hypothesis, implementation, distribution, results, user words, learning and next step. The owner can inspect the full story, including interventions and failed tests.
 
-## 2. Free listing videos for real estate agents (backup)
+Expansion means starting another evidence-informed hypothesis within the current capabilities and authority. It does not mean granting new permissions, claiming fake users or letting an unreviewed product change the studio controller. Run tokens fence stale work; trusted-crew names are not a cryptographic per-agent identity boundary.
 
-Agents spot new Bay Area listings, turn the listing photos into a 30-second vertical video with a voiceover, and email it to the listing agent for free. After that it costs $X per listing.
+## Getting users quickly
 
-- **Why the timing works:** real estate agents work hardest on weekends because that's when open houses happen. They live on their phones and want marketing for the listing they're promoting right now.
-- **Why it scores:** you'll get replies on a Saturday, which B2B ideas rarely do. Judges can watch the videos, which fits People's Choice and Best Design. The US has more than 1.5 million agents, so the market is large.
-- **Risk:** listing photos are usually licensed for the listing's marketing, so send each video only to that listing's agent. Cold email has to follow anti-spam law: an unsubscribe link and an honest subject line.
+Use the problem's existing audience and language. A useful first result, a clear link and a relevant explanation make a better first test than building more studio features. The proposed acquisition work is:
 
-## 3. A tool factory built from people's requests
+1. Find recent threads asking for the exact outcome and record their URLs; a public complaint is research, not permission to message its author.
+2. Demonstrate one working product to reachable consenting builders or an approved community. Keep founder QA separate from outside usage.
+3. Collect specific feedback: what they tried, whether the result helped and what prevented another use. A signup or compliment alone is weak evidence.
+4. Test one change per version where practical. If nobody arrives, change distribution; if visitors arrive but never reach value, repair the product or promise.
 
-Agents watch Reddit, Hacker News and X for posts like "is there a tool that…". They pick the best requests, build and deploy a small tool on Vercel within an hour, and send it to the person who asked.
+The collaborator's source includes social/email distribution. Local declarations now require approval for direct sending tools, and app quotas govern logged actions only. No new outreach is authorized or sent by this update. See [studio boundaries](docs/STUDIO_UPDATE.md) before live operation.
 
-- **Why it's strong:** the most "autonomous company" pitch of these ideas. The agents decide which products should exist. Each request comes with its first user, the person who asked.
-- **What you'd show:** "We shipped 11 products overnight, and here are their users."
-- **Risk:** platforms limit bots, so replies may be the step that needs a person, which you'd have to log. Quality varies a lot.
+The previous four service offers remain in [config/experiments.seed.json](config/experiments.seed.json) for the retained fulfillment runtime. They are not simultaneous studio product promises. [Earlier proposals](docs/archive/README.md) preserve the history.

@@ -1,0 +1,22 @@
+{
+  "source_filename": "New Recording 35.m4a",
+  "source_path": "/Users/srujanyamali/Downloads/New Recording 35.m4a",
+  "source_sha256": "0ab14b65e1ed9d77720ea1a8e4816cd0c338aa39c1082bef189c5f2243930f39",
+  "source_size_bytes": 63743689,
+  "duration_seconds": 3885.461333,
+  "engine": "mlx-whisper",
+  "engine_version": "0.4.3",
+  "model": "mlx-community/whisper-large-v3-mlx",
+  "language": "en",
+  "task": "transcribe",
+  "command": "mlx_whisper \"$AUDIO_PATH\" --model mlx-community/whisper-large-v3-mlx --output-dir transcripts --output-name hackathon-recording-35 --output-format all --language en --condition-on-previous-text False --verbose False",
+  "notes": [
+    "Raw automatic speech recognition; no speaker diarization.",
+    "Source audio stays at its original path, outside this repository.",
+    "Initial turbo pass degenerated into filler repetition. Preserved under attempts/turbo for provenance; not the accepted transcript.",
+    "Final five formats merge full-model output with three focused normalized redecodes. Original engine outputs retained; no manual name/spelling correction."
+  ],
+  "processing_script": "scripts/finalize_transcript.py",
+  "repair_script": "scripts/recover_transcript_clips.py",
+  "repair_manifest": "transcripts/attempts/recovered-clips/manifest.json"
+}

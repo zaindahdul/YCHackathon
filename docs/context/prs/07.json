@@ -1,0 +1,85 @@
+{
+  "baseRefName": "launchpad",
+  "body": "## Summary\nThe first Launchpad UI looked like a generic AI-made template: an emoji logo, the default indigo button, a purple gradient banner, all-caps micro labels, a feature-card grid, a \"Copy\" button under every paragraph, and raw `**markdown**` on the page. This PR replaces it with a quiet, editorial design that shows the product instead of describing it.\n\n**It's live now:** https://launchpad-2rdynba3hkaq.vercel.app\n\n**Stacked on #6.** The base is `launchpad`, so this diff is only the UI. Merge #6 first.\n\n### What changed\n- **Design system:**\n  - Paper background, near-black type, and hairline rules instead of boxes.\n  - Black primary buttons, with one green reserved for \"live\".\n  - Inter font. No emoji, no gradients. Dark mode works.\n- **Landing page:** leads with a real kit preview (the timeline plus an X post) instead of four feature cards. The numbers only appear once there are launches.\n- **Kit page, now a working tool:**\n  - Posts are styled like their platform (X shows as a thread with character counts), and copy buttons sit quietly in each post's corner.\n  - The Launch YC body renders as Markdown and copies as Markdown.\n  - Once you're live, results come first: big numbers and per-channel bars.\n  - A sticky sidebar holds Launch now, the posting timeline and the launch-day checklist.\n- **Mobile:** Launch now comes first, then the plan and the posts. The timeline and checklist sit below them instead of before every post.\n- **Form:** grouped into sections, with outline-and-check channel chips.\n- **Boost page and ops log:** rebuilt on the same system.\n- **Fixes:**\n  - Plurals (\"1 squad founder was asked\", \"1 boost\").\n  - The public log shows a clean kit summary (the plan's first sentence plus the timing) instead of truncated raw Markdown.\n  - Readable radar sources (\"Show HN\", not \"show hn\").\n  - Footer spacing.\n\nEvery page was checked in a headless browser at 1280px and 390px, with realistic seeded data.\n\n## What we need from you\n1. **Review the look** on the live site: `/`, `/new`, `/ops`, and a kit page (submit a test launch with your own email, then untick \"list my launch\").\n2. Same open asks as #6: a **full-permission Na\u00efve key** saved only in `key.txt`, and a **fresh anonymous X account**.\n\n## Test plan\n- [x] `cd project-2 && npm test`: 11 pass\n- [x] `npm run typecheck`\n- [x] Screenshots of every page (landing, form, kit while writing, ready and live, boost, ops) on desktop and mobile\n- [x] Deployed: the live landing page serves the new design, with no emoji left\n\n\ud83e\udd16 Generated with [Claude Code](https://claude.com/claude-code)",
+  "comments": [],
+  "commits": [
+    {
+      "authoredDate": "2026-11-08T05:34:42Z",
+      "authors": [
+        {
+          "email": "pmf-engine@users.noreply.github.com",
+          "id": "",
+          "login": "",
+          "name": "PMF Engine"
+        },
+        {
+          "email": "noreply@anthropic.com",
+          "id": "MDQ6VXNlcjgxODQ3",
+          "login": "claude",
+          "name": "Claude Opus 5.5"
+        }
+      ],
+      "committedDate": "2026-11-08T05:34:42Z",
+      "messageBody": "- Paper background, near-black type, hairline rules instead of boxes,\n  black primary buttons, one green for \"live\"; Inter; no emoji or\n  gradients; dark mode\n- Landing page leads with a real kit preview instead of a feature grid\n- Kit page is a working tool: posts look like their platform, quiet\n  copy buttons, results first once live, sticky sidebar with Launch now,\n  the timeline and the checklist; Launch YC body renders as Markdown\n- Form grouped into sections with channel chips; boost page and ops log\n  rebuilt on the same system\n- Fixes: plurals (\"1 boost\"), clean kit summaries in the public log\n  instead of truncated raw Markdown, readable radar source names,\n  footer spacing, mobile order (Launch now first, timeline after)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+      "messageHeadline": "Redesign Launchpad's UI: quiet, editorial, show the product",
+      "oid": "0a0e3933229bf1b33d84f3f000d9783e386288af"
+    },
+    {
+      "authoredDate": "2026-11-08T05:34:59Z",
+      "authors": [
+        {
+          "email": "pmf-engine@users.noreply.github.com",
+          "id": "",
+          "login": "",
+          "name": "PMF Engine"
+        },
+        {
+          "email": "noreply@anthropic.com",
+          "id": "MDQ6VXNlcjgxODQ3",
+          "login": "claude",
+          "name": "Claude Opus 5.5"
+        }
+      ],
+      "committedDate": "2026-11-08T05:34:59Z",
+      "messageBody": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+      "messageHeadline": "Ignore the local screenshot database",
+      "oid": "19b18e07ff4e45e51f6f386c29d30d6417658d42"
+    }
+  ],
+  "files": [
+    {
+      "path": "project-2/.gitignore",
+      "additions": 1,
+      "deletions": 0,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "project-2/server/mcp.ts",
+      "additions": 10,
+      "deletions": 2,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "project-2/server/pages.ts",
+      "additions": 335,
+      "deletions": 149,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "project-2/server/routes.ts",
+      "additions": 1,
+      "deletions": 1,
+      "changeType": "MODIFIED"
+    }
+  ],
+  "headRefName": "launchpad-ui",
+  "headRefOid": "19b18e07ff4e45e51f6f386c29d30d6417658d42",
+  "isDraft": false,
+  "mergedAt": null,
+  "number": 7,
+  "reviews": [],
+  "state": "OPEN",
+  "title": "Redesign Launchpad's UI: quiet, editorial, show the product",
+  "updatedAt": "2026-11-08T05:35:03Z",
+  "url": "https://github.com/zaindahdul/YCHackathon/pull/7"
+}

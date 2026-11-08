@@ -1,0 +1,118 @@
+[
+  {
+    "id": "qa-mobile-reviews",
+    "name": "Mobile review reproduction",
+    "audience": "Independent app developers with a recent release and a specific reported first-use problem",
+    "offer": "Investigate one agreed review complaint or customer journey, deliver recorded evidence and reproduction steps, and include one scoped retest.",
+    "priceCents": 2900,
+    "currency": "USD",
+    "fulfillmentType": "qa",
+    "status": "candidate",
+    "budgetCents": 500,
+    "channels": ["owned_intake", "opted_in_email", "approved_community"],
+    "hypothesis": "Developers with a current complaint will pay for independent reproducible evidence and a retest rather than another unverified bug list.",
+    "successCriteria": [
+      "At least one independent developer agrees to a specific journey and acceptance condition.",
+      "A completed investigation contains actual environment evidence and is acknowledged as useful by the customer.",
+      "A paid order is verified separately from free pilots; a repeat test or referral is recorded when it occurs."
+    ],
+    "killCriteria": [
+      "Pause paid fulfillment if the agreed app, device or test account cannot be accessed; do not substitute a different environment silently.",
+      "Pause if findings cannot be reproduced or provider failures are repeatedly mistaken for product bugs.",
+      "After at least five qualified permitted exposures and their agreed response windows, reconsider the offer if no developer states a current problem or takes a substantive next step."
+    ],
+    "evidenceRequirements": [
+      "Customer-authorized target, journey, synthetic data and expected result.",
+      "Run/session identifiers, actual device or browser environment, timestamps, screenshots or recording, and reproduction attempt.",
+      "Explicit passed, failed, blocked or inconclusive result; actual customer acknowledgment, costs and intervention records."
+    ],
+    "parentExperimentId": null
+  },
+  {
+    "id": "real-estate-reels",
+    "name": "Authorized property listing reels",
+    "audience": "Real estate agents currently promoting a listing and authorized to supply its photos and facts",
+    "offer": "Produce one short silent vertical property video from authorized photos, with approved facts in an accompanying manifest and a downloadable MP4. A changed scope requires a new order.",
+    "priceCents": 4900,
+    "currency": "USD",
+    "fulfillmentType": "video",
+    "status": "candidate",
+    "budgetCents": 500,
+    "channels": ["owned_intake", "opted_in_email", "approved_community"],
+    "hypothesis": "An agent with a current listing will use and buy a ready-to-publish clip when the sample is accurate and removes editing work.",
+    "successCriteria": [
+      "At least one independent listing agent supplies or authorizes actual assets and confirms an immediate marketing use.",
+      "The customer approves an accurate playable export and confirms receipt or publication; those outcomes are recorded separately.",
+      "Verified payment and observed production cost support continuing a small repeat test."
+    ],
+    "killCriteria": [
+      "Block production when image or recording permission and listing facts are unconfirmed.",
+      "Pause if exports repeatedly fail playback, accuracy or agreed revision checks.",
+      "After at least five qualified permitted exposures and their response windows, change the audience or offer if no agent supplies a real listing or takes a substantive next step."
+    ],
+    "evidenceRequirements": [
+      "Source asset references, customer permission and approved listing facts.",
+      "Playable rendered file, file version, dimensions/duration and quality check results.",
+      "Customer approval and receipt/publication evidence, verified payment if paid, actual cost and intervention records."
+    ],
+    "parentExperimentId": null
+  },
+  {
+    "id": "request-microtools",
+    "name": "Requested browser microtools",
+    "audience": "Makers and small teams with a specific unmet browser-based task and concrete example inputs and outputs",
+    "offer": "Configure one supported offline browser utility (CSV deduplication, JSON formatting or UTM building) against agreed input/output examples and deliver a tested downloadable HTML file.",
+    "priceCents": 1900,
+    "currency": "USD",
+    "fulfillmentType": "microtool",
+    "status": "candidate",
+    "budgetCents": 750,
+    "channels": ["owned_intake", "opted_in_email", "approved_community"],
+    "hypothesis": "A person who has already requested a small utility will use a working version and may pay for a scoped improvement or private version.",
+    "successCriteria": [
+      "An independent requester confirms the task and supplies at least one meaningful acceptance example.",
+      "The delivered tool passes agreed examples and the requester completes the intended task.",
+      "A verified paid order, requested improvement or independent repeat use provides an early commercial or retention signal."
+    ],
+    "killCriteria": [
+      "Decline tasks needing production secrets, privileged third-party accounts, unrestricted code execution or unsupported infrastructure.",
+      "Pause if the build cannot pass its agreed examples within the job's time and cost cap.",
+      "After at least five qualified permitted exposures and their response windows, reconsider the task cluster if no requester supplies concrete examples or actually uses an output."
+    ],
+    "evidenceRequirements": [
+      "Original request reference, permission to follow up, explicit scope and input/output examples.",
+      "Isolated build result, source/artifact version, test output and working preview or bundle.",
+      "Observed customer task completion, price/payment mode, costs and any founder repair or deployment work."
+    ],
+    "parentExperimentId": null
+  },
+  {
+    "id": "indie-launch-clips",
+    "name": "Indie product launch clips",
+    "audience": "Independent software makers preparing a launch or demo with a working product and permission to supply its screen recordings",
+    "offer": "Produce one short silent vertical product clip from supplied authorized screenshots or an operator-provided recording, with approved facts in an accompanying manifest and a downloadable MP4.",
+    "priceCents": 2900,
+    "currency": "USD",
+    "fulfillmentType": "video",
+    "status": "candidate",
+    "budgetCents": 500,
+    "channels": ["owned_intake", "opted_in_email", "approved_community"],
+    "hypothesis": "A maker with an imminent launch will use a ready-to-share demonstration of the actual product and pay to avoid recording and editing it themselves.",
+    "successCriteria": [
+      "At least one independent maker supplies an authorized working flow or recording and a real intended publication or presentation.",
+      "The maker approves and receives a playable clip that accurately represents the product.",
+      "Actual presentation/publication, verified payment or a repeat request is recorded rather than inferred from a download."
+    ],
+    "killCriteria": [
+      "Block if source access or media rights are missing, or the proposed flow cannot actually be demonstrated.",
+      "Pause when producing the clip repeatedly requires false UI states, invented capabilities or unbounded manual edits.",
+      "After at least five qualified permitted exposures and their response windows, change the audience or offer if no maker supplies a real launch need or uses an output."
+    ],
+    "evidenceRequirements": [
+      "Customer-approved flow, asset permission and actual captured or supplied source recording.",
+      "Versioned playable export, source/fact manifest checks and any separately approved revised order.",
+      "Customer approval, receipt and any actual publication evidence, verified payment if paid, costs and intervention records."
+    ],
+    "parentExperimentId": null
+  }
+]
