@@ -2,6 +2,8 @@
 
 Requested by Srujan on November 8, 2026: make sure Zain’s Claude gets all context, implements the product and tests it thoroughly. This is an execution brief and evidence checklist, not proof that the other session has received or completed it. Repository delivery, session acknowledgment, implementation, local verification and live results are separate states.
 
+Execution thread: [GitHub #9](https://github.com/zaindahdul/YCHackathon/issues/9), assigned to `zaindahdul`. Instructions and baseline evidence are published. Remote Claude receipt, active implementation and repair verification remain **unverified** until acknowledged and supported by commits/results.
+
 ## Read before implementing
 
 - [Bot handoff and PR dependencies](../BOT_HANDOFF.md): main is not the Launchpad checkout; PRs #6 → #7 → #8 contain the current product source.
