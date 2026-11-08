@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "naive:dry": "npm run build && naive up --dry-run",
     "naive:up": "npm run build && naive up",
-    "scout": "tsx scripts/kickoff.ts",
+    "agent": "tsx scripts/run-agent.ts",
     "intervene": "tsx scripts/intervene.ts"
   },
   "dependencies": {
@@ -27,6 +27,6 @@
     "esbuild": "0.28.2",
     "tsx": "^4.23.15",
     "typescript": "5.9.3",
-    "vitest": "^3.2.7"
+    "vitest": "^5.1.0"
   }
 }
