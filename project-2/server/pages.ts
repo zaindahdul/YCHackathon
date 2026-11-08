@@ -320,6 +320,37 @@ pre.snippet{background:var(--soft);padding:12px 14px;border-radius:8px;font:12.5
 .roles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}.roles div{background:var(--soft);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--muted)}.roles b{display:block;color:var(--ink);font-weight:600;font-size:14px}
 select{min-height:48px}
 .cmeta{font-size:12.5px;color:var(--muted);margin-top:6px}
+.ops-head{padding:72px 0 0;max-width:720px}
+.ops-head .display{font-size:clamp(38px,5vw,60px);margin-bottom:20px}
+.ops-head>p{font-size:17px;color:var(--ink-2);line-height:1.6;max-width:36em}
+.ops-cta{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-top:32px}
+.ops-steps{list-style:none;margin:0;padding:88px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.ops-steps li{background:var(--soft);border-radius:16px;padding:26px 22px 28px}
+.ops-n{display:inline-flex;width:28px;height:28px;border-radius:50%;border:1px solid var(--rule);align-items:center;justify-content:center;font-size:13px;color:var(--muted);background:var(--paper)}
+.ops-who{font-size:13px;color:var(--muted);margin:24px 0 6px}
+.ops-steps h3{font-size:17px;margin-bottom:8px}
+.ops-steps li>p:last-child{font-size:14.5px;color:var(--ink-2);line-height:1.6}
+.ops-behind{margin-top:24px;font-size:14px;color:var(--muted);max-width:70ch}
+.ops-live{padding-top:104px}
+.ops-livehead{display:flex;align-items:baseline;gap:14px;margin-bottom:20px}
+.ops-livehead h2{font-size:22px}.ops-livehead span{font-size:13px;color:var(--muted)}
+.ops-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.ops-kpis div{background:var(--soft);border-radius:14px;padding:20px 20px 18px}
+.ops-kpis b{display:block;font-size:34px;font-weight:550;letter-spacing:-.03em;line-height:1.1;font-variant-numeric:tabular-nums;margin-bottom:6px}
+.ops-kpis span{font-size:13px;color:var(--muted)}
+.ops-recent{list-style:none;margin:28px 0 0;padding:0}
+.ops-recent li{display:grid;grid-template-columns:100px minmax(0,1fr) auto;gap:20px;padding:13px 0;border-top:1px solid var(--rule);font-size:14.5px;align-items:baseline}
+.ops-recent .w{color:var(--muted);font-size:13px;text-transform:capitalize}
+.ops-recent .t{color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ops-recent .d{color:var(--muted);font-size:13px;white-space:nowrap}
+.ops-log{margin-top:48px}
+.ops-log summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:12px;font-size:14px;color:var(--ink-2);padding:10px 18px;border:1px solid var(--rule);border-radius:999px}
+.ops-log summary::-webkit-details-marker{display:none}
+.ops-log summary::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .15s}
+.ops-log[open] summary::after{transform:translateY(1px) rotate(-135deg)}
+.ops-log summary:hover{border-color:var(--muted);color:var(--ink)}
+@media (max-width:1100px) and (min-width:861px){.ops-steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){.ops-head{padding-top:40px}.ops-steps{grid-template-columns:minmax(0,1fr);padding-top:56px;gap:10px}.ops-live{padding-top:80px}.ops-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.ops-kpis div:last-child{grid-column:1/-1}.ops-recent li{grid-template-columns:1fr auto;gap:4px 16px}.ops-recent .t{grid-column:1/-1;grid-row:2;white-space:normal}}
 @media (max-width:860px){
   .side .launch{display:none}.kithead .right{text-align:left!important}
   .hero{grid-template-columns:minmax(0,1fr);gap:40px;padding:48px 0 40px}
@@ -350,8 +381,14 @@ const ICON = `<link rel="icon" href="data:image/svg+xml,${encodeURIComponent('<s
 export const page = (title: string, body: string, head = "") =>
   `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title>${ICON}${FONT}${head}<style>${CSS}</style></head><body>${body}</body></html>`;
 
-export const header = (cta = true) => `<header class="top wrap"><a class="mark" href="/"><i></i>Launchpad</a><nav><a class="link" href="/ops">How it runs</a>${cta ? `<a class="btn sm" href="/new">Plan a launch</a>` : ""}</nav></header>`;
-export const footer = `<footer class="wrap"><p>Launchpad is not affiliated with Y Combinator. No bots, no fake engagement. <a href="/ops">How it runs</a></p></footer>`;
+export const header = (cta = true) => `<header class="top wrap"><a class="mark" href="/"><i></i>Launchpad</a><nav><a class="link" href="/ops">How it works</a>${cta ? `<a class="btn sm" href="/new">Plan a launch</a>` : ""}</nav></header>`;
+export const footer = `<footer class="wrap"><p>Launchpad is not affiliated with Y Combinator. No bots, no fake engagement. <a href="/ops">How it works</a></p></footer>`;
+/** The first sentence of a log entry, on one line, cut to fit. */
+const oneLine = (text: string, max = 140) => {
+  const flat = text.replace(/\s+/g, " ").trim();
+  const first = /^.*?[.!?](?=\s|$)/.exec(flat)?.[0] ?? flat;
+  return first.length > max ? `${first.slice(0, max - 1).trimEnd()}…` : first;
+};
 export const copyBtn = (text: string, label = "Copy") => `<button class="copy" type="button" data-copy="${esc(text)}">${esc(label)}</button>`;
 
 /** Impressions an hour against the starting thresholds: under 150 is behind, 500 and up is ahead. */
@@ -563,12 +600,36 @@ export function renderOps(d: { overview: Overview; launches: Launch[]; decisions
   const feed = <T>(rows: T[], empty: string, f: (r: T) => string) => (rows.length ? `<ul class="feed">${rows.map(f).join("")}</ul>` : `<p class="empty">${esc(empty)}</p>`);
   const o = d.overview;
   const reports = d.reports.filter((r) => r.listed);
-  return page("How it runs · Launchpad", `${header()}
+  const launches = d.launches.length === 0 ? `<p class="empty">None yet.</p>` : `<div class="tablewrap"><table class="t"><thead><tr><th>Company</th><th>Status</th><th>Asked</th><th>Kit ready</th><th>Launched</th></tr></thead><tbody>${[...d.launches].reverse().map((l) => `<tr><td>${esc(l.listed ? l.company : "Unlisted launch")}</td><td><span class="status ${l.status === "launched" || l.status === "reported" ? "live" : ""}">${esc(l.status)}</span></td><td class="muted">${esc(time(l.created_at))}</td><td class="muted">${l.ready_at ? esc(time(l.ready_at)) : "—"}</td><td class="muted">${l.launched_at ? esc(time(l.launched_at)) : "—"}</td></tr>`).join("")}</tbody></table></div>`;
+  /* Only work done for founders (kits, boosts, reports). Scout and inbox housekeeping stays in the full log. */
+  const recent = d.decisions.filter((x) => (x.launch_id !== null || x.agent === "producer" || x.agent === "booster") && !/^(skip|no[-_ ]?op|idle|nothing)/i.test(x.decision)).slice(0, 4);
+  const steps: [string, string, string][] = [
+    ["You", "Tell us about the launch", "One short form: what you're launching, the link, and which channels you want."],
+    ["Producer", "Writes your launch kit", "A time for every channel and every post written in its voice. In your inbox in about ten minutes."],
+    ["Booster", "Rallies the squad", "Press Launch now and founders in the squad get a one-tap request to share it."],
+    ["Producer", "Reports back", "Two hours later: clicks per channel, who shared it, and what to do next."],
+  ];
+  const n = d.interventions.length;
+  return page("How it works · Launchpad", `${header()}
 <main class="wrap">
-<section style="padding:48px 0 8px"><p class="eyebrow">The live record</p><h1 style="font-size:36px;margin:12px 0 12px">How Launchpad runs</h1>
-<div class="roles"><div title="Writes each kit and the report afterwards"><b>Producer</b>Kits, reports</div><div title="Asks squad founders to share each launch"><b>Booster</b>Squad asks</div><div title="Finds founders who are launching and offers a kit"><b>Scout</b>Finds launches</div><div title="Answers the inbox"><b>Concierge</b>Inbox</div></div><p class="small muted" style="margin-top:12px">Updated ${esc(time(d.now))}</p></section>
-<div class="numbers"><span><b>${o.launches}</b> launches planned</span><span><b>${o.launched}</b> launched</span><span><b>${o.clicks}</b> people clicked through</span><span><b>${o.boosts_sent}</b> ${o.boosts_sent === 1 ? "boost" : "boosts"} asked</span><span><b>${o.boosts_shared}</b> composers opened</span><span><b>${o.squad}</b> in the squad</span><span><b>${d.interventions.length}</b> human ${d.interventions.length === 1 ? "step-in" : "step-ins"}</span></div>
-<section class="section"><h2>Launches</h2>${d.launches.length === 0 ? `<p class="empty">None yet.</p>` : `<div class="tablewrap"><table class="t"><thead><tr><th>Company</th><th>Status</th><th>Asked</th><th>Kit ready</th><th>Launched</th></tr></thead><tbody>${[...d.launches].reverse().map((l) => `<tr><td>${esc(l.listed ? l.company : "Unlisted launch")}</td><td><span class="status ${l.status === "launched" || l.status === "reported" ? "live" : ""}">${esc(l.status)}</span></td><td class="muted">${esc(time(l.created_at))}</td><td class="muted">${l.ready_at ? esc(time(l.ready_at)) : "—"}</td><td class="muted">${l.launched_at ? esc(time(l.launched_at)) : "—"}</td></tr>`).join("")}</tbody></table></div>`}</section>
+<section class="ops-head"><h1 class="display">What the agents do for you</h1>
+<p>You fill in one form. AI agents plan, write and rally your launch, and you post each piece in one click.</p>
+<div class="ops-cta"><a class="btn" href="/new">Plan my launch</a><span class="small muted">Free. About two minutes.</span></div></section>
+<ol class="ops-steps">${steps.map(([who, title, text], i) => `<li><span class="ops-n">${i + 1}</span><p class="ops-who">${esc(who)}</p><h3>${esc(title)}</h3><p>${esc(text)}</p></li>`).join("")}</ol>
+<p class="ops-behind">Behind the scenes, a scout watches what else is launching so your posts avoid crowded mornings, and a concierge answers your email.</p>
+<section class="ops-live">
+<div class="ops-livehead"><h2>Live</h2><span>Updated ${esc(time(d.now))}</span></div>
+<div class="ops-kpis">
+<div><b>${o.launches}</b><span>${o.launches === 1 ? "launch" : "launches"}, ${o.launched} live</span></div>
+<div><b>${o.clicks}</b><span>people clicked through</span></div>
+<div><b>${o.boosts_shared}</b><span>composers opened, of ${o.boosts_sent} asked</span></div>
+<div><b>${o.squad}</b><span>in the squad</span></div>
+<div><b>${n}</b><span>human ${n === 1 ? "step-in" : "step-ins"}</span></div>
+</div>
+${recent.length ? `<ul class="ops-recent">${recent.map((x) => `<li><span class="w">${esc(x.agent)}</span><span class="t">${esc(oneLine(x.reasoning))}</span><span class="d">${esc(time(x.created_at))}</span></li>`).join("")}</ul>` : ""}
+</section>
+<details class="ops-log"><summary>Full agent log</summary>
+<section class="section"><h2>Launches</h2>${launches}</section>
 <section class="section"><h2>Reports</h2>${feed(reports, "None yet. The producer writes one about two hours after each launch.", (r) => `<li><div class="meta"><b>${esc(name(r.launch_id))}</b> · ${esc(time(r.created_at))}</div><p><a href="/r/${esc(r.id)}">${esc(r.title)}</a></p></li>`)}</section>
 <section class="section"><h2>Decisions</h2>${feed(d.decisions, "None yet.", (x) => `<li><div class="meta"><b>${esc(name(x.launch_id))}</b> · ${esc(x.decision)} · ${esc(x.agent)} · ${esc(time(x.created_at))}</div><p>${esc(x.reasoning)}</p></li>`)}</section>
 <section class="section cols">
@@ -576,7 +637,8 @@ export function renderOps(d: { overview: Overview; launches: Launch[]; decisions
 <div><h2 style="font-size:20px;margin-bottom:18px">Launch radar</h2>${feed(d.radar, "Nothing yet.", (r) => `<li><div class="meta"><b>${esc(SOURCE_NAMES[r.source] ?? r.source)}</b>${r.batch ? ` · ${esc(r.batch)}` : ""}</div><p><a href="${esc(r.url)}" rel="noopener nofollow">${esc(r.title)}</a></p></li>`)}</div>
 </section>
 <section class="section"><h2>Where a human stepped in</h2>${feed(d.interventions, "None so far.", (x) => `<li><div class="meta">${esc(time(x.created_at))}</div><p>${esc(x.description)}</p></li>`)}</section>
-</main>${footer}`, `<meta http-equiv="refresh" content="60">`);
+</details>
+</main>${footer}`);
 }
 
 export function renderReport(r: Report, company: string, stats: LaunchStats | null): string {
