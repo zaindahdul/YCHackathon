@@ -1,14 +1,16 @@
 # Start here: context for Zain's bot
 
-Updated November 7, 2026 (Pacific). PR snapshot captured November 8 at 06:38 UTC / November 7 at 22:38 Pacific. This file consolidates the user's direction, all seven known PRs, implementation boundaries and the new founder interview. Read it before choosing a branch or changing the product.
+Updated November 8, 2026 (Pacific). Historical seven-PR snapshot captured November 8 at 06:38 UTC / November 7 at 22:38 Pacific. This file consolidates the user's direction, the earlier seven-PR inventory plus a PR #8 addendum, implementation boundaries and both supplied founder replies. Read it before choosing a branch or changing the product.
 
 ## The job and the newest evidence
 
 We are building an **agent-run business** for the Naïve Autonomous Company Hackathon, not just a dashboard about agents. Use the Naïve SDK. The demo should show actual useful output, user behavior, decisions and human interventions. Hacking stops **Sunday, November 8, 2026 at 11am Pacific**; final presentations start at 1pm. See [event rules](hackathon-rules.md) and [brief](docs/hackathon-brief.md). Speed to a real user's outcome matters more than adding another autonomous-company framework.
 
-**Latest customer-informed candidate: Launchpad, focused on helping a founder handle launch conversations.** Jesai Tarun says replying to comments across X and LinkedIn is hard while founders are busy during launch. An agent that knows the company, helps reply and explains what comments reveal would be useful. Timing and preparing launch content also hurt. He says Bookface discovery already works well. Read [his complete supplied interview and evidence limits](docs/customer-research/jesai-tarun-launch-interview.md).
+**Latest customer-informed candidate: Launchpad as a per-launch service to get real product users.** [Aditya, who mentions Sentient](docs/customer-research/aditya-sentient-launch-interview.md), reports early users from Reddit and wants relevant communities, a compelling demo, adapted posts and personalized outreach drafts for review. He wants attribution through actual product use and return use. Per-launch pricing may fit better than a subscription unless we deliver ongoing marketing value.
 
-This is one respondent expressing interest, not proven PMF, a sale, an accepted trial or a final user-approved pivot. The collaborator has already built a broader launch-kit implementation in PR #6 and redesigned it in PR #7. **Neither PR implements the comment-engagement job yet.** Do not tell the user those replies are already automated.
+[Jesai Tarun](docs/customer-research/jesai-tarun-launch-interview.md) separately prioritizes company-aware replies to launch comments across X/LinkedIn, plus comment insights. Aditya does not specifically request that workflow. Keep the two jobs distinct: initial distribution versus launch follow-through. Both value product/company context. Jesai says Bookface works well; Aditya wants explained relevance without claiming Bookface is insufficient.
+
+Read the [two-interview comparison and updated trial](docs/customer-research/README.md). These are two qualitative replies, not proven PMF, sales, accepted trials or a final user-approved pivot. Aditya expresses conditional payment interest but gives no price or purchase commitment; Jesai provides no payment answer. The collaborator built broader launch kits in PR #6/#7, but those inspected snapshots do not implement comment engagement, video cuts or activation/retention attribution. Do not claim those capabilities already work.
 
 ## Repository reality: read this before running commands
 
@@ -35,6 +37,8 @@ States/SHAs below are the captured snapshot. [Full metadata, bodies, file lists,
 | [#5](https://github.com/zaindahdul/YCHackathon/pull/5) | Open draft / master ← main | 17c9556 | Shared review of integrated main; this handoff push advances its head |
 | [#6](https://github.com/zaindahdul/YCHackathon/pull/6) | Open / master ← launchpad | 920fb99 | Launchpad backend, crew, UI and earlier problem notes; not a patch on current main |
 | [#7](https://github.com/zaindahdul/YCHackathon/pull/7) | Open / launchpad ← launchpad-ui | 19b18e0 | UI stacked on #6; source also touches MCP/routes; inspect those changes as behavior, not styling only |
+
+**November 8 addendum:** [PR #8](https://github.com/zaindahdul/YCHackathon/pull/8), open, `launchpad-ui` ← `scout-exact-log`, head `8d87f94`, is stacked on #7. Its one-line scout prompt asks for the exact sent email subject/body in `log_touch` instead of a summary. [Source snapshot](docs/context/prs/08.json) is separately dated; the original seven-PR index is unchanged. This is an instruction, not code-enforced logging or a quota fix; full email content in a public log needs privacy review. Source diff inspected, no tests/live behavior verified; not merged into main. Integration dependency is now **#6 → #7 → #8** if taking that addendum.
 
 Refresh all heads without changing the working tree:
 
@@ -69,9 +73,11 @@ Read-only branch review found the following; no Launchpad deployment was changed
 - Kit/link writes, launch/boost creation and reports use multiple queries without the main studio's transaction repairs. Handle partial failure/concurrency explicitly if integrating.
 - `project-2/package.json` declares `scout` as `tsx scripts/kickoff.ts`, but that file is absent in the inspected tree. Do not present that command as working.
 
-## Recommended narrow trial: launch reply desk
+## Earlier proposed trial: launch reply desk
 
-Proposal, not an already approved build: **“Give us your launch post and company facts; we help answer the questions while you keep building.”** The company operates a launch-day reply service. Agents intake context, triage comments, draft grounded replies, route unknowns to the founder and produce a useful report. Platform access and founder approval determine which steps can execute; do not promise unattended posting before that access is demonstrated.
+Jesai-specific proposal, not an already approved build. The newer [two-interview synthesis](docs/customer-research/README.md) also considers Aditya’s distribution-first trial; choose a real founder’s job rather than automatically expanding this scope.
+
+Proposal: **“Give us your launch post and company facts; we help answer the questions while you keep building.”** The company operates a launch-day reply service. Agents intake context, triage comments, draft grounded replies, route unknowns to the founder and produce a useful report. Platform access and founder approval determine which steps can execute; do not promise unattended posting before that access is demonstrated.
 
 Start with one launch, one platform and one consenting founder. Ask for their product URL, approved facts/FAQ, launch-post URL and voice. Use only a permitted read path or founder-supplied comments; if importing is manual, record that human intervention. Draft replies grouped by product question, buying intent, objection, support and low-value engagement. Ask the founder to approve factual and account actions; missing facts become questions, not invented claims. Report unanswered comments, repeated objections and qualified conversations, with original comment references.
 
@@ -92,7 +98,7 @@ For acquisition, have the founders personally show the workflow to Jesai and a f
 - User initially explored CAD/custom parts and startup merch, then repeatedly asked for something concrete, quickly deliverable, with real users and hackathon fit. Those initial ideas are not constraints on the next concept.
 - User later wanted a multi-PMF autonomous company: start with 3–5 hypotheses, find better strategies and expand. That motivated the portfolio/studio work; the user then questioned whether we were developing an actual agent-run business and asked to stop and think of another idea.
 - Assistant subsequently suggested an agent-run software repair shop (PatchDesk). The user did **not** accept that as a final pivot. Do not present it as the current decision or begin building it from this handoff.
-- Latest user request was to fetch all PRs and add context for Zain's bot; the pasted interview supplements that request. This update documents and publishes context; it does not merge the new product PRs or authorize live operations.
+- The handoff request was to fetch all PRs and add context for Zain's bot; Jesai’s reply and now Aditya’s separate reply supplement that request. This update documents and publishes context; it does not merge the new product PRs or authorize live operations.
 - “Slop” referred in context to AI-built products / making the agent-run business work. No named Slop tool was established; older startup notes treating it as a missing executable should not block the business work.
 - Earlier [unattributed founder notes in #6](docs/context/yc-founder-problems-pr6.md) complain about Bookface and say “bot the video.” Jesai's supplied answer says Bookface is already good and requests engagement help. Keep source identities and disagreements visible; do not merge them into a fabricated consensus.
 
@@ -108,7 +114,7 @@ No contact, publishing, upvote automation, paid run, account creation, deploymen
 
 ## Read next / resume
 
-1. Read the [new interview](docs/customer-research/jesai-tarun-launch-interview.md), [PR snapshot](docs/context/prs/README.md) and relevant `git show` source.
+1. Read the [two-interview synthesis](docs/customer-research/README.md), both linked source replies, [PR snapshot](docs/context/prs/README.md) and relevant `git show` source.
 2. For main development use [README](README.md), [studio setup](studio/README.md), [service architecture](docs/ARCHITECTURE.md) and [THINKPAD](THINKPAD.md). Main startup remains `npm ci`, `npm start`, `npm run doctor`.
 3. Before live Launchpad promises, verify a real intake → producer kit → founder use → results loop. If building comment support, verify the permitted data/account path first and record every manual step. Nothing in this handoff proves these are connected.
 4. Preserve the [recording digest](docs/recording-digest.md), [MLX Whisper transcript/provenance](transcripts/README.md), [research](docs/research/naive-sdk.md) and [historical ideas](docs/archive/README.md). The recording and new interview are different sources.

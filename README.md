@@ -1,6 +1,6 @@
 # PMF Engine
 
-**Latest context for collaborators: [BOT_HANDOFF.md](BOT_HANDOFF.md).** All seven PRs are fetched and snapshotted, including Launchpad #6 and its stacked UI #7. The new [Jesai interview](docs/customer-research/jesai-tarun-launch-interview.md) points to company-aware launch-comment support, which those branches do not yet implement. The sections below describe the code currently integrated on main.
+**Latest context for collaborators: [BOT_HANDOFF.md](BOT_HANDOFF.md).** The original seven PRs and a separately dated #8 addendum are fetched and snapshotted; Launchpad remains on stacked branches #6 → #7 → #8. The [two-founder synthesis](docs/customer-research/README.md) now includes Aditya/Sentient: relevant communities, reviewable launch materials, actual product-use attribution and conditional per-launch pricing, alongside Jesai’s comment-support need. These are hypotheses with implementation gaps, not validated customer outcomes. The sections below describe the code currently integrated on main.
 
 **An AI venture studio: several founder agents build products, find users and decide what to improve or pivot.** Each founder starts with a different market, shares the studio's publishing and analytics infrastructure, and keeps its product/version history and reports visible.
 

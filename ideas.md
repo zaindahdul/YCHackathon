@@ -1,6 +1,6 @@
 # Ideas and current implementation
 
-**Newest evidence and candidate:** [BOT_HANDOFF.md](BOT_HANDOFF.md) maps the Launchpad PRs and [Jesai's interview](docs/customer-research/jesai-tarun-launch-interview.md). Company-aware replies to launch comments are the strongest narrow hypothesis from that interview, not an implemented feature or proven PMF. No final pivot approval is recorded.
+**Newest evidence and candidate:** [BOT_HANDOFF.md](BOT_HANDOFF.md) maps the Launchpad PRs and [both founder replies](docs/customer-research/README.md). Aditya adds a distribution-first, per-launch hypothesis; Jesai prioritizes company-aware comment support. Choose one real founder trial rather than building both entire workflows; neither is proven PMF. No final pivot approval is recorded.
 
 ## Implemented on main: autonomous venture studio
 

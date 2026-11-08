@@ -92,7 +92,9 @@ def plan():
              'studio/README.md', 'docs/STUDIO_UPDATE.md', 'docs/STUDIO_REVIEW.md',
              'BOT_HANDOFF.md', 'docs/context/prs/README.md',
              'docs/context/yc-founder-problems-pr6.md',
-             'docs/customer-research/jesai-tarun-launch-interview.md')
+             'docs/customer-research/jesai-tarun-launch-interview.md',
+             'docs/customer-research/aditya-sentient-launch-interview.md',
+             'docs/customer-research/README.md')
     paths = [ROOT / f for f in files]
     for path in paths:
         require(path.stat().st_size > 100, f'Missing/empty plan artifact: {path}')

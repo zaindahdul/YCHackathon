@@ -1,5 +1,9 @@
 # Delivery record
 
+## November 8 founder-feedback update
+
+Added [Aditya’s supplied Sentient feedback](customer-research/aditya-sentient-launch-interview.md) and a [two-interview synthesis](customer-research/README.md). The handoff and entrypoints distinguish Aditya’s distribution/per-launch pricing hypothesis from Jesai’s launch-comment job. Payment interest is conditional, and product activation/retention requires evidence beyond clicks. This is a documentation update, with no product implementation or live actions. The newly discovered prompt-only PR #8 is recorded as a separately dated addendum stacked on #7; earlier snapshots are preserved. Documentation/transcript/source checks pass (136 local links), PR #8 head/stack ancestry was checked, and independent read-only review found no material issues in the new interview synthesis. Existing runtime tests were not rerun for this documentation-only update.
+
 ## Latest collaborator handoff
 
 See [BOT_HANDOFF.md](../BOT_HANDOFF.md) for the current user intent and [all seven PR snapshots](context/prs/README.md). Launchpad #6 and stacked UI #7 are fetched source, not merged into main. The new [Jesai interview](customer-research/jesai-tarun-launch-interview.md) is saved separately from the earlier anonymous notes. This documentation update leaves live deployments and agents unchanged. Earlier runtime and startup observations below are historical verification records, not current Launchpad validation.
