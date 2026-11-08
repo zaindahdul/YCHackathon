@@ -237,18 +237,18 @@ export class Workspace {
     const tab: Tab = (TABS as readonly string[]).includes(opts.tab ?? "") ? (opts.tab as Tab) : "kit";
     const row = await this.row(l.id);
     const facts = withFacts(row?.facts);
-    const [outreach, comments, checks, commitments, links, stats, overview, reports, attribution, matches] = await Promise.all([
+    const [outreach, comments, checks, commitments, links, stats, squad, reports, attribution, matches] = await Promise.all([
       this.db.query<Outreach>("select * from outreach where launch_id = $1 order by created_at asc", [l.id]),
       this.db.query<LaunchComment>("select * from launch_comments where launch_id = $1 order by created_at asc", [l.id]),
       this.db.query<WaveCheck>("select * from wave_checks where launch_id = $1 order by created_at asc", [l.id]),
       this.db.query<Commitment>("select * from commitments where launch_id = $1 order by status desc, created_at desc", [l.id]),
-      this.repo.linksFor(l.id), this.repo.stats(l.id), this.repo.overview(), this.repo.listReports(l.id),
+      this.repo.linksFor(l.id), this.repo.stats(l.id), this.repo.squadFor(l), this.repo.listReports(l.id),
       this.attribution(l, opts.origin), this.matches(l, opts.ask),
     ]);
     return {
       launch: l, tab, origin: opts.origin, token: l.token, notice: opts.notice,
       facts, missing: row?.missing ?? missingFacts(facts), producer: row?.producer ?? null, is_sample: l.company.toLowerCase().includes("(sample)"),
-      links, stats, squad: Math.max(0, overview.squad - (l.join_squad ? 1 : 0)), reports,
+      links, stats, squad, reports,
       communities: row?.communities ?? [], demo: row?.demo ?? null, wave_plan: row?.wave_plan ?? [],
       outreach: outreach.rows, comments: comments.rows, insights: this.insights(comments.rows),
       checks: checks.rows, advice: adviseWave(checks.rows, facts), attribution,

@@ -160,10 +160,14 @@ describe("a launch, end to end", () => {
     await handleRequest(req("POST", "/k/gamma/go", { query: `t=${gToken}` }), ctx());
     clock = new Date(clock.getTime() + 13 * 60_000);
     const pending = await tool("get_work", { agent: "booster" }, { BOOSTS_PER_BOOSTER_PER_DAY: "1" });
-    // Beta was already asked once today, so only Acme is asked to boost Gamma.
-    expect(pending.data.boosts.map((x: { booster_email: string }) => x.booster_email)).toEqual(["founder@acme.dev"]);
-    const code = new URL(pending.data.boosts[0].boost_url).pathname.split("/")[2]!;
-    expect((await get(`/b/${code}/stop`)).html).toContain("left the squad");
+    // Beta was already asked once today, so only Acme is asked to boost Gamma. Gamma joined
+    // after Acme launched, so Gamma is asked to boost Acme.
+    const asked = pending.data.boosts.map((x: { booster_email: string; company: string }) => `${x.booster_email} -> ${x.company}`).sort();
+    expect(asked).toEqual(["founder@acme.dev -> Gamma", "hi@gamma.dev -> Acme AI"]);
+    const mine = pending.data.boosts.find((x: { booster_email: string }) => x.booster_email === "founder@acme.dev");
+    const code = new URL(mine.boost_url).pathname.split("/")[2]!;
+    expect((await get(`/b/${code}/stop`)).html).toContain("Leave the boost squad?"); // a GET only asks
+    expect((await handleRequest(req("POST", `/b/${code}/stop`), ctx())).html).toContain("left the squad");
     clock = new Date(clock.getTime() + 13 * 60_000);
     expect((await tool("get_work", { agent: "booster" })).data.boosts.map((x: { booster_email: string }) => x.booster_email)).not.toContain("founder@acme.dev");
   });

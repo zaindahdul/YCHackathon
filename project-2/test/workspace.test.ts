@@ -111,7 +111,7 @@ describe("private access", () => {
     const l = await w.launch();
     const r = new Repo(db);
     await r.logDecision({ launch_id: l.id, decision: "timing", reasoning: "SECRET-STRATEGY", agent: "producer" });
-    await r.logTouch({ channel: "email", kind: "email", target: "x@y.dev", content: "SECRET-EMAIL-BODY" });
+    await r.logTouch({ channel: "email", kind: "email", target: "x@y.dev", content: "SECRET-EMAIL-BODY" }, new Date());
     const ops = await call("GET", "/ops");
     expect(ops.html).not.toContain("SECRET-STRATEGY");
     expect(ops.html).not.toContain("SECRET-EMAIL-BODY");

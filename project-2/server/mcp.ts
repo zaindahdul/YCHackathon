@@ -20,7 +20,7 @@ export const REPORT_GUIDE =
 
 export const KIT_GUIDE = `The kit is one JSON object:
 { "strategy": markdown, 80-4000 chars: the plan and why (what is launching this week that competes for attention, the angle, the order of channels),
-  "timing": [{ "channel": one of ${CHANNELS.join("|")}, "when": a concrete time with timezone, e.g. "Sun Nov 8, 6:30 AM PT", "why": the reason }],
+  "timing": [{ "channel": one of ${CHANNELS.join("|")}, "when": a concrete time with timezone, e.g. "Sun Nov 8, 6:30 AM PT", "why": the reason }], listed in the order they happen,
   "posts": {
     "x": [thread of 1-8 posts, each <= 280 chars; put {link} where the tracked link goes],
     "linkedin": "80-3000 chars, with {link}",
@@ -131,7 +131,7 @@ export const kitUrl = (origin: string, l: Launch) => `${origin}/k/${l.slug}?t=${
 
 /** A one-line record of a kit for the public log: the plan's first sentence and every timing call. */
 export function kitSummary(kit: Kit): string {
-  const plain = kit.strategy.replace(/[*_`#>]/g, "").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/\s+/g, " ").trim();
+  const plain = kit.strategy.replace(/^\s*#{1,6}\s.*$/gm, "").replace(/[*_`#>]/g, "").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/\s+/g, " ").trim();
   const first = (/^.*?[.!?](?=\s|$)/.exec(plain)?.[0] ?? plain).slice(0, 300);
   const timing = kit.timing.map((t) => `${CHANNEL_NAMES[t.channel]} ${t.when}`).join(" · ");
   return `${first} Timing: ${timing}.`;
@@ -146,6 +146,13 @@ const brief = (origin: string, l: Launch) => ({
 export async function callTool(name: string, args: Record<string, unknown>, ctx: McpContext): Promise<unknown> {
   const { repo, origin } = ctx;
   const now = () => ctx.now?.() ?? new Date();
+  /** An optional launch_id must name a real launch: a made-up one would break the foreign key. */
+  const launchIdOpt = async () => {
+    const value = opt(args, "launch_id", 64);
+    if (value === undefined) return null;
+    if (!(await repo.launchExists(value))) throw new ToolError(`no launch has id ${value}. Use an id from get_work (lch_...), or leave launch_id out.`);
+    return value;
+  };
   const launchOf = async (key = "id") => {
     const l = await repo.getLaunch(need(args, key, 64));
     if (!l) throw new ToolError("no such launch");
@@ -184,10 +191,14 @@ export async function callTool(name: string, args: Record<string, unknown>, ctx:
         };
       }
       const sent = await repo.sentLastDay(now());
+      const quota = { emails_left: Math.max(0, ctx.caps.emailsPerDay - sent.emails), posts_left: Math.max(0, ctx.caps.postsPerDay - sent.posts) };
       return {
         now: now().toISOString(), run_token: runToken,
+        next: quota.emails_left === 0
+          ? `The email quota for the rolling 24 hours is used up. Do not research or draft emails this run. ${quota.posts_left > 0 ? "If social.accounts lists a connected account, make at most one post. " : ""}Otherwise end_run now, without logging a decision.`
+          : `Up to ${Math.min(8, quota.emails_left)} emails this run.`,
         studio: await repo.overview(),
-        quota: { emails_left: Math.max(0, ctx.caps.emailsPerDay - sent.emails), posts_left: Math.max(0, ctx.caps.postsPerDay - sent.posts) },
+        quota,
         radar: await repo.listRadar(40),
         recent_outreach: (await repo.listTouches(30)).map((t) => ({ channel: t.channel, target: t.target, content: t.content.slice(0, 200), created_at: t.created_at })),
         signup_url: `${origin}/new`,
@@ -208,6 +219,7 @@ export async function callTool(name: string, args: Record<string, unknown>, ctx:
         const kit = validateKit(args["kit"], l.channels);
         const saved = await repo.saveKit(l.id, kit, now());
         await repo.logDecision({ launch_id: l.id, decision: "kit", reasoning: kitSummary(kit), agent: "producer" });
+        await repo.joinLateBoosts(saved, now(), ctx.caps);
         return { kit_url: kitUrl(origin, saved), email_founder: `Email ${l.email} their kit_url now: what is in it, the first step, and that the Launch now button rallies the boost squad.`, founder_email: l.email };
       } catch (error) {
         if (error instanceof KitError || error instanceof RepoError) throw new ToolError(error.message);
@@ -265,7 +277,7 @@ export async function callTool(name: string, args: Record<string, unknown>, ctx:
         const blocked = (await repo.blockedTargets([target], now()))[target.toLowerCase()];
         if (blocked) throw new ToolError(`${target} must not be contacted: ${blocked}`);
       }
-      return await repo.logTouch({ channel, kind: need(args, "kind", 20), content: need(args, "content", 6000), target: target ?? null, external_id: opt(args, "external_id", 200) ?? null, launch_id: opt(args, "launch_id", 64) ?? null });
+      return await repo.logTouch({ channel, kind: need(args, "kind", 20), content: need(args, "content", 6000), target: target ?? null, external_id: opt(args, "external_id", 200) ?? null, launch_id: await launchIdOpt() }, now());
     }
 
     case "update_touch_metrics": {
@@ -275,7 +287,7 @@ export async function callTool(name: string, args: Record<string, unknown>, ctx:
     }
 
     case "log_decision":
-      return await repo.logDecision({ launch_id: opt(args, "launch_id", 64) ?? null, decision: need(args, "decision", 40), reasoning: need(args, "reasoning", 2000), agent: need(args, "agent", 20) });
+      return await repo.logDecision({ launch_id: await launchIdOpt(), decision: need(args, "decision", 40), reasoning: need(args, "reasoning", 2000), agent: need(args, "agent", 20) });
 
     case "find_launch": {
       const email = need(args, "email", 254);
@@ -285,7 +297,7 @@ export async function callTool(name: string, args: Record<string, unknown>, ctx:
 
     case "add_feedback": {
       const email = opt(args, "email", 254);
-      await repo.addFeedback(opt(args, "launch_id", 64) ?? null, "email", need(args, "text", 4000), email && isEmail(email) ? email : null);
+      await repo.addFeedback(await launchIdOpt(), "email", need(args, "text", 4000), email && isEmail(email) ? email : null);
       return { filed: true };
     }
 

@@ -2,7 +2,7 @@
  * The founder's private workspace: seven tabs over one launch. Server-rendered, every piece of
  * founder or commenter text goes through esc(), and every link and form carries the owner token.
  */
-import { COPY_JS, copyBtn, esc, footer, page, renderMarkdown, time } from "./pages.ts";
+import { COPY_JS, TODO_JS, copyBtn, esc, footer, page, renderMarkdown, time } from "./pages.ts";
 import type { Launch } from "./repo.ts";
 import { CHANNEL_NAMES, share, utm, withLink, type Channel } from "./rules.ts";
 import { DEMO_STUDIO_JS } from "./video-client.ts";
@@ -83,7 +83,7 @@ export function renderWorkspace(v: WorkspaceView): string {
   return page(`${l.company} launch kit · Launchpad`, `${head}
 <main class="wrap">${banners}${panes[v.tab]()}</main>
 ${v.notice ? `<div class="toast" role="status">${esc(v.notice)}</div>` : ""}
-${footer}${COPY_JS}${SAVE_JS}${UX_JS}`, `<meta name="robots" content="noindex">`);
+${footer}${COPY_JS}${TODO_JS}${SAVE_JS}${UX_JS}`, `<meta name="robots" content="noindex">`);
 
   // ---------------------------------------------------------------- Kit
   function kitTab(): string {
@@ -153,8 +153,8 @@ ${textField("audience", "Audience", f.audience, "who it's for")}${textField("pro
 
     const s = v.stats;
     const launchPanel = launched
-      ? `<div class="panel"><span class="status live">You're live</span><p style="margin-top:8px">${s.boosts.sent} squad ${s.boosts.sent === 1 ? "founder" : "founders"} asked. ${s.boosts.shared} opened a composer, which doesn't confirm a post went up.</p><a class="btn quiet" href="${tabUrl("results")}">See results</a></div>`
-      : `<div class="panel"><h3>When your first post is up</h3><p>${v.squad > 0 ? `Launch now asks ${v.squad} opted-in squad ${v.squad === 1 ? "founder" : "founders"} to share it.` : "Launch now marks you live. No one else is in the squad yet."} Launchpad doesn't post for you.</p><form method="post" action="${act("/go")}"><button class="btn" type="submit">Launch now</button></form></div>`;
+      ? `<div class="panel"><span class="status live">You're live</span><p style="margin-top:8px">${s.boosts.sent + s.boosts.pending === 0 ? "Nobody else is in the squad yet. Founders who join in the next 48 hours will be asked to share it." : `${s.boosts.pending > 0 ? `${s.boosts.pending} squad ${s.boosts.pending === 1 ? "founder is" : "founders are"} being asked to share it now. ` : ""}${s.boosts.sent} asked so far, ${s.boosts.shared} opened a composer, which doesn't confirm a post went up.`}</p><a class="btn quiet" href="${tabUrl("results")}">See results</a></div>`
+      : `<div class="panel"><h3>When your first post is up</h3><p>${v.squad > 0 ? `Launch now asks ${v.squad} ${v.squad === 1 ? "founder" : "founders"} in the squad to share it.` : "Launch now marks you live. Nobody else is in the squad yet, so founders who join in the next 48 hours will be asked to share it."} Launchpad doesn't post for you.</p><form method="post" action="${act("/go")}"><button class="btn" type="submit">Launch now</button></form></div>`;
 
     return `<section class="pane"><div class="split"><div>
 <div class="pane-head" style="margin-bottom:24px"><h1>${esc(l.one_liner)}</h1></div>
@@ -165,7 +165,7 @@ ${sections.join("") || empty("No channels selected", "This launch has no channel
 </div>
 <aside class="side">${launchPanel}
 <div><p class="eyebrow" style="margin-bottom:6px">When to post</p><ul class="timeline">${kit.timing.map((x) => `<li><a href="#ch-${esc(x.channel)}"><span class="t">${esc(x.when)}</span></a><span class="c">${esc(channelName(x.channel))}</span></li>`).join("")}</ul></div>
-${kit.checklist.length ? `<div><p class="eyebrow" style="margin-bottom:6px">Launch day</p><ul class="todo">${kit.checklist.map((c) => `<li>${esc(c)}</li>`).join("")}</ul></div>` : ""}
+${kit.checklist.length ? `<div><p class="eyebrow" style="margin-bottom:6px">Launch day</p><ul class="todo" data-kit="${esc(l.slug)}">${kit.checklist.map((c, i) => `<li><label><input type="checkbox" data-step="${i}"><span>${esc(c)}</span></label></li>`).join("")}</ul></div>` : ""}
 </aside></div></section>`;
   }
 

@@ -12,6 +12,7 @@
     "naive:dry": "npm run build && naive up --dry-run",
     "naive:up": "npm run build && naive up",
     "seed:demo": "tsx scripts/seed-demo.ts",
+    "agent": "tsx scripts/run-agent.ts",
     "intervene": "tsx scripts/intervene.ts"
   },
   "dependencies": {
