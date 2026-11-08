@@ -13,3 +13,12 @@ config/policy.local.json
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+
+# Studio local credentials and generated state
+key.txt
+.naive/
+.pmf-local/
+studio/.local/
+studio/.data/
+.playwright-cli/
+output/playwright/

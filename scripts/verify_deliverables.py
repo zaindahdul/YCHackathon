@@ -88,10 +88,15 @@ def research():
 def plan():
     files = ('README.md', 'ideas.md', 'AGENTS.md', 'docs/hackathon-brief.md',
              'docs/recording-digest.md', 'docs/OPERATING_MODEL.md', 'docs/ARCHITECTURE.md',
-             'docs/NAIVE_SETUP.md', 'docs/REVIEW.md', 'docs/DELIVERY.md', 'docs/archive/README.md')
+             'docs/NAIVE_SETUP.md', 'docs/REVIEW.md', 'docs/DELIVERY.md', 'docs/archive/README.md',
+             'studio/README.md', 'docs/STUDIO_UPDATE.md', 'docs/STUDIO_REVIEW.md')
     paths = [ROOT / f for f in files]
     for path in paths:
         require(path.stat().st_size > 100, f'Missing/empty plan artifact: {path}')
+    for name in ('0001_init.sql', '0002_runs.sql', '0003_uploads.sql'):
+        original = subprocess.check_output(['git', 'show', f'fc49da2:sql/{name}'], cwd=ROOT)
+        require((ROOT / 'studio/sql' / name).read_bytes() == original,
+                f'Applied studio migration changed: {name}')
     local_links([p for p in ROOT.rglob('*.md') if not any(x in p.parts for x in ('node_modules', '.git', 'data'))])
     print('Current and archived document/reference checks passed; behavior uses npm run check')
 
@@ -105,7 +110,7 @@ def delivery():
     remote = run('git', 'ls-remote', 'origin', 'refs/heads/main').split()[0]
     require(remote == commit, 'Remote main differs from local HEAD')
     require(not run('git', 'status', '--porcelain'), 'Working tree is not clean')
-    for ancestor in ('fd6eb33', 'b46bfe1', 'bd2a830'):
+    for ancestor in ('fd6eb33', 'b46bfe1', 'bd2a830', 'fc49da2'):
         subprocess.run(['git', 'merge-base', '--is-ancestor', ancestor, 'HEAD'], cwd=ROOT, check=True)
     repo = json.loads(run('gh', 'repo', 'view', 'zaindahdul/YCHackathon', '--json', 'url,defaultBranchRef'))
     record = (ROOT / 'docs/DELIVERY.md').read_text()
@@ -130,7 +135,10 @@ def main():
             review = (ROOT / 'docs/REVIEW.md').read_text()
             require('Final disposition' in review, 'Final independent review disposition missing')
             require('No unresolved material findings' in review, 'Review still has material findings')
-            print('Review disposition recorded; lead must still inspect its evidence')
+            studio_review = (ROOT / 'docs/STUDIO_REVIEW.md').read_text()
+            require('Final disposition' in studio_review, 'Studio independent review disposition missing')
+            require('No unresolved material' in studio_review, 'Studio review still has material findings')
+            print('Both review dispositions recorded; lead must still inspect their evidence')
     except (AssertionError, OSError, KeyError, ValueError, subprocess.CalledProcessError, IndexError) as error:
         parser.exit(1, f'FAIL: {error}\n')
 

@@ -1,5 +1,17 @@
 # Delivery record
 
+## Current studio integration
+
+The latest update integrates PR #4 (`fc49da2`) into the `studio/` workspace on [main](https://github.com/zaindahdul/YCHackathon/tree/main), while retaining the service runtime and all existing research/transcript history. Root npm commands test/typecheck/build both systems with one lockfile. The source update adds forward migration `0004_integrity.sql`; the original three deployed migration files are byte-for-byte preserved.
+
+Read-only verification reached the existing public dashboard, three live product listings and its health/state endpoints. That service was deployed by the collaborator before this integration. The local security, transaction, kickoff and documentation repairs have **not** been deployed there, and this update did not run paid sessions, send messages, provision credentials or change organization agents.
+
+Integration checks passed: **77 service tests + 73 studio tests (150 total)**, both typechecks/builds, formatting, dependency audit and transcript/document checks. `pad finish --timeout 60` passed all ten tasks with fresh acceptance checks. Independent review and actual local Chromium checks verified opaque product isolation, XML protection, ES modules and private storage add/get; the lead also checked reload persistence, a separate browser's isolation, mobile/desktop rendering and QA counters staying zero. The public deployment was only read, never changed.
+
+The root live kickoff command was invoked with credentials/authorization explicitly absent and refused before a client request. Original migrations `0001`–`0003` remain byte-for-byte equal to the imported studio commit. No provider credentials, local databases, generated product data, node_modules or build output are committed. The final remote delivery check requires clean local main to match origin/main and preserve PR #4's commit ancestry. The earlier delivery record is retained below for provenance.
+
+## Earlier service-runtime delivery
+
 Published target: [zaindahdul/YCHackathon main](https://github.com/zaindahdul/YCHackathon/tree/main).
 
 The local `main` preserves the original `master`, the collaborator's `add-ideas`, and the earlier research/transcription branch through merge ancestry. No collaborator branch is deleted and no history is force-pushed. Earlier single-idea plans are archived; the current README and ideas describe the implemented portfolio.

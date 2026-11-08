@@ -7,14 +7,26 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "build": "tsc",
-    "typecheck": "tsc --noEmit",
-    "test": "tsx --test tests/*.test.ts",
+    "build": "npm run runtime:build && npm run studio:build",
+    "typecheck": "npm run runtime:typecheck && npm run studio:typecheck",
+    "test": "npm run runtime:test && npm run studio:test",
     "company": "tsx src/cli.ts",
     "check": "npm run typecheck && npm test",
     "demo": "tsx src/cli.ts demo",
-    "format": "prettier --write src tests config package.json tsconfig.json",
-    "format:check": "prettier --check src tests config package.json tsconfig.json"
+    "format": "prettier --write src tests config package.json tsconfig.json studio/server studio/scripts studio/crew studio/test studio/naive.config.ts studio/tsconfig.json studio/package.json studio/build.mjs",
+    "format:check": "prettier --check src tests config package.json tsconfig.json studio/server studio/scripts studio/crew studio/test studio/naive.config.ts studio/tsconfig.json studio/package.json studio/build.mjs",
+    "runtime:build": "tsc",
+    "runtime:test": "tsx --test tests/*.test.ts",
+    "runtime:typecheck": "tsc --noEmit",
+    "dev": "npm run dev --workspace @pmf/studio",
+    "studio:test": "npm test --workspace @pmf/studio",
+    "studio:typecheck": "npm run typecheck --workspace @pmf/studio",
+    "studio:build": "npm run build --workspace @pmf/studio",
+    "naive:dry": "npm run naive:dry --workspace @pmf/studio --",
+    "naive:up": "npm run naive:up --workspace @pmf/studio --",
+    "kickoff": "npm run kickoff --workspace @pmf/studio --",
+    "intervene": "npm run intervene --workspace @pmf/studio --",
+    "fence-ceo": "npm run fence-ceo --workspace @pmf/studio --"
   },
   "dependencies": {
     "@usenaive-sdk/managed-agents": "0.12.3",
@@ -25,5 +37,9 @@
     "prettier": "3.6.2",
     "tsx": "4.23.15",
     "typescript": "7.0.2"
-  }
+  },
+  "workspaces": [
+    "studio"
+  ],
+  "description": "PMF venture studio workspace and retained verified service-company runtime"
 }

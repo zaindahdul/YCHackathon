@@ -1,6 +1,6 @@
 # Project instructions
 
-Build one agent-run company operating multiple bounded market experiments. Start at README.md, ideas.md, docs/OPERATING_MODEL.md and THINKPAD.md. The source event rules are hackathon-rules.md. Earlier single-idea proposals are historical in docs/archive/.
+Current product: the venture studio in studio/. Preserve the separate verified service runtime in src/. Both must pass the integrated root checks. Start at README.md, ideas.md, docs/OPERATING_MODEL.md and THINKPAD.md. The source event rules are hackathon-rules.md. Earlier single-idea proposals are historical in docs/archive/.
 
 - Node 24+, TypeScript ESM; npm run check is the integrated code gate.
 - Use the real Naïve adapter only with explicit operator policy, available budget and a configured key. Never expose credentials in task context or Git.
@@ -12,3 +12,7 @@ Build one agent-run company operating multiple bounded market experiments. Start
 - Document actual live capability separately from installed/configured adapters. QA collector receipts are not independent device replay.
 - Keep one owner of writable core files, migrations, deployment and dependency changes; workers must preserve others' edits.
 - Work on main without force-pushing or deleting collaborator branches. Existing histories are preserved.
+
+- Root npm workspaces route studio commands to studio/; keep one lockfile. Never change applied studio migrations0001–0003; add forward migrations.
+- Studio products are untrusted browser code. Preserve the opaque sandbox/storage bridge and browser capability boundaries. Studio telemetry is not independently verified human demand.
+- New schedule declarations are disabled and paid kickoff requires explicit local authorization. Source edits do not alter existing remote agents; no deployment/outreach is implied by an integration request.
