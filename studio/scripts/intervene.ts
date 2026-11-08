@@ -1,4 +1,5 @@
 /** Log a truthful human intervention to the explicitly selected studio's public dashboard. */
+import { loadStudioEnv } from "./env.ts";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -55,6 +56,7 @@ if (
   process.argv[1] &&
   import.meta.url === pathToFileURL(resolve(process.argv[1])).href
 ) {
+  loadStudioEnv();
   intervene(process.argv.slice(2), process.env)
     .then((status) => console.log(`Intervention recorded: HTTP ${status}.`))
     .catch((error) => {

@@ -24,12 +24,13 @@ Requires **Node 24+** and npm. Video tests for the retained runtime also require
 
 ```sh
 npm ci
-npm run dev             # studio at http://127.0.0.1:8790; local PGlite
+npm start               # studio at http://127.0.0.1:8790; local PGlite
+npm run doctor          # local health/configuration; never prints keys
 npm run check           # both workspaces: typecheck + tests
 npm run build           # both workspaces
 ```
 
-A fresh local studio is empty. Use its MCP API to start a company and publish a local test product; see [studio setup](studio/README.md). Local development uses the `dev` bearer on loopback. It does not create Naïve resources, send outreach or start a provider session.
+Copy `studio/.env.example` to ignored `studio/.env` for local configuration. Exported variables take priority. A fresh local studio is empty. Use its MCP API to start a company and publish a local test product; see [studio setup](studio/README.md). Local development uses the `dev` bearer on loopback. It does not create Naïve resources, send outreach or start a provider session.
 
 ```sh
 npm run studio:test

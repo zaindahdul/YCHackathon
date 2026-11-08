@@ -26,7 +26,9 @@
     "naive:up": "npm run naive:up --workspace @pmf/studio --",
     "kickoff": "npm run kickoff --workspace @pmf/studio --",
     "intervene": "npm run intervene --workspace @pmf/studio --",
-    "fence-ceo": "npm run fence-ceo --workspace @pmf/studio --"
+    "fence-ceo": "npm run fence-ceo --workspace @pmf/studio --",
+    "start": "npm run start --workspace @pmf/studio",
+    "doctor": "npm run doctor --workspace @pmf/studio"
   },
   "dependencies": {
     "@usenaive-sdk/managed-agents": "0.12.3",

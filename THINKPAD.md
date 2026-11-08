@@ -10,6 +10,8 @@ Build a runnable TypeScript company runtime seeded with four concrete PMF experi
 
 The current update integrates PR #4 (fc49da2) into main as a studio workspace, preserves the verified service runtime, validates the claimed public deployment read-only, repairs locally actionable integrity/access issues and updates current documentation. Acceptance includes both test suites/builds, real browser inspection of the integrated studio, independent review, preserved Git histories and clean pushed main. No deployment, live paid work, outreach or organization permission changes are authorized by this integration.
 
+Current startup request: keep the studio running locally with a simple npm start entry point, safe ignored configuration and secret-free diagnostics; leave the repo clean and pushed. Discover the requested Slop integration; the term is pending clarification. No Slop executable/connector or Naïve credentials are available in this environment, so do not claim paid founders have started.
+
 ## Constraints
 - **Max concurrency: 3**
 
@@ -59,6 +61,9 @@ The current update integrates PR #4 (fc49da2) into main as a studio workspace, p
       files: docs/STUDIO_REVIEW.md, docs/DELIVERY.md
       accept: npm run check && npm run build
       deps: T6, T7, T8, T9
+- [x] T11 · Simplify startup configuration and verify running local studio
+      files: package.json, studio/package.json, studio/scripts/env.ts, studio/scripts/doctor.ts, studio/.env.example, studio/server/dev.ts, studio/scripts/kickoff.ts, studio/scripts/fence-ceo.ts, studio/scripts/intervene.ts, studio/test/setup.test.ts, README.md, studio/README.md
+      accept: npm run check && npm run build && npm run format:check
 ## Log
 
 - 2026-11-07 · thinkpad created
@@ -84,3 +89,5 @@ The current update integrates PR #4 (fc49da2) into main as a studio workspace, p
 - 2026-11-07 · done T10 · Independently review repairs and deliver clean integrated main
 - 2026-11-07 · Current integration acceptance finished: 77 service +73 studio tests (150), both builds/typechecks, formatting, audit0, preserved migration hashes, transcript/doc references. pad finish --timeout60 passed all10 tasks. Independent actual-browser XML/module/storage repairs verified; lead save/reload/separate-browser/mobile/desktop checked with QA counters0. Root kickoff without credentials/liveauthorization refused beforeproviderclient; no live modifications. Final Gitpush/clean-head verification next.
 - 2026-11-07 · Published main integration1c32a24 plus master-ancestry90f005b. Created draft cofounder review PR5 https://github.com/zaindahdul/YCHackathon/pull/5 (main→master). Clean local/remote90f005b deliverycheckpassed; defaultmaster remains due priorWRITEsettingsblocker. FinaldoccommitwillupdatePRhead automatically; verifyfullHEAD match afterpush.
+- 2026-11-07 · done T11 · Simplify startup configuration and verify running local studio
+- 2026-11-07 · Startup cleanup complete locally: npmstart serving127.0.0.1:8790, npmdoctor reportsserverrunning/keyfalse/livefalse. Added literal ignored.env loading/exportpriority, secretfree diagnostics, prepared blank inactive studio/.env, removed cleanunusedPR3worktree. 154tests +builds/typechecks/format pass; independent4setuptests clear; padfinish all11passed. Real founder start blocked on absent Naivekey/budget; Slopdefinitionpending. No providerrequest/deploy/outreach performed.

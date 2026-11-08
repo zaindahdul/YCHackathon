@@ -13,7 +13,9 @@
     "naive:up": "npm run build && naive up",
     "kickoff": "tsx scripts/kickoff.ts",
     "intervene": "tsx scripts/intervene.ts",
-    "fence-ceo": "tsx scripts/fence-ceo.ts"
+    "fence-ceo": "tsx scripts/fence-ceo.ts",
+    "start": "tsx server/dev.ts",
+    "doctor": "tsx scripts/doctor.ts"
   },
   "dependencies": {
     "@usenaive-sdk/managed-agents": "^0.12.3",

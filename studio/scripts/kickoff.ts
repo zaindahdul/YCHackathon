@@ -3,6 +3,7 @@
  * This admits work before STUDIO_STOP_AT; it does not promise instantaneous remote cancellation.
  * Each accepted session retains its full cap in the local ledger: accepted is not billed/finished.
  */
+import { loadStudioEnv } from "./env.ts";
 import { createClient } from "@usenaive-sdk/managed-agents";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -196,6 +197,7 @@ if (
   process.argv[1] &&
   import.meta.url === pathToFileURL(resolve(process.argv[1])).href
 ) {
+  loadStudioEnv();
   kickoff(process.argv.slice(2), process.env)
     .then((results) => {
       for (const result of results)

@@ -1,5 +1,13 @@
 # Delivery record
 
+## Local startup cleanup
+
+Startup is now `npm start`; `npm run doctor` checks loopback health and configuration without printing credentials or making provider requests. Commands load ignored root/studio `.env` files with exported variables taking priority. An ignored `studio/.env` was prepared with blank credentials, zero total budget and live authorization disabled. The unused PR #3 review worktree was removed after confirming it was clean.
+
+At delivery the local studio is running at `http://127.0.0.1:8790`. No Slop executable or connector was found; its intended meaning is pending clarification. No Naïve key, saved CLI profile or credit envelope is configured on this machine, so live founder execution has not started. These are missing inputs, not simulated success. Existing remote agents/deployment are unchanged.
+
+Validation now passes **154 tests** (77 service + 77 studio), both builds/typechecks, formatting and all eleven plan checks. Independent startup review passed the four new configuration/redaction tests. The local server remains running for use.
+
 ## Current studio integration
 
 Draft cofounder review: [PR #5 — integrated venture studio](https://github.com/zaindahdul/YCHackathon/pull/5), `main` → `master`. The current integration commit is `1c32a24`; `90f005b` also preserves the already-merged master history without changing its tree. The remote default branch remains `master`; the earlier repository-settings permission blocker is unchanged.

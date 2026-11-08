@@ -10,12 +10,15 @@ Run commands from the repository root. Node 24+ is required; the shared root loc
 
 ```sh
 npm ci
-npm run dev                 # http://127.0.0.1:8790
+npm start                   # http://127.0.0.1:8790
+npm run doctor              # local readiness; no provider calls or secret output
 npm run studio:test
 npm run studio:typecheck
 npm run studio:build
 npm run check               # includes the retained service runtime
 ```
+
+Optional setup: copy `.env.example` in this workspace to ignored `studio/.env`. Studio commands load root `.env` followed by `studio/.env`, with exported environment variables taking priority. The same configuration is used by startup, doctor, kickoff and owner scripts.
 
 Local state defaults to `studio/.data/pglite`. Set `PORT` and `PGLITE_DIR` for a separate local instance. Development binds to loopback and defaults to the local `dev` bearer; `PMF_DEV_TOKEN` can override it. No provider, outreach, deployment or paid session starts with `dev`.
 
@@ -58,7 +61,7 @@ Iterate, scale and kill reports require at least 400 characters and all seven se
 
 ## Authorized provider work
 
-This integration does not provision a key or activate the studio. Use operation-specific provider permissions. A request to deploy or run a bounded task does not require every billing/admin permission. Keep keys out of Git/chat/logs. The root `.env.example` primarily describes the retained service runtime; studio commands use exported environment variables.
+This integration does not provision a key or activate the studio. Use operation-specific provider permissions. A request to deploy or run a bounded task does not require every billing/admin permission. Keep keys out of Git/chat/logs. The root `.env.example` primarily describes the retained service runtime; studio commands also load ignored local `.env` files; exported variables take priority.
 
 - `npm run naive:dry` plans provider deployment. It requires authenticated read access and does not validate live customer demand.
 - `npm run naive:up` changes external resources and applies migrations. Review the plan and authorize the actual deployment first. This source declares **disabled schedules** and no inbound-mail binding by default. Editing source does not pause the collaborator's existing remote schedules or remove earlier inbox routing.

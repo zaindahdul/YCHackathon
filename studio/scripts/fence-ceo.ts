@@ -4,6 +4,7 @@
  * Needs only agent read/update access granted by the organization; no billing permissions.
  * This may affect an organization's shared orchestrator. Review its scope before applying.
  */
+import { loadStudioEnv } from "./env.ts";
 import { createClient, type VettaClient } from "@usenaive-sdk/managed-agents";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -114,6 +115,7 @@ if (
   process.argv[1] &&
   import.meta.url === pathToFileURL(resolve(process.argv[1])).href
 ) {
+  loadStudioEnv();
   fenceCeo(process.argv.slice(2), process.env["NAIVE_API_KEY"] ?? "")
     .then((result) => console.log(JSON.stringify(result, null, 2)))
     .catch((error) => {
