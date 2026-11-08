@@ -14,6 +14,8 @@ Current startup request: keep the studio running locally with a simple npm start
 
 Current handoff request: fetch every PR, preserve a dated source snapshot and add the new Jesai interview for Zain's bot. Acceptance: all seven PR heads and dependency #7→#6 documented; raw interview and earlier anonymous notes kept separate; implementation vs proposal and local vs live claims explicit; README/AGENTS/ideas point to one read-first handoff; independent review, valid references and clean pushed main through draft PR #5. No blind merge, pivot implementation, deployment or outreach is part of this update.
 
+Current quality coordination request: independently verify latest Launchpad source; publish a Claude-readable implementation/evidence matrix covering both interviews, route it to Zain via an assigned GitHub execution task, and distinguish delivery from unobserved remote receipt or implementation. Main remains owned by the lead; no remote session control, live spend or outreach is inferred.
+
 ## Constraints
 - **Max concurrency: 3**
 
@@ -70,6 +72,10 @@ Current handoff request: fetch every PR, preserve a dated source snapshot and ad
       files: BOT_HANDOFF.md, docs/context, docs/customer-research, README.md, ideas.md, AGENTS.md, scripts/verify_deliverables.py
       accept: python3 scripts/verify_deliverables.py all
       notes: All seven PRs snapshotted with refs and stacked dependency; verbatim founder evidence distinguished from proposals; independent read-only review before clean push.
+- [ ] T13 · Verify latest Launchpad and publish actionable Claude implementation and quality requirements
+      files: CLAUDE.md, docs/IMPLEMENTATION_ACCEPTANCE.md, docs/LAUNCHPAD_VERIFICATION.md, AGENTS.md, README.md, BOT_HANDOFF.md, scripts/verify_deliverables.py
+      accept: python3 scripts/verify_deliverables.py all
+      notes: Read all founder feedback; independent branch test results and coverage gaps; requirement-to-evidence matrix; assigned repo task with acknowledgment request. Do not claim remote Claude read or implemented without evidence.
 ## Log
 
 - 2026-11-07 · thinkpad created

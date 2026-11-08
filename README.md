@@ -1,5 +1,7 @@
 # PMF Engine
 
+**Implementation and quality:** [Claude execution checklist](docs/IMPLEMENTATION_ACCEPTANCE.md), [independent Launchpad verification](docs/LAUNCHPAD_VERIFICATION.md). The repo’s [CLAUDE.md](CLAUDE.md) imports the context and checklist; remote receipt/completion still requires evidence.
+
 **Latest context for collaborators: [BOT_HANDOFF.md](BOT_HANDOFF.md).** The original seven PRs and a separately dated #8 addendum are fetched and snapshotted; Launchpad remains on stacked branches #6 → #7 → #8. The [two-founder synthesis](docs/customer-research/README.md) now includes Aditya/Sentient: relevant communities, reviewable launch materials, actual product-use attribution and conditional per-launch pricing, alongside Jesai’s comment-support need. These are hypotheses with implementation gaps, not validated customer outcomes. The sections below describe the code currently integrated on main.
 
 **An AI venture studio: several founder agents build products, find users and decide what to improve or pivot.** Each founder starts with a different market, shares the studio's publishing and analytics infrastructure, and keeps its product/version history and reports visible.

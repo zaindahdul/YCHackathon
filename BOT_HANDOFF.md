@@ -2,6 +2,10 @@
 
 Updated November 8, 2026 (Pacific). Historical seven-PR snapshot captured November 8 at 06:38 UTC / November 7 at 22:38 Pacific. This file consolidates the user's direction, the earlier seven-PR inventory plus a PR #8 addendum, implementation boundaries and both supplied founder replies. Read it before choosing a branch or changing the product.
 
+## Latest execution request
+
+Srujan asks that Zain’s Claude receives all context, implements the product and tests its real quality. Follow the [implementation/evidence matrix](docs/IMPLEMENTATION_ACCEPTANCE.md), loaded through [CLAUDE.md](CLAUDE.md). Read the [independent Launchpad baseline](docs/LAUNCHPAD_VERIFICATION.md). Do not confuse published instructions with acknowledgment by the other session or completed implementation.
+
 ## The job and the newest evidence
 
 We are building an **agent-run business** for the Naïve Autonomous Company Hackathon, not just a dashboard about agents. Use the Naïve SDK. The demo should show actual useful output, user behavior, decisions and human interventions. Hacking stops **Sunday, November 8, 2026 at 11am Pacific**; final presentations start at 1pm. See [event rules](hackathon-rules.md) and [brief](docs/hackathon-brief.md). Speed to a real user's outcome matters more than adding another autonomous-company framework.
