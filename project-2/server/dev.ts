@@ -43,5 +43,5 @@ createServer(async (req, res) => {
     send(hostRes, { status: 500, json: { error: String(error) } });
   }
 }).listen(port, () => {
-  console.log(`PMF Engine running on http://localhost:${port}  (MCP: POST /mcp with "Authorization: Bearer dev")`);
+  console.log(`Launchpad running on http://localhost:${port}  (MCP: POST /mcp with "Authorization: Bearer dev")`);
 });

@@ -130,6 +130,43 @@ export class Repo {
     return launch;
   }
 
+  /** Squad members a launch would rally right now: the same people markLaunched queues boosts for. */
+  private static readonly SQUAD = `l.join_squad and l.id <> $1 and l.email <> $2 and l.status in ('ready','launched','reported')
+         and not exists (select 1 from optouts o where o.target = l.email)`;
+
+  async squadFor(launch: Pick<Launch, "id" | "email">): Promise<number> {
+    const { rows } = await this.db.query<{ n: number }>(`select count(distinct l.email)::int as n from launches l where ${Repo.SQUAD}`, [launch.id, launch.email]);
+    return rows[0]?.n ?? 0;
+  }
+
+  private async queueBoost(launch: Launch, boosterId: string): Promise<boolean> {
+    const { rows } = await this.db.query<{ id: string }>(
+      "insert into boosts (id, launch_id, booster_id, code) values ($1,$2,$3,$4) on conflict do nothing returning id", [id("bst"), launch.id, boosterId, code()],
+    );
+    if (rows[0]) await this.ensureLink(launch, "boost", rows[0].id);
+    return rows.length > 0;
+  }
+
+  /**
+   * A founder who joins the squad after others have launched still boosts them: once their own
+   * kit is ready, they get a boost for every launch that went out in the last 48 hours.
+   */
+  async joinLateBoosts(member: Launch, now: Date, caps: Caps): Promise<number> {
+    if (!member.join_squad || !["ready", "launched", "reported"].includes(member.status)) return 0;
+    const { rows } = await this.db.query<Launch>(
+      `select l.* from launches l
+       where l.status in ('launched','reported') and l.launched_at >= $3 and l.id <> $1 and l.email <> $2
+         and not exists (select 1 from optouts o where o.target = $2)
+         and not exists (select 1 from boosts b where b.launch_id = l.id and b.booster_id = $1)
+         and (select count(*) from boosts b where b.launch_id = l.id) < $4
+       order by l.launched_at desc`,
+      [member.id, member.email, new Date(now.getTime() - 48 * 3_600_000), caps.boostsPerLaunch],
+    );
+    let queued = 0;
+    for (const launch of rows) if (await this.queueBoost(launch, member.id)) queued++;
+    return queued;
+  }
+
   private async ensureLink(launch: Launch, channel: string, boostId: string | null): Promise<string> {
     const existing = await this.db.query<{ code: string }>(
       "select code from links where launch_id = $1 and channel = $2 and ($3::text is null and boost_id is null or boost_id = $3) limit 1",
@@ -157,21 +194,18 @@ export class Repo {
     );
     const launch = rows[0];
     if (!launch) throw new RepoError("this launch is not ready yet");
+    // One boost per person (a founder with two launches is asked once), up to the per-launch cap.
     const squad = await this.db.query<{ id: string }>(
-      `select l.id from launches l
-       where l.join_squad and l.id <> $1 and l.email <> $2 and l.status in ('ready','launched','reported')
-         and not exists (select 1 from optouts o where o.target = l.email)
-         and not exists (select 1 from boosts b where b.launch_id = $1 and b.booster_id = l.id)
-       order by l.created_at asc limit $3`,
-      [launch.id, launch.email, caps.boostsPerLaunch],
+      `select distinct on (l.email) l.id from launches l
+       where ${Repo.SQUAD}
+         and not exists (select 1 from boosts b join launches bm on bm.id = b.booster_id where b.launch_id = $1 and bm.email = l.email)
+       order by l.email, l.created_at asc`,
+      [launch.id, launch.email],
     );
-    for (const member of squad.rows) {
-      const boostId = id("bst");
-      const c = code();
-      await this.db.query("insert into boosts (id, launch_id, booster_id, code) values ($1,$2,$3,$4) on conflict do nothing", [boostId, launch.id, member.id, c]);
-      await this.ensureLink(launch, "boost", boostId);
-    }
-    return { launch, boosts: squad.rows.length };
+    const already = await this.db.query<{ n: number }>("select count(*)::int as n from boosts where launch_id = $1", [launch.id]);
+    let boosts = 0;
+    for (const member of squad.rows.slice(0, Math.max(0, caps.boostsPerLaunch - (already.rows[0]?.n ?? 0)))) if (await this.queueBoost(launch, member.id)) boosts++;
+    return { launch, boosts };
   }
 
   /** Boosts waiting to be emailed, skipping anyone already asked their daily share. */
@@ -214,6 +248,16 @@ export class Repo {
     await this.db.query("update boosts set status = 'shared', shared_at = coalesce(shared_at, $2) where id = $1", [boostId, now]);
   }
 
+  /** A squad member passed on this one. A share already made stays counted. */
+  async markBoostSkipped(boostId: string): Promise<void> {
+    await this.db.query("update boosts set status = 'skipped' where id = $1 and status in ('pending','sent')", [boostId]);
+  }
+
+  async launchExists(launchId: string): Promise<boolean> {
+    const { rows } = await this.db.query("select 1 from launches where id = $1", [launchId]);
+    return rows.length > 0;
+  }
+
   // ---------------------------------------------------------------- tracked links
 
   /** Records a click (once per visitor per hour) and answers where to send them. */
@@ -243,7 +287,7 @@ export class Repo {
     return {
       clicks_by_channel: by,
       clicks_total: total.rows[0]?.n ?? 0,
-      boosts: { total: (b["pending"] ?? 0) + (b["sent"] ?? 0) + (b["shared"] ?? 0) + (b["skipped"] ?? 0), sent: (b["sent"] ?? 0) + (b["shared"] ?? 0), shared: b["shared"] ?? 0, pending: b["pending"] ?? 0 },
+      boosts: { total: (b["pending"] ?? 0) + (b["sent"] ?? 0) + (b["shared"] ?? 0) + (b["skipped"] ?? 0), sent: (b["sent"] ?? 0) + (b["shared"] ?? 0) + (b["skipped"] ?? 0), shared: b["shared"] ?? 0, pending: b["pending"] ?? 0 },
       boost_clicks: by["boost"] ?? 0,
     };
   }
@@ -265,7 +309,7 @@ export class Repo {
               (select count(*)::int from (select distinct launch_id, visitor from clicks) c) as clicks,
               (select count(*)::int from boosts where status in ('sent','shared')) as boosts_sent,
               (select count(*)::int from boosts where status = 'shared') as boosts_shared,
-              (select count(distinct email)::int from launches where join_squad) as squad`,
+              (select count(distinct email)::int from launches l where join_squad and not exists (select 1 from optouts o where o.target = l.email)) as squad`,
     );
     return rows[0]!;
   }
@@ -292,10 +336,11 @@ export class Repo {
 
   // ---------------------------------------------------------------- outreach
 
-  async logTouch(input: { launch_id?: string | null; channel: string; kind: string; target?: string | null; content: string; external_id?: string | null }): Promise<Touch> {
+  /** Stamped with the same clock the quota and 7-day checks read, so they always agree. */
+  async logTouch(input: { launch_id?: string | null; channel: string; kind: string; target?: string | null; content: string; external_id?: string | null }, now: Date): Promise<Touch> {
     const { rows } = await this.db.query<Touch>(
-      "insert into touches (id, launch_id, channel, kind, target, content, external_id) values ($1,$2,$3,$4,$5,$6,$7) returning *",
-      [id("tch"), input.launch_id ?? null, input.channel, input.kind, input.target?.toLowerCase() ?? null, input.content, input.external_id ?? null],
+      "insert into touches (id, launch_id, channel, kind, target, content, external_id, created_at) values ($1,$2,$3,$4,$5,$6,$7,$8) returning *",
+      [id("tch"), input.launch_id ?? null, input.channel, input.kind, input.target?.toLowerCase() ?? null, input.content, input.external_id ?? null, now],
     );
     return rows[0]!;
   }
