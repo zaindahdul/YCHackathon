@@ -193,7 +193,7 @@ textarea{min-height:132px;resize:vertical}
 .opshead h1{font-size:48px;letter-spacing:-.04em;margin-bottom:20px}
 .opshead p{font-size:17px;color:var(--ink-2);line-height:1.65}
 .opshead p.updated{font-size:13px;color:var(--muted);margin-top:20px}
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;padding:80px 0 0}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
 .kpis div{background:var(--surface);border-radius:16px;padding:24px 24px 22px}
 .kpis b{display:block;font-size:40px;font-weight:500;letter-spacing:-.04em;line-height:1.1;font-variant-numeric:tabular-nums;margin:10px 0 4px}
 .kpis span{font-size:13px;color:var(--muted)}
@@ -203,6 +203,31 @@ textarea{min-height:132px;resize:vertical}
 .blocks .block:last-child{border-bottom:1px solid var(--line)}
 .block>header h2{font-size:18px;letter-spacing:-.015em}
 .block>header p{font-size:13.5px;color:var(--muted);margin-top:8px;max-width:26ch;line-height:1.55}
+.opshead .ctas{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin-top:36px}
+.steps{list-style:none;margin:0;padding:96px 0 0;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.steps li{background:var(--surface);border-radius:16px;padding:28px 24px 30px}
+.steps .n{display:inline-flex;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);align-items:center;justify-content:center;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.steps .who{font-size:13px;color:var(--muted);margin:28px 0 6px}
+.steps h3{font-size:17px;font-weight:550;letter-spacing:-.01em;margin-bottom:10px}
+.steps li>p:last-child{font-size:14.5px;color:var(--ink-2);line-height:1.6}
+.behind{margin-top:28px;font-size:14px;color:var(--muted);max-width:70ch}
+.live{padding-top:120px}
+.livehead{display:flex;align-items:baseline;gap:16px;margin-bottom:24px}
+.livehead h2{font-size:22px;letter-spacing:-.02em}
+.livehead .updated{font-size:13px;color:var(--muted)}
+.recentlog{list-style:none;margin:32px 0 0;padding:0}
+.recentlog li{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:24px;padding:14px 0;border-top:1px solid var(--line);font-size:14.5px;align-items:baseline}
+.recentlog .who{color:var(--muted);font-size:13px;text-transform:capitalize}
+.recentlog .what{color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recentlog .when{color:var(--muted);font-size:13px;white-space:nowrap}
+.fulllog{margin-top:56px}
+.fulllog summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:12px;font-size:14px;color:var(--ink-2);padding:10px 18px;border:1px solid var(--line);border-radius:999px}
+.fulllog summary::-webkit-details-marker{display:none}
+.fulllog summary::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .15s}
+.fulllog[open] summary::after{transform:translateY(1px) rotate(-135deg)}
+.fulllog summary:hover{border-color:var(--muted);color:var(--ink)}
+.fulllog .blocks{padding-top:48px}
+@media (max-width:1100px) and (min-width:901px){.steps{grid-template-columns:1fr 1fr}}
 table.t{width:100%;border-collapse:collapse;font-size:14px}
 table.t th{text-align:left;font-weight:400;font-size:13px;color:var(--muted);padding:0 16px 14px 0}
 table.t td{padding:14px 16px 14px 0;border-top:1px solid var(--line);vertical-align:top}
@@ -232,7 +257,9 @@ table.t td.muted,table.t th{white-space:nowrap}
   .kit{grid-template-columns:1fr;gap:0;padding-top:48px}.side{position:static;margin-top:88px}
   .channel{padding-top:72px}.channel>.head{flex-direction:column;gap:16px}
   .opshead{padding-top:40px}.opshead h1{font-size:36px}
-  .kpis{grid-template-columns:1fr 1fr;gap:12px;padding-top:48px}.kpis div:last-child{grid-column:1/-1}.kpis b{font-size:32px}
+  .kpis{grid-template-columns:1fr 1fr;gap:12px}.kpis div:last-child{grid-column:1/-1}.kpis b{font-size:32px}
+  .steps{grid-template-columns:1fr;padding-top:56px;gap:12px}.live{padding-top:88px}
+  .recentlog li{grid-template-columns:1fr auto;gap:4px 16px}.recentlog .what{grid-column:1/-1;grid-row:2;white-space:normal}
   .blocks{padding-top:56px}.block{grid-template-columns:1fr;gap:24px;padding:40px 0}
   .two{grid-template-columns:1fr;gap:0}
   .writing{padding-top:88px}
@@ -249,8 +276,14 @@ const COPY_JS = `<script>document.addEventListener("click",function(e){var b=e.t
 const page = (title: string, body: string, head = "") =>
   `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title>${ICON}${FONT}${head}<style>${CSS}</style></head><body>${body}</body></html>`;
 
-const header = (cta = true) => `<header class="top wrap"><a class="mark" href="/"><i></i>Launchpad</a><nav><a class="link" href="/ops">How it runs</a>${cta ? `<a class="btn sm" href="/new">Plan a launch</a>` : ""}</nav></header>`;
-const footer = `<footer class="wrap"><div class="row"><p>Run by AI agents. Launchpad is not affiliated with Y Combinator. Every boost is a real founder choosing to share.</p><a href="/ops">How it runs</a></div></footer>`;
+const header = (cta = true) => `<header class="top wrap"><a class="mark" href="/"><i></i>Launchpad</a><nav><a class="link" href="/ops">How it works</a>${cta ? `<a class="btn sm" href="/new">Plan a launch</a>` : ""}</nav></header>`;
+const footer = `<footer class="wrap"><div class="row"><p>Run by AI agents. Launchpad is not affiliated with Y Combinator. Every boost is a real founder choosing to share.</p><a href="/ops">How it works</a></div></footer>`;
+/** The first sentence of a log entry, on one line, cut to fit. */
+const oneLine = (text: string, max = 140) => {
+  const flat = text.replace(/\s+/g, " ").trim();
+  const first = /^.*?[.!?](?=\s|$)/.exec(flat)?.[0] ?? flat;
+  return first.length > max ? `${first.slice(0, max - 1).trimEnd()}…` : first;
+};
 const copyBtn = (text: string, label = "Copy") => `<button class="copy" type="button" data-copy="${esc(text)}">${esc(label)}</button>`;
 
 // ------------------------------------------------------------------- landing
@@ -452,18 +485,32 @@ export function renderOps(d: { overview: Overview; launches: Launch[]; decisions
   const o = d.overview;
   const reports = d.reports.filter((r) => r.listed);
   const launches = d.launches.length === 0 ? `<p class="empty">None yet.</p>` : `<div class="tablewrap"><table class="t"><thead><tr><th>Company</th><th>Status</th><th>Asked</th><th>Kit ready</th><th>Launched</th></tr></thead><tbody>${[...d.launches].reverse().map((l) => `<tr><td>${esc(l.listed ? l.company : "Unlisted launch")}</td><td><span class="status ${l.status === "launched" || l.status === "reported" ? "live" : ""}">${esc(l.status)}</span></td><td class="muted">${esc(time(l.created_at))}</td><td class="muted">${l.ready_at ? esc(time(l.ready_at)) : "—"}</td><td class="muted">${l.launched_at ? esc(time(l.launched_at)) : "—"}</td></tr>`).join("")}</tbody></table></div>`;
-  return page("How it runs · Launchpad", `${header()}
+  /* Only real actions: runs that skipped or found nothing to do stay in the full log. */ const recent = d.decisions.filter((x) => !/^(skip|no[-_ ]?op|idle|nothing)/i.test(x.decision)).slice(0, 4);
+  const steps: [string, string, string][] = [
+    ["You", "Tell us about the launch", "One short form: what you're launching, the link, and which channels you want."],
+    ["Producer", "Writes your launch kit", "A time for every channel and every post written in its voice. In your inbox in about ten minutes."],
+    ["Booster", "Rallies the squad", "Press Launch now and founders in the squad get a one-tap request to share it."],
+    ["Producer", "Reports back", "Two hours later: clicks per channel, who shared it, and what to do next."],
+  ];
+  return page("How it works · Launchpad", `${header()}
 <main class="wrap">
-<section class="opshead"><h1>How Launchpad runs</h1>
-<p>There's no human staff. A producer writes each kit and the report afterwards, a booster asks squad founders to share, a scout finds YC founders who are launching, and a concierge answers the inbox. Everything they do is recorded here.</p>
-<p class="updated">Updated ${esc(time(d.now))}</p></section>
-<section class="kpis">
+<section class="opshead"><h1>What the agents do for you</h1>
+<p>You fill in one form. AI agents plan, write and rally your launch, and you post each piece in one click.</p>
+<div class="ctas"><a class="btn" href="/new">Plan my launch</a><span class="small muted">Free. About two minutes.</span></div></section>
+<ol class="steps">${steps.map(([who, title, text], i) => `<li><span class="n">${i + 1}</span><p class="who">${esc(who)}</p><h3>${esc(title)}</h3><p>${esc(text)}</p></li>`).join("")}</ol>
+<p class="behind">Behind the scenes, a scout watches what else is launching so your posts avoid crowded mornings, and a concierge answers your email.</p>
+<section class="live">
+<div class="livehead"><h2>Live</h2><span class="updated">Updated ${esc(time(d.now))}</span></div>
+<div class="kpis">
 <div><span>Launches</span><b>${o.launches}</b><em>${o.launched} live</em></div>
-<div><span>People clicked through</span><b>${o.clicks}</b><em>across tracked links</em></div>
+<div><span>Clicks</span><b>${o.clicks}</b><em>unique people</em></div>
 <div><span>Boosts shared</span><b>${o.boosts_shared}</b><em>of ${o.boosts_sent} asked</em></div>
 <div><span>Squad</span><b>${o.squad}</b><em>${o.squad === 1 ? "founder" : "founders"}</em></div>
 <div><span>Human step-ins</span><b>${d.interventions.length}</b><em>${d.interventions.length === 1 ? "time a person stepped in" : "times a person stepped in"}</em></div>
+</div>
+${recent.length ? `<ul class="recentlog">${recent.map((x) => `<li><span class="who">${esc(x.agent)}</span><span class="what">${esc(oneLine(x.reasoning))}</span><span class="when">${esc(time(x.created_at))}</span></li>`).join("")}</ul>` : ""}
 </section>
+<details class="fulllog"><summary>Full agent log</summary>
 <div class="blocks">
 ${block("Launches", "Every launch planned, newest first.", launches)}
 ${block("Reports", "Written by the producer about two hours after each launch.", feed(reports, "None yet.", (r) => `<li><div class="meta"><b>${esc(name(r.launch_id))}</b> · ${esc(time(r.created_at))}</div><p><a href="/r/${esc(r.id)}">${esc(r.title)}</a></p></li>`))}
@@ -472,7 +519,8 @@ ${block("Outreach", "Every message the scout sent.", feed(d.touches, "None yet."
 ${block("Launch radar", "What else is launching, so kits avoid crowded mornings.", feed(d.radar, "Nothing yet.", (r) => `<li><div class="meta"><b>${esc(SOURCE_NAMES[r.source] ?? r.source)}</b>${r.batch ? ` · ${esc(r.batch)}` : ""}</div><p><a href="${esc(r.url)}" rel="noopener nofollow">${esc(r.title)}</a></p></li>`))}
 ${block("Human step-ins", "Every time a person had to step in.", feed(d.interventions, "None so far.", (x) => `<li><div class="meta">${esc(time(x.created_at))}</div><p>${esc(x.description)}</p></li>`))}
 </div>
-</main>${footer}`, `<meta http-equiv="refresh" content="60">`);
+</details>
+</main>${footer}`);
 }
 
 export function renderReport(r: Report, company: string, stats: LaunchStats | null): string {
