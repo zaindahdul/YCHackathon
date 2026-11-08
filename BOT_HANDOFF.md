@@ -2,6 +2,12 @@
 
 Updated November 8, 2026 (Pacific). Historical seven-PR snapshot captured November 8 at 06:38 UTC / November 7 at 22:38 Pacific. This file consolidates the user's direction, the earlier seven-PR inventory plus a PR #8 addendum, implementation boundaries and both supplied founder replies. Read it before choosing a branch or changing the product.
 
+## Current state: read this first
+
+PR #10 merged Launchpad into `main` under `project-2/`, including PRs #6, #7, #8, #12, the #11 visual system and #13. Older statements below that Launchpad exists only in PRs are history. Start from [docs/PARALLEL_WORK.md](docs/PARALLEL_WORK.md) for how to run it, bring over unmerged work and pick a lane.
+
+Kits come from a labelled local template until a real `lp-producer` run is connected (R11). The merged app has not been deployed. Srujan reports that five YC F26 founders use it (Tryclean.ai, Sentient OS, Archangel Health) and have not yet sent usage feedback; the app holds no record of that usage. A third founder reply is in [Clarissa's feedback](docs/customer-research/clarissa-tryclean-launch-feedback.md).
+
 ## Latest execution request
 
 Srujan asks that Zain’s Claude receives all context, implements the product and tests its real quality. [Execution task #9](https://github.com/zaindahdul/YCHackathon/issues/9) is assigned to Zain; remote Claude acknowledgment and implementation remain unverified. Follow the [implementation/evidence matrix](docs/IMPLEMENTATION_ACCEPTANCE.md), loaded through [CLAUDE.md](CLAUDE.md). Read the [independent Launchpad baseline](docs/LAUNCHPAD_VERIFICATION.md). Do not confuse published instructions with acknowledgment by the other session or completed implementation.

@@ -28,7 +28,7 @@ lp-concierge answers the launch@ inbox
 |---|---|
 | `/` | Landing page, live numbers, launches we ran |
 | `/new` | The launch form |
-| `/k/<slug>?t=<token>` | The founder's private kit, the Launch now button, and live results |
+| `/k/<slug>?t=<token>` | The founder's private workspace: Kit, Reach, Demo, Replies, Results, Network, Follow-through |
 | `/b/<code>` | A squad founder's one-tap boost page |
 | `/l/<code>` | Tracked short link (counts unique people per channel; ignores bots) |
 | `/ops` | The public record: launches, decisions, outreach, the radar, reports and human step-ins |
@@ -37,8 +37,9 @@ lp-concierge answers the launch@ inbox
 ## Run it
 ```bash
 npm install
-npm test             # 11 tests: the whole loop against a real Postgres (PGlite)
-npm run dev          # http://localhost:8790
+npm test             # the whole loop against a real Postgres (PGlite)
+npm run dev          # http://localhost:8790, with the local template producer on
+npm run seed:demo    # in a second terminal: a labelled sample workspace
 npm run naive:dry    # then: npm run naive:up   (needs NAIVE_API_KEY and PMF_ADMIN_TOKEN)
 ```
 

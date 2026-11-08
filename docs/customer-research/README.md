@@ -25,3 +25,7 @@ Ask for a per-launch purchase only after defining the deliverable and demonstrat
 A founder approves or uses an output, real outside users reach the product’s defined first useful action, and the founder can say what work was saved. Attribution needs permitted product-side events or another declared evidence path: the current Launchpad branches measure clicks/share intents, not activation or retention. A return-use claim needs an observed cohort and an elapsed return window. Until then report first-use evidence and explicitly pending retention.
 
 Two interviews are not PMF, customers, trials or revenue. Do not count our QA. No outreach was sent, no account connected and no new implementation or live operation was authorized by these replies. See [BOT_HANDOFF.md](../../BOT_HANDOFF.md) for the PR and implementation boundaries.
+
+## Third reply
+
+[Clarissa Saputra, Tryclean.ai](clarissa-tryclean-launch-feedback.md) focuses on launch timing and placement, reacting to low numbers, and regular demos for technical B2B inbound.
