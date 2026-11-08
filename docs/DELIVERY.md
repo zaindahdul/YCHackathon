@@ -2,6 +2,8 @@
 
 ## Current studio integration
 
+Draft cofounder review: [PR #5 — integrated venture studio](https://github.com/zaindahdul/YCHackathon/pull/5), `main` → `master`. The current integration commit is `1c32a24`; `90f005b` also preserves the already-merged master history without changing its tree. The remote default branch remains `master`; the earlier repository-settings permission blocker is unchanged.
+
 The latest update integrates PR #4 (`fc49da2`) into the `studio/` workspace on [main](https://github.com/zaindahdul/YCHackathon/tree/main), while retaining the service runtime and all existing research/transcript history. Root npm commands test/typecheck/build both systems with one lockfile. The source update adds forward migration `0004_integrity.sql`; the original three deployed migration files are byte-for-byte preserved.
 
 Read-only verification reached the existing public dashboard, three live product listings and its health/state endpoints. That service was deployed by the collaborator before this integration. The local security, transaction, kickoff and documentation repairs have **not** been deployed there, and this update did not run paid sessions, send messages, provision credentials or change organization agents.
