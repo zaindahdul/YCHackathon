@@ -74,7 +74,7 @@ export function renderWorkspace(v: WorkspaceView): string {
 </div></header>`;
 
   const banners = `${v.is_sample ? `<div class="banner" role="note"><b>Sample data, not real users.</b> <span>Numbers and people here were seeded to show the workflow.</span></div>` : ""}
-${v.missing.length ? `<div class="banner" role="note"><b>Missing facts:</b> <span>${esc(v.missing.join(", "))}. We won't invent these. <a href="${tabUrl("kit", "#context")}">Add them</a>.</span></div>` : ""}`;
+${v.missing.length ? `<div class="banner" role="note"><b>Missing facts:</b> <span>${esc(v.missing.map((m) => m.replace(/\.$/, "")).join(", "))}. We won't invent these. <a href="${tabUrl("kit", "#context")}">Add them</a>.</span></div>` : ""}`;
 
   const panes: Record<Tab, () => string> = { kit: kitTab, reach: reachTab, demo: demoTab, replies: repliesTab, results: resultsTab, network: networkTab, follow: followTab };
 

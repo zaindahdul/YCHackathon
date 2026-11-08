@@ -315,7 +315,7 @@ pre.snippet{background:var(--soft);padding:12px 14px;border-radius:8px;font:12.5
   .split{grid-template-columns:1fr;gap:16px}.grid2,.fields .row3,.fields .row4{grid-template-columns:minmax(0,1fr)}
   .fields .row4.nums{grid-template-columns:repeat(2,minmax(0,1fr))}
   .pane-head h1{font-size:32px}.ws-id .co{font-size:22px}
-  .hero{padding:44px 0 36px}
+  .hero{padding:44px 0 36px;grid-template-columns:minmax(0,1fr)}.preview{min-width:0}.preview .slot{grid-template-columns:72px minmax(0,1fr)}.wrap,main,section,.split>*{min-width:0}
   .btn{white-space:normal}
 }
 `;
@@ -374,6 +374,12 @@ export function renderHome(d: { overview: Overview; launches: Launch[] }): strin
     <div class="tweet"><div class="who"><i></i><b style="font-weight:600">Show HN</b><span class="muted">· 41 clicks → 9 activated → 3 returned</span></div>Each channel traced past the click, to people who actually used the product.</div>
   </div>
 </section>
+<section class="section"><p class="eyebrow">Built with YC F26 founders</p><h2 class="display" style="margin-top:10px">Five founders shaped what this does.</h2>
+<div class="points" style="border-top:1px solid var(--rule);margin-top:18px">
+<div><h3>Tryclean.ai</h3><p>Clarissa Saputra</p></div>
+<div><h3>Sentient OS</h3><p>Jesai Tarun, Aditya Vellanki</p></div>
+<div><h3>Archangel Health</h3><p>Aryaa Bhatia, Tej Patel</p></div>
+</div></section>
 <section class="section"><h2 class="display">Seven deliverables for one launch.</h2>
 <div class="ledger">${steps.map(([h, p], i) => `<div class="row"><span class="n">${i + 1}</span><h3>${esc(h)}</h3><p>${esc(p)}</p></div>`).join("")}</div></section>
 <section class="section"><h2 class="display">What founders told us takes the time.</h2>
