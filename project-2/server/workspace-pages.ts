@@ -2,7 +2,7 @@
  * The founder's private workspace: seven tabs over one launch. Server-rendered, every piece of
  * founder or commenter text goes through esc(), and every link and form carries the owner token.
  */
-import { COPY_JS, TODO_JS, copyBtn, esc, footer, page, renderMarkdown, time } from "./pages.ts";
+import { COPY_JS, TODO_JS, copyBtn, esc, footer, meter, page, renderMarkdown, time } from "./pages.ts";
 import type { Launch } from "./repo.ts";
 import { CHANNEL_NAMES, share, utm, withLink, type Channel } from "./rules.ts";
 import { DEMO_STUDIO_JS } from "./video-client.ts";
@@ -16,18 +16,25 @@ const channelName = (c: string) => CHANNEL_NAMES[c as Channel] ?? c;
 const safeHref = (u: string | null | undefined) => (u && /^https?:\/\//i.test(u) ? esc(u) : "#");
 /** Keeps the producer's link placeholder intact in an editable field without printing it literally in the page source. */
 const rawField = (s: string) => esc(s).replace(/\{link\}/g, "&#123;link&#125;");
+const firstSentence = (t: string) => t.split(/(?<=[.?!])\s/)[0] ?? t;
+const tags = (items: string[], cls = "") => `<div class="chips-row">${items.map((x) => `<span class="tag ${cls}">${esc(x)}</span>`).join("")}</div>`;
+/** Matched keywords out of the producer's reason, so a card can show them instead of a sentence. */
+const keywords = (why: string): string[] => {
+  const listed = /^Matched on (.+?) in your description/.exec(why)?.[1];
+  return listed ? listed.split(", ") : [...why.matchAll(/"([^"]+)"/g)].map((m) => m[1]!);
+};
 const empty = (title: string, text: string) => `<div class="empty-state"><b>${esc(title)}</b>${esc(text)}</div>`;
 /** Opens company context when linked to it, and keeps the active tab visible on narrow screens. */
 const UX_JS = `<script>(function(){var c=document.getElementById("context");function o(){if(c&&location.hash==="#context"){c.open=true;c.scrollIntoView({block:"start"})}}addEventListener("hashchange",o);o();var t=document.querySelector(".tabs"),a=t&&t.querySelector("[aria-current]");if(a)t.scrollLeft=a.offsetLeft-(t.clientWidth-a.offsetWidth)/2})();</script>`;
 const SAVE_JS = `<script>document.addEventListener("submit",function(e){var b=e.submitter;if(b)setTimeout(function(){b.disabled=true;b.textContent="Saving…"},0)});</script>`;
 
 const CATEGORY_LABELS: Record<CommentCategory, string> = { question: "Question", buying_intent: "Buying intent", objection: "Objection", support: "Support", praise: "Praise", low_value: "Low value" };
-const STATUS_GROUPS: { status: CommentStatus; title: string; sub: string }[] = [
-  { status: "needs_founder", title: "Needs you", sub: "The answer isn't in your company facts, so no reply was invented." },
-  { status: "needs_review", title: "Ready for review", sub: "Grounded in your facts. Edit and approve." },
-  { status: "approved", title: "Approved", sub: "Post these yourself, then mark them posted." },
-  { status: "posted_manual", title: "Posted by you", sub: "" },
-  { status: "ignored", title: "Ignored", sub: "" },
+const STATUS_GROUPS: { status: CommentStatus; title: string; tag: string }[] = [
+  { status: "needs_founder", title: "Needs you", tag: "Not in your facts" },
+  { status: "needs_review", title: "Ready for review", tag: "From your facts" },
+  { status: "approved", title: "Approved", tag: "Post it yourself" },
+  { status: "posted_manual", title: "Posted by you", tag: "" },
+  { status: "ignored", title: "Ignored", tag: "" },
 ];
 
 export function renderWriting(l: Launch, token: string): string {
@@ -41,17 +48,16 @@ document.getElementById("retry").addEventListener("click",go);go()})();</script>
 <p class="eyebrow">Launch kit · ${esc(l.company)}</p>
 <div id="working">
 <h1>Writing your launch kit…</h1>
-<p class="muted" style="font-size:16px;max-width:34em">Reading your context and preparing each deliverable. This page opens your workspace as soon as it's ready.</p>
 <div class="pulse" role="progressbar" aria-label="Writing"></div>
 </div>
 <div id="failed" class="err-state" role="alert" hidden>
 <h1>The producer didn't finish.</h1>
-<p class="muted" style="font-size:16px;max-width:34em">Nothing was published and your launch details are saved. It's safe to try again.</p>
+<p class="muted" style="font-size:16px">Nothing was published. Your details are saved.</p>
 <button id="retry" class="btn" type="button" style="margin-top:18px">Try again</button>
 </div>
-<ul class="made"><li>Channel posts and timing</li><li>Communities, with reasons and rules</li><li>Demo storyboard</li><li>Wave plan for the first hours</li></ul>
-<p class="small muted" style="margin-top:28px">Bookmark this page. It's your private kit.</p>
-<noscript><p>Refresh this page in a minute to see your kit.</p></noscript>
+<ul class="made"><li>Posts and timing</li><li>Communities</li><li>Demo storyboard</li><li>Wave plan</li></ul>
+<p class="small muted" style="margin-top:28px">Private link. Bookmark it.</p>
+<noscript><p>Refresh in a minute.</p></noscript>
 </main>${footer}${script}`, `<meta name="robots" content="noindex">`);
 }
 
@@ -75,8 +81,8 @@ export function renderWorkspace(v: WorkspaceView): string {
 <nav class="tabs" aria-label="Workspace">${TAB_ORDER.map((t) => `<a href="${tabUrl(t)}"${t === v.tab ? ` aria-current="page"` : ""}>${esc(TAB_LABELS[t])}${counts[t] ? `<span class="count" aria-label="${counts[t]} need attention">${counts[t]}</span>` : ""}</a>`).join("")}</nav>
 </div></header>`;
 
-  const banners = v.is_sample ? `<p class="sample-note" role="note"><span class="tag warn">Sample</span>Sample data, not real users. Numbers and people here were seeded to show the workflow.</p>` : "";
-  const missingCallout = v.missing.length ? `<div class="callout" role="note"><b>Still missing:</b> ${esc(v.missing.map((m) => m.replace(/\.$/, "")).join(" "))}. We won't invent these. <a href="#context">Add them</a>.</div>` : "";
+  const banners = v.is_sample ? `<p class="sample-note" role="note"><span class="tag warn">Sample</span>Seeded data, not real users.</p>` : "";
+  const missingCallout = v.missing.length ? `<div class="callout" role="note" title="We won't invent these."><b>Still missing</b> ${v.missing.map((m) => `<span class="tag">${esc(firstSentence(m))}</span>`).join(" ")} <a href="#context">Add</a></div>` : "";
 
   const panes: Record<Tab, () => string> = { kit: kitTab, reach: reachTab, demo: demoTab, replies: repliesTab, results: resultsTab, network: networkTab, follow: followTab };
 
@@ -96,12 +102,12 @@ ${footer}${COPY_JS}${TODO_JS}${SAVE_JS}${UX_JS}`, `<meta name="robots" content="
 <div class="body${bodyHtml ? " prose" : ""}"${bodyHtml ? ` style="white-space:normal;color:var(--ink)"` : ""}>${bodyHtml ?? esc(shown)}</div>
 <div class="foot"><span>${esc(foot)}</span>${copyBtn(shown)}</div>
 <details class="edit"><summary>Edit</summary><form method="post" action="${act("/edit")}"><input type="hidden" name="channel" value="${esc(channel)}"><input type="hidden" name="part" value="${esc(part)}">
-<label class="field"><span>${esc(label || "Post text")}</span><textarea class="draft" name="text" required>${rawField(raw)}</textarea></label>
-${raw.includes("{link}") ? `<p class="note">Keep &#123;link&#125; where the tracked link goes.</p>` : ""}<div class="actions"><button class="btn sm" type="submit">Save edit</button></div></form></details></div>`;
+<label class="field"><span>${esc(label || "Text")}</span><textarea class="draft" name="text" required>${rawField(raw)}</textarea></label>
+${raw.includes("{link}") ? `<p class="note">Keep &#123;link&#125;.</p>` : ""}<div class="actions"><button class="btn sm" type="submit">Save edit</button></div></form></details></div>`;
 
     const section = (c: Channel, action: string, inner: string, note = "") => {
       const w = whenOf(c);
-      return `<section class="channel" id="ch-${c}"><div class="head"><div><h2>${esc(channelName(c))}</h2>${w ? `<div class="when">${esc(w.when)}. ${esc(w.why)}</div>` : ""}</div>${action}</div>${inner}${note ? `<p class="note">${note}</p>` : ""}</section>`;
+      return `<section class="channel" id="ch-${c}"><div class="head"><div><h2>${esc(channelName(c))}</h2>${w ? `<div class="when" title="${esc(w.why)}">${esc(w.when)}</div>` : ""}</div>${action}</div>${inner}${note ? `<p class="note">${note}</p>` : ""}</section>`;
     };
 
     const sections: string[] = [];
@@ -110,7 +116,7 @@ ${raw.includes("{link}") ? `<p class="note">Keep &#123;link&#125; where the trac
       const thread = p.x.map((t) => withLink(t, tracked("x")));
       sections.push(section("x", `<a class="btn sm" href="${esc(share.x(thread[0]!))}" target="_blank" rel="noopener">Open X composer</a>`,
         `<div class="thread">${thread.map((t, i) => post("x", String(i), "", p.x![i]!, t, `${i + 1}/${thread.length} · ${t.length} characters`)).join("")}</div>`,
-        thread.length > 1 ? "The button opens the first post. Reply to it with the rest, in order." : ""));
+        thread.length > 1 ? "Opens post 1. Reply with the rest." : ""));
     }
     if (p.linkedin) {
       const t = withLink(p.linkedin, tracked("linkedin"));
@@ -120,18 +126,18 @@ ${raw.includes("{link}") ? `<p class="note">Keep &#123;link&#125; where the trac
       const hn = p.show_hn;
       sections.push(section("show_hn", `<a class="btn sm" href="${esc(share.show_hn(utm(l.url, "hn"), hn.title))}" target="_blank" rel="noopener">Open HN submit form</a>`,
         post("show_hn", "title", "Title", hn.title, hn.title, `${hn.title.length} characters`) + post("show_hn", "text", "First comment", hn.text, hn.text, `${hn.text.length} characters`),
-        `HN expects the real URL, so this one isn't redirected. It's tagged <span class="mono">?ref=hn</span> instead.`));
+        `Tracked with <span class="mono">?ref=hn</span>, not a redirect.`));
     }
     if (p.product_hunt) {
       const ph = p.product_hunt;
       sections.push(section("product_hunt", `<a class="btn sm quiet" href="${esc(share.product_hunt())}" target="_blank" rel="noopener">Open Product Hunt</a>`,
         post("product_hunt", "tagline", "Tagline", ph.tagline, ph.tagline, `${ph.tagline.length} characters`) + post("product_hunt", "description", "Description", ph.description, ph.description, `${ph.description.length} characters`) + post("product_hunt", "first_comment", "Maker's first comment", ph.first_comment, ph.first_comment, `${ph.first_comment.length} characters`),
-        `Website field: <span class="mono">${esc(utm(l.url, "producthunt"))}</span>`));
+        `Website: <span class="mono">${esc(utm(l.url, "producthunt"))}</span>`));
     }
     if (p.launch_yc) {
       const body = withLink(p.launch_yc.body, tracked("launch_yc"));
       sections.push(section("launch_yc", `<a class="btn sm quiet" href="${esc(share.launch_yc())}" target="_blank" rel="noopener">Open Launch YC</a>`,
-        post("launch_yc", "title", "Title", p.launch_yc.title, p.launch_yc.title, "Title") + post("launch_yc", "body", "", p.launch_yc.body, body, "Post body · copies as Markdown", renderMarkdown(body))));
+        post("launch_yc", "title", "Title", p.launch_yc.title, p.launch_yc.title, "Title") + post("launch_yc", "body", "", p.launch_yc.body, body, "Markdown", renderMarkdown(body))));
     }
     if (p.email) {
       const body = withLink(p.email.body, tracked("email"));
@@ -141,26 +147,25 @@ ${raw.includes("{link}") ? `<p class="note">Keep &#123;link&#125; where the trac
 
     const f = v.facts;
     const faqText = f.faq.map((x) => `Q: ${x.q}\nA: ${x.a}`).join("\n\n");
-    const textField = (name: string, label: string, value: string, hint: string) => `<label class="field"><span>${esc(label)} <em>${esc(hint)}</em></span><textarea name="${name}" rows="2" style="min-height:64px">${esc(value)}</textarea></label>`;
-    const context = `<details class="context" id="context"${v.notice && /context|facts/i.test(v.notice) ? " open" : ""}><summary>Company context</summary>
+    const textField = (name: string, label: string, value: string, hint: string) => `<label class="field"><span>${esc(label)}</span><textarea name="${name}" rows="2" style="min-height:64px" placeholder="${esc(hint)}">${esc(value)}</textarea></label>`;
+    const context = `<details class="context" id="context"${v.notice && /context|facts/i.test(v.notice) ? " open" : ""}><summary>Company context <span class="tag" style="margin-left:6px">We only use what's here</span></summary>
 <form method="post" action="${act("/facts")}"><div class="fields">
-<p class="small muted">Replies, outreach and demos only use what's written here. Leave a field empty and we'll ask rather than guess.</p>
-${textField("audience", "Audience", f.audience, "who it's for")}${textField("problem", "Problem", f.problem, "what hurts today")}${textField("proof", "Proof", f.proof, "real numbers, customers, results")}
-<div class="grid2">${textField("pricing", "Pricing", f.pricing, "what you charge")}${textField("voice", "Voice", f.voice, "how you sound")}</div>
-<label class="field"><span>FAQ <em>blocks of Q: and A:</em></span><textarea name="faq" rows="5" placeholder="Q: Do you support SSO?&#10;A: Yes, on the Team plan.">${esc(faqText)}</textarea></label>
-<label class="check"><input type="checkbox" name="b2b" value="1"${f.b2b ? " checked" : ""}><span>Technical B2B product. Demos and copy lean technical rather than consumer social.</span></label>
+${textField("audience", "Audience", f.audience, "Who it's for")}${textField("problem", "Problem", f.problem, "What hurts today")}${textField("proof", "Proof", f.proof, "Real numbers, customers")}
+<div class="grid2">${textField("pricing", "Pricing", f.pricing, "What you charge")}${textField("voice", "Voice", f.voice, "How you sound")}</div>
+<label class="field"><span>FAQ</span><textarea name="faq" rows="5" placeholder="Q: Do you support SSO?&#10;A: Yes, on the Team plan.">${esc(faqText)}</textarea></label>
+<label class="check"><input type="checkbox" name="b2b" value="1"${f.b2b ? " checked" : ""}><span>Technical B2B</span></label>
 <div><button class="btn sm" type="submit">Save context</button></div></div></form></details>`;
 
     const s = v.stats;
     const launchPanel = launched
-      ? `<div class="panel"><span class="status live">You're live</span><p style="margin-top:8px">${s.boosts.sent + s.boosts.pending === 0 ? "Nobody else is in the squad yet. Founders who join in the next 48 hours will be asked to share it." : `${s.boosts.pending > 0 ? `${s.boosts.pending} squad ${s.boosts.pending === 1 ? "founder is" : "founders are"} being asked to share it now. ` : ""}${s.boosts.sent} asked so far, ${s.boosts.shared} opened a composer, which doesn't confirm a post went up.`}</p><a class="btn quiet" href="${tabUrl("results")}">See results</a></div>`
-      : `<div class="panel"><h3>When your first post is up</h3><p>${v.squad > 0 ? `Launch now asks ${v.squad} ${v.squad === 1 ? "founder" : "founders"} in the squad to share it.` : "Launch now marks you live. Nobody else is in the squad yet, so founders who join in the next 48 hours will be asked to share it."} Launchpad doesn't post for you.</p><form method="post" action="${act("/go")}"><button class="btn" type="submit">Launch now</button></form></div>`;
+      ? `<div class="panel"><span class="status live">You're live</span><p style="margin-top:8px">${s.boosts.sent + s.boosts.pending === 0 ? "Nobody else is in the squad yet. Founders who join in the next 48 hours will be asked to share it." : `${s.boosts.pending > 0 ? `${s.boosts.pending} squad ${s.boosts.pending === 1 ? "founder is" : "founders are"} being asked to share it now. ` : ""}${s.boosts.sent} asked, ${s.boosts.shared} opened a composer <span class="muted">(not a confirmed post)</span>`}</p><a class="btn quiet" href="${tabUrl("results")}">See results</a></div>`
+      : `<div class="panel"><h3>First post up?</h3><p>${v.squad > 0 ? `Launch now asks ${v.squad} ${v.squad === 1 ? "founder" : "founders"} in the squad to share it.` : "Launch now marks you live. Nobody else is in the squad yet, so founders who join in the next 48 hours will be asked to share it."}</p><form method="post" action="${act("/go")}"><button class="btn" type="submit">Launch now</button></form></div>`;
 
     return `<section class="pane"><div class="split"><div>
 <div class="pane-head" style="margin-bottom:24px"><h1>${esc(l.one_liner)}</h1></div>
 ${missingCallout}
-<p class="eyebrow" style="margin-bottom:10px">The plan</p><div class="prose">${renderMarkdown(kit.strategy)}</div>
 ${context}
+<details class="context"><summary>The plan</summary><div class="prose" style="padding-top:12px">${renderMarkdown(kit.strategy)}</div></details>
 ${sections.join("") || empty("No channels selected", "This launch has no channel posts.")}
 </div>
 <aside class="side">${launchPanel}
@@ -172,44 +177,45 @@ ${kit.checklist.length ? `<div><p class="eyebrow" style="margin-bottom:6px">Laun
   // ---------------------------------------------------------------- Reach
   function reachTab(): string {
     const communities = v.communities.length
-      ? `<div class="grid2">${v.communities.map((c) => `<article class="card"><div class="line"><h3><a href="${safeHref(c.url)}" target="_blank" rel="noopener nofollow">${esc(c.name)}</a></h3><span class="tag">${esc(c.kind.replace("_", " "))}</span></div>
-<dl class="kv"><dt>Why</dt><dd>${esc(c.why)}</dd><dt>Angle</dt><dd>${esc(c.angle)}</dd><dt>Rules</dt><dd>${esc(c.rules)} <a href="${safeHref(c.rules_url)}" target="_blank" rel="noopener nofollow">Source</a></dd></dl>
-<p class="small muted" style="margin-top:8px">Catalog entry ${esc(c.reviewed)}. Check the live rules before posting.</p>
-<details class="edit"><summary>Draft post</summary><p style="margin-top:8px"><b style="font-weight:600">${esc(c.draft_title)}</b></p><p style="white-space:pre-wrap">${esc(c.draft_body)}</p><div class="actions">${copyBtn(`${c.draft_title}\n\n${c.draft_body}`, "Copy draft")}</div></details></article>`).join("")}</div>`
-      : empty("No communities yet", "Add your audience in Company context and the shortlist will follow.");
+      ? `<div class="grid2">${v.communities.map((c) => { const hits = keywords(c.why); return `<article class="card"><div class="line"><h3><a href="${safeHref(c.url)}" target="_blank" rel="noopener nofollow">${esc(c.name)}</a></h3><span class="tag">${esc(c.kind.replace("_", " "))}</span></div>
+${hits.length ? tags(hits, "good") : `<p class="small muted" style="margin-top:6px">${esc(firstSentence(c.why))}</p>`}
+<p style="margin-top:10px;color:var(--ink)">${esc(c.angle)}</p>
+<p class="cmeta" title="${esc(c.rules)} Catalog entry ${esc(c.reviewed)}."><a href="${safeHref(c.rules_url)}" target="_blank" rel="noopener nofollow">Check live rules</a> before posting</p>
+<details class="edit"><summary>Draft post</summary><p style="margin-top:8px"><b style="font-weight:600">${esc(c.draft_title)}</b></p><p style="white-space:pre-wrap">${esc(c.draft_body)}</p><div class="actions">${copyBtn(`${c.draft_title}\n\n${c.draft_body}`, "Copy draft")}</div></details></article>`; }).join("")}</div>`
+      : empty("No communities yet", "Add your audience in Company context.");
 
     const wave = v.wave_plan.length
-      ? `<ol class="steps">${v.wave_plan.map((w) => `<li><div class="w">${esc(w.when)} · ${esc(channelName(w.channel))}</div><div>${esc(w.step)}</div><div class="y">${esc(w.why)}</div></li>`).join("")}</ol>`
-      : empty("No wave plan yet", "The wave plan appears once your kit is written.");
+      ? `<ol class="strip">${v.wave_plan.map((w) => `<li title="${esc(w.why)}"><div class="w">${esc(w.when)} · ${esc(channelName(w.channel))}</div><div class="s">${esc(w.step)}</div></li>`).join("")}</ol>`
+      : empty("No wave plan yet", "It appears once your kit is written.");
 
     const row = (o: Outreach) => {
       const closed = o.status === "sent_manual" || o.status === "opted_out";
       const tag = o.status === "approved" ? `<span class="tag good">Approved</span>` : o.status === "sent_manual" ? `<span class="tag good">Sent by you</span>` : o.status === "opted_out" ? `<span class="tag">Opted out</span>` : `<span class="tag accent">Draft</span>`;
       const when = [o.approved_at ? `approved ${time(o.approved_at)}` : "", o.sent_at ? `sent ${time(o.sent_at)}` : "", !o.approved_at && !o.sent_at ? `updated ${time(o.updated_at)}` : ""].filter(Boolean).join(" · ");
-      return `<article class="card"><div class="line"><h3>${esc(o.name)}</h3>${tag}</div><p class="small muted">${esc(o.contact)} · ${esc(when)}</p><p style="margin-top:8px"><b style="font-weight:600">Why them:</b> ${esc(o.why)}</p>
-${closed ? `<p class="quote" style="margin-top:10px">${esc(o.draft)}</p>` : `<form method="post" action="${act(`/outreach/${esc(o.id)}`)}" style="margin-top:10px"><label class="field"><span>Message to ${esc(o.name)}</span><textarea class="draft" name="draft">${esc(o.draft)}</textarea></label>
+      return `<article class="card"><div class="line"><h3>${esc(o.name)}</h3>${tag}</div><p class="small muted">${[o.contact, when].filter(Boolean).map(esc).join(" · ")}</p><p class="small" style="margin-top:8px">${esc(o.why)}</p>
+${closed ? `<p class="quote" style="margin-top:10px">${esc(o.draft)}</p>` : `<form method="post" action="${act(`/outreach/${esc(o.id)}`)}" style="margin-top:10px"><textarea class="draft" name="draft" aria-label="Message to ${esc(o.name)}">${esc(o.draft)}</textarea>
 <div class="actions"><button class="btn sm quiet" name="action" value="save" type="submit">Save</button>${o.status === "draft" ? `<button class="btn sm" name="action" value="approve" type="submit">Approve</button>` : `<button class="btn sm" name="action" value="sent" type="submit">I sent this</button>`}<button class="btn sm quiet" name="action" value="opt_out" type="submit">Opted out</button>${copyBtn(o.draft)}</div></form>`}</article>`;
     };
 
-    return `<section class="pane"><div class="pane-head"><h1>Where to reach people</h1><p>Communities that fit your audience, a plan for the first hours, and people worth writing to.</p></div>
-<div class="block"><h2>Communities</h2><p class="sub">Each reason comes from your context. Launchpad doesn't post here for you.</p>${communities}</div>
-<div class="block"><h2>Wave plan</h2><p class="sub">What to do at each stage of the first hours. Log your numbers in Results to see how you're tracking.</p>${wave}</div>
-<div class="block"><h2>Outreach</h2><p class="sub"><b style="color:var(--ink);font-weight:600">Nothing is sent by Launchpad.</b> You review each draft, send it yourself, then mark it here.</p>
-${v.outreach.map(row).join("") || empty("No one on the list yet", "Add a person below and we'll draft a note from your company facts.")}
-<form class="card" method="post" action="${act("/outreach")}" style="margin-top:14px"><h3>Add someone</h3><div class="fields" style="margin-top:10px"><div class="grid2"><label class="field"><span>Name</span><input type="text" name="name" required maxlength="120"></label><label class="field"><span>Contact <em>email, handle or URL</em></span><input type="text" name="contact" required maxlength="200"></label></div><label class="field"><span>Why they're relevant</span><textarea name="why" required maxlength="600" rows="2" style="min-height:64px"></textarea></label><div><button class="btn sm" type="submit">Draft a note</button></div></div></form></div></section>`;
+    return `<section class="pane"><div class="pane-head"><h1>Where to reach people</h1></div>
+<div class="block"><h2>Communities</h2><div style="height:12px"></div>${communities}</div>
+<div class="block"><h2>Wave plan</h2><div style="height:14px"></div>${wave}</div>
+<div class="block"><div class="h-row"><h2>Outreach</h2><span class="tag warn">Nothing is sent by Launchpad</span></div>
+${v.outreach.map(row).join("") || empty("No one on the list", "Add someone below.")}
+<details class="context" style="margin-top:14px"><summary>Add someone</summary><form method="post" action="${act("/outreach")}"><div class="fields" style="margin-top:10px"><div class="grid2"><label class="field"><span>Name</span><input type="text" name="name" required maxlength="120"></label><label class="field"><span>Contact</span><input type="text" name="contact" required maxlength="200" placeholder="Email, handle or URL"></label></div><label class="field"><span>Why them</span><textarea name="why" required maxlength="600" rows="2" style="min-height:64px"></textarea></label><div><button class="btn sm" type="submit">Draft a note</button></div></div></form></details></div></section>`;
   }
 
   // ---------------------------------------------------------------- Demo
   function demoTab(): string {
     const d = v.demo;
-    if (!d) return `<section class="pane"><div class="pane-head"><h1>Demo cuts</h1></div>${empty("No storyboard yet", "The storyboard appears once your kit is written.")}</section>`;
+    if (!d) return `<section class="pane"><div class="pane-head"><h1>Demo cuts</h1></div>${empty("No storyboard yet", "It appears once your kit is written.")}</section>`;
     const total = d.scenes.reduce((n, s) => n + s.seconds, 0);
-    return `<section class="pane"><div class="pane-head"><h1>${esc(d.title)}</h1><p>${d.format === "technical_b2b" ? "A technical B2B cut: the workflow and the result, shown plainly." : "A short product cut."} ${d.scenes.length} scenes, ${total} seconds.</p></div>
-<div class="block"><h2>Studio</h2><p class="sub">Add your own recording for a real product cut. Without one, this renders a storyboard from your facts, which is not footage of your product.</p>
+    return `<section class="pane"><div class="pane-head"><h1>${esc(d.title)}</h1><div class="head-tags"><span class="tag">${d.format === "technical_b2b" ? "Technical B2B" : "Product cut"}</span><span class="tag">${d.scenes.length} scenes</span><span class="tag">${total}s</span></div></div>
+<div class="block"><h2>Studio</h2><div style="height:12px"></div>
 <div id="demo-studio" data-plan="${esc(JSON.stringify(d))}" data-company="${esc(l.company)}"></div><noscript>${empty("JavaScript needed", "Rendering happens in your browser.")}</noscript></div>
-<div class="block"><h2>Scenes</h2><p class="sub">The script used for the cut.</p><ol class="steps">${d.scenes.map((s) => `<li><div class="w">${esc(s.heading)} · ${s.seconds}s</div><div class="y">${esc(s.caption)}</div></li>`).join("")}</ol></div>
-<div class="block"><h2>Regular demos</h2><p class="sub">One topic a week between launches, drawn from your facts. Nothing here is scheduled or published automatically.</p>
-${d.cadence.length ? `<div class="grid2">${d.cadence.map((c) => `<article class="card"><p class="eyebrow">Week ${c.week}</p><h3 style="margin-top:4px">${esc(c.topic)}</h3><p>${esc(c.why)}</p></article>`).join("")}</div>` : empty("No cadence yet", "Add proof and FAQ answers to Company context to get weekly topics.")}</div>
+<div class="block"><h2>Scenes</h2><div style="height:12px"></div><div class="timebar" aria-hidden="true">${d.scenes.map((s) => `<i style="flex:${s.seconds}"></i>`).join("")}</div><ol class="steps">${d.scenes.map((s) => `<li><div class="w">${esc(s.heading)} · ${s.seconds}s</div><div class="y">${esc(s.caption)}</div></li>`).join("")}</ol></div>
+<div class="block"><div class="h-row"><h2>Weekly demos</h2><span class="tag">Not auto-published</span></div>
+${d.cadence.length ? `<ol class="strip">${d.cadence.map((c) => `<li title="${esc(c.why)}"><div class="w">Week ${c.week}</div><div class="s">${esc(c.topic)}</div></li>`).join("")}</ol>` : empty("No topics yet", "Add proof and FAQ answers to Company context.")}</div>
 <script>${DEMO_STUDIO_JS}</script></section>`;
   }
 
@@ -217,28 +223,30 @@ ${d.cadence.length ? `<div class="grid2">${d.cadence.map((c) => `<article class=
   function repliesTab(): string {
     const i = v.insights;
     const max = Math.max(1, ...Object.values(i.by_category));
-    const insights = i.total === 0 ? empty("No comments imported", "Insights come only from comments you import, so there's nothing to summarize yet.") : `<div class="big"><div><b>${i.total}</b><span>comments imported</span></div><div><b>${i.unanswered}</b><span>still unanswered</span></div><div><b>${i.interested.length}</b><span>showing buying interest</span></div></div>
+    const insights = i.total === 0 ? empty("No comments yet", "Paste some below.") : `<div class="big"><div><b>${i.total}</b><span>imported</span></div><div><b>${i.unanswered}</b><span>unanswered</span></div><div><b>${i.interested.length}</b><span>buying interest</span></div></div>
 <div class="grid2"><div class="bars full">${(Object.keys(CATEGORY_LABELS) as CommentCategory[]).map((c) => { const n = i.by_category[c] ?? 0; return `<div class="row"><span>${esc(CATEGORY_LABELS[c])}</span><div class="track"><div class="fill" style="width:${Math.round((n / max) * 100)}%"></div></div><span class="n">${n}</span></div>`; }).join("")}</div>
 <div>${insightList("Top questions", i.top_questions.map((x) => [x.text, x.comment_id]))}${insightList("Objections", i.objections.map((x) => [x.text, x.comment_id]))}${insightList("Interested", i.interested.map((x) => [x.author, x.comment_id]))}</div></div>`;
 
     const card = (c: LaunchComment) => {
       const closed = c.status === "posted_manual" || c.status === "ignored";
-      const source = c.url ? `<a href="${safeHref(c.url)}" target="_blank" rel="noopener nofollow">Original comment</a>` : `<span>Manual import, no link</span>`;
-      return `<article class="card" id="c-${esc(c.id)}"><div class="line"><h3>${esc(c.author)}</h3><span class="tag">${esc(CATEGORY_LABELS[c.category])}</span></div><p class="small muted">${esc(c.platform)} · ${source} · ${esc(time(c.created_at))}</p>
+      const source = c.url ? `<a href="${safeHref(c.url)}" target="_blank" rel="noopener nofollow">Original</a>` : `<span>Manual import</span>`;
+      return `<article class="card" id="c-${esc(c.id)}"><div class="line"><h3>${esc(c.author)}</h3><span class="tag">${esc(CATEGORY_LABELS[c.category])}</span></div><p class="small muted">${esc(channelName(c.platform))} · ${source} · ${esc(time(c.created_at))}</p>
 <p class="quote" style="margin-top:10px">${esc(c.body)}</p>
-${c.unknown ? `<div class="escalate"><b>We don't know this:</b> ${esc(c.unknown)} <a href="${tabUrl("kit", "#context")}">Add it to your facts</a></div>` : ""}
-${c.fact_refs.length ? `<div class="chips-row"><span class="small muted">Grounded in:</span>${c.fact_refs.map((r) => `<span class="tag">${esc(r)}</span>`).join("")}</div>` : ""}
-${closed ? (c.draft ? `<p style="margin-top:10px;white-space:pre-wrap">${esc(c.draft)}</p>` : "") : `<form method="post" action="${act(`/comments/${esc(c.id)}`)}" style="margin-top:10px"><label class="field"><span>Reply to ${esc(c.author)}</span><textarea class="draft" name="draft" placeholder="Write the answer, or add the missing fact and re-import.">${esc(c.draft)}</textarea></label>
+${c.unknown ? `<div class="escalate"><b>Not in your facts.</b> ${c.unknown.startsWith("No approved fact") ? "" : `${esc(c.unknown)} `}<a href="${tabUrl("kit", "#context")}">Add it</a></div>` : ""}
+${c.fact_refs.length ? `<div class="chips-row">${c.fact_refs.map((r) => `<span class="tag good" title="Grounded in this fact">${esc(r)}</span>`).join("")}</div>` : ""}
+${closed ? (c.draft ? `<p style="margin-top:10px;white-space:pre-wrap">${esc(c.draft)}</p>` : "") : `<form method="post" action="${act(`/comments/${esc(c.id)}`)}" style="margin-top:10px"><textarea class="draft" name="draft" aria-label="Reply to ${esc(c.author)}" placeholder="Write the answer">${esc(c.draft)}</textarea>
 <div class="actions"><button class="btn sm quiet" name="action" value="save" type="submit">Save</button>${c.status === "approved" ? `<button class="btn sm" name="action" value="posted" type="submit">I posted this</button>` : `<button class="btn sm" name="action" value="approve" type="submit">Approve</button>`}${c.status !== "needs_founder" ? `<button class="btn sm quiet" name="action" value="escalate" type="submit">Needs me</button>` : ""}<button class="btn sm quiet" name="action" value="ignore" type="submit">Ignore</button>${c.draft ? copyBtn(c.draft) : ""}</div></form>`}</article>`;
     };
-    const groups = STATUS_GROUPS.map((g) => { const rows = v.comments.filter((c) => c.status === g.status); return rows.length ? `<div class="block"><h2>${esc(g.title)} <span class="muted" style="font-weight:400">${rows.length}</span></h2>${g.sub ? `<p class="sub">${esc(g.sub)}</p>` : `<div style="height:12px"></div>`}${rows.map(card).join("")}</div>` : ""; }).join("");
+    const filled = STATUS_GROUPS.map((g) => ({ g, rows: v.comments.filter((c) => c.status === g.status) })).filter((x) => x.rows.length);
+    const statuses = filled.length ? `<nav class="statuses" aria-label="Comment status">${filled.map(({ g, rows }) => `<a href="#s-${g.status}"${g.status === "needs_founder" ? ` class="hot"` : ""}>${esc(g.title)} <b>${rows.length}</b></a>`).join("")}</nav>` : "";
+    const groups = filled.map(({ g, rows }) => `<div class="block" id="s-${g.status}"><div class="h-row"><h2>${esc(g.title)}</h2>${g.tag ? `<span class="tag">${esc(g.tag)}</span>` : ""}</div>${rows.map(card).join("")}</div>`).join("");
+    const importer = `<form method="post" action="${act("/comments")}"><div class="fields" style="margin-top:10px"><label class="field"><span>Platform</span><select name="platform"><option>X</option><option>LinkedIn</option><option>Hacker News</option><option>Product Hunt</option><option>Reddit</option><option>Other</option></select></label>
+<label class="field"><span>Comments</span><textarea name="raw" required rows="7" placeholder="jane: Does this work with Postgres?&#10;https://x.com/jane/status/123&#10;&#10;sam: How is this priced?"></textarea></label><div><button class="btn sm" type="submit">Import and draft replies</button></div></div></form>`;
 
-    return `<section class="pane"><div class="pane-head"><h1>Launch comments</h1><p>Replies drawn only from your company facts. If the facts don't cover a question, it comes to you.</p></div>
-<div class="block"><h2>Insights</h2><p class="sub">Counted from the comments below, with no outside sentiment data.</p>${insights}</div>
-${groups || `<div class="block">${empty("Your review queue is empty", "Paste comments from your launch thread below to get grounded drafts.")}</div>`}
-<div class="block"><h2>Manual import</h2><p class="sub">Paste comments from your launch post. Launchpad doesn't read your social accounts, and imports stay labelled manual.</p>
-<form method="post" action="${act("/comments")}"><div class="fields"><label class="field"><span>Platform</span><select name="platform"><option>X</option><option>LinkedIn</option><option>Hacker News</option><option>Product Hunt</option><option>Reddit</option><option>Other</option></select></label>
-<label class="field"><span>Comments <em>separate with a blank line. "author: text", optional URL on its own line</em></span><textarea name="raw" required rows="7" placeholder="jane: Does this work with Postgres?&#10;https://x.com/jane/status/123&#10;&#10;sam: How is this priced?"></textarea></label><div><button class="btn sm" type="submit">Import and draft replies</button></div></div></form></div></section>`;
+    return `<section class="pane"><div class="pane-head"><h1>Launch comments</h1></div>${statuses}
+<div class="block">${insights}</div>
+${groups || `<div class="block">${empty("Queue is empty", "Paste comments below.")}</div>`}
+<div class="block"><details class="context"${filled.length ? "" : " open"}><summary>Manual import <span class="tag" style="margin-left:6px" title="Launchpad doesn't read your social accounts">Paste only</span></summary>${importer}</details></div></section>`;
 
     function insightList(title: string, items: [string, string][]): string {
       if (!items.length) return "";
@@ -252,39 +260,51 @@ ${groups || `<div class="block">${empty("Your review queue is empty", "Paste com
     const t = a.totals;
     const s = v.stats;
     const channels = l.channels.length ? l.channels : ["x"];
-    const advice = v.advice.length
-      ? `<div class="grid2">${v.advice.map((x) => `<article class="card"><div class="line"><h3>${esc(channelName(x.channel))}</h3><span class="verdict ${esc(x.verdict)}">${esc(x.verdict.replace("_", " "))}</span></div><p>${esc(x.reading)}</p><p style="margin-top:8px;color:var(--ink)"><b style="font-weight:600">Next:</b> ${esc(x.action)}</p><p class="small muted" style="margin-top:8px">Rule: ${esc(x.rule)}</p></article>`).join("")}</div>`
-      : empty("No checks logged", "Enter your numbers above after a post has been up for a while. The reading uses only those numbers.");
+    const latest = new Map(v.checks.map((c) => [c.channel, c]));
+    const advice = v.advice.some((x) => x.verdict !== "no_data")
+      ? `<div class="grid2">${v.advice.map((x) => {
+          const c = latest.get(x.channel);
+          const perHour = c ? Math.round(c.impressions / (Math.max(c.minutes_since_post, 15) / 60)) : 0;
+          return `<article class="card"><div class="line"><h3>${esc(channelName(x.channel))}</h3><span class="verdict ${esc(x.verdict)}">${esc(x.verdict.replace("_", " "))}</span></div>
+<div class="rate" style="margin-top:6px">${perHour}<small> impressions / hour</small></div><div style="margin-top:8px">${meter(perHour)}</div>
+${c ? `<p class="cmeta">${c.likes} ${c.likes === 1 ? "like" : "likes"} · ${c.replies} ${c.replies === 1 ? "reply" : "replies"} · ${c.minutes_since_post} min</p>` : ""}
+<p style="margin-top:10px;color:var(--ink)">${esc(x.action)}</p><p class="cmeta" title="${esc(x.rule)}">Our starting rule, not the platform's</p></article>`;
+        }).join("")}</div>`
+      : empty("No checks yet", "Enter your first numbers above.");
+    const stages: [string, number][] = [["Clicks", t.clicks], ["Visitors", t.visitors], ["Activated", t.activated], ["Returned", t.returned]];
+    const top = Math.max(1, ...stages.map(([, n]) => n));
+    const pct = (n: number, of: number) => Math.min(100, Math.round((n / Math.max(1, of)) * 100));
+    const totals = `<div class="bars full">${stages.map(([k, n]) => `<div class="row"><span>${k}</span><div class="track"><div class="fill" style="width:${pct(n, top)}%"></div></div><span class="n">${n}</span></div>`).join("")}</div>`;
+    const biggest = Math.max(1, ...a.funnel.flatMap((f) => [f.clicks, f.visitors]));
     const funnel = a.funnel.length
-      ? `<div class="tablewrap"><table class="funnel"><thead><tr><th>Channel</th><th>Clicks</th><th>Visitors</th><th>Activated</th><th>Returned</th><th>Visit → active</th></tr></thead><tbody>${a.funnel.map((f) => `<tr><td>${esc(channelName(f.channel))}</td><td>${f.clicks}</td><td>${f.visitors}</td><td>${f.activated}</td><td>${f.returned}</td><td>${f.visitors ? `${Math.round((f.activated / f.visitors) * 100)}%` : "–"}</td></tr>`).join("")}</tbody><tfoot><tr><td>Total</td><td>${t.clicks}</td><td>${t.visitors}</td><td>${t.activated}</td><td>${t.returned}</td><td>${t.visitors ? `${Math.round((t.activated / t.visitors) * 100)}%` : "–"}</td></tr></tfoot></table></div>`
-      : empty("No tracked traffic yet", "Clicks on your tracked links and product events from the snippet will appear here.");
+      ? `<div style="margin-top:18px">${a.funnel.map((f) => `<div class="fchan"><span>${esc(channelName(f.channel))}</span><div class="nest" role="img" aria-label="${f.clicks} clicks, ${f.visitors} visitors, ${f.activated} activated, ${f.returned} returned"><i style="width:${pct(f.clicks, biggest)}%"></i><i style="width:${pct(f.visitors, biggest)}%"></i><i style="width:${pct(f.activated, biggest)}%"></i><i style="width:${pct(f.returned, biggest)}%"></i></div><span class="ns" title="Clicks, visitors, activated, returned">${f.clicks} → ${f.visitors} → ${f.activated} → ${f.returned}</span></div>`).join("")}</div>`
+      : empty("No tracked traffic yet", "Share a tracked link to start.");
     const d = v.deal;
 
-    return `<section class="pane"><div class="pane-head"><h1>What's working</h1><p>${launched ? "Live numbers from your tracked links and product." : "These fill in once your tracked links get traffic."}</p></div>
-<div class="big"><div><b>${t.clicks}</b><span>clicks</span></div><div><b>${t.visitors}</b><span>product visitors</span></div><div><b>${t.activated}</b><span>activated</span></div><div><b>${t.returned}</b><span>returned</span></div><div><b>${s.boosts.shared}</b><span>squad composers opened</span></div></div>
-<div class="block"><h2>Wave check</h2><p class="sub">Enter what the platform shows you. We compare it with stated thresholds. Launchpad can't see platform analytics.</p>
-<form method="post" action="${act("/wave")}"><div class="fields"><div class="row4 nums"><label class="field"><span>Channel</span><select name="channel">${channels.map((c) => `<option value="${esc(c)}">${esc(channelName(c))}</option>`).join("")}</select></label><label class="field"><span>Minutes since post</span><input type="number" name="minutes" min="0" required></label><label class="field"><span>Impressions</span><input type="number" name="impressions" min="0" required></label><label class="field"><span>Likes</span><input type="number" name="likes" min="0" required></label><label class="field"><span>Replies</span><input type="number" name="replies" min="0" required></label></div><div><button class="btn sm" type="submit">Read my numbers</button></div></div></form>
-<div style="margin-top:18px">${advice}</div>
-${v.checks.length ? `<p class="small muted" style="margin-top:8px">${v.checks.length} ${v.checks.length === 1 ? "check" : "checks"} logged. Latest ${esc(time(v.checks[v.checks.length - 1]!.created_at))}.</p>` : ""}</div>
-<div class="block"><h2>What brought users</h2><p class="sub">${esc(a.rules)}</p>${funnel}
-<p class="small muted" style="margin-top:10px">${t.qa_excluded} QA ${t.qa_excluded === 1 ? "event" : "events"} excluded. ${t.returned > 0 ? `${t.returned} observed ${t.returned === 1 ? "return" : "returns"} within ${a.return_window_days} days.` : "No return use observed yet, so we make no retention claim."}</p>
-<details class="edit"><summary>Add the tracking snippet to your product</summary><p class="small muted" style="margin-top:8px">Sends visits and activations from your product, so the funnel goes past the click.</p><pre class="snippet">${esc(a.snippet)}</pre>${copyBtn(a.snippet, "Copy snippet")}</details></div>
+    return `<section class="pane"><div class="pane-head"><h1>What's working</h1></div>
+<div class="block" style="margin-top:0">${totals}${funnel}
+<div class="chips-row" style="margin-top:14px"><span class="tag">${t.qa_excluded} QA excluded</span><span class="tag ${t.returned > 0 ? "good" : ""}">${t.returned > 0 ? `${t.returned} returned in ${a.return_window_days} days` : "No returns yet, no retention claim"}</span><span class="tag" title="Opening a composer doesn't confirm a post went up">${s.boosts.shared} squad composers opened</span></div>
+<details class="edit"><summary>How we count</summary><p class="small muted" style="margin-top:8px">${esc(a.rules)}</p></details>
+<details class="edit"><summary>Tracking snippet</summary><pre class="snippet">${esc(a.snippet)}</pre>${copyBtn(a.snippet, "Copy snippet")}</details></div>
+<div class="block"><div class="h-row"><h2>Wave check</h2><span class="tag" title="Launchpad can't see platform analytics">You enter the numbers</span></div>
+<form method="post" action="${act("/wave")}"><div class="fields"><div class="row4 nums"><label class="field"><span>Channel</span><select name="channel">${channels.map((c) => `<option value="${esc(c)}">${esc(channelName(c))}</option>`).join("")}</select></label><label class="field"><span>Minutes</span><input type="number" name="minutes" min="0" required></label><label class="field"><span>Impressions</span><input type="number" name="impressions" min="0" required></label><label class="field"><span>Likes</span><input type="number" name="likes" min="0" required></label><label class="field"><span>Replies</span><input type="number" name="replies" min="0" required></label></div><div><button class="btn sm" type="submit">Read my numbers</button></div></div></form>
+<div style="margin-top:18px">${advice}</div></div>
 ${v.reports.length ? `<div class="block"><h2>Reports</h2>${v.reports.map((r) => `<p><a href="/r/${esc(r.id)}?${esc(q)}">${esc(r.title)}</a> <span class="small muted">· ${esc(time(r.created_at))}</span></p>`).join("")}</div>` : ""}
-<div class="block"><div class="deal"><div class="grid2"><div><p class="small">Per launch</p><div class="price">$${d.price_usd}</div><ul>${d.deliverables.map((x) => `<li>${esc(x)}</li>`).join("")}</ul><p class="small">No payment taken. Trials are recorded separately from revenue.</p></div>
+<div class="block"><div class="deal"><div class="grid2"><div><p class="small">Per launch</p><div class="price">$${d.price_usd}</div><ul>${d.deliverables.map((x) => `<li>${esc(x)}</li>`).join("")}</ul><p class="small">No payment taken.</p></div>
 <div><div class="fields">${d.trial_accepted_at ? `<p>Trial accepted ${esc(time(d.trial_accepted_at))}.</p>` : `<form method="post" action="${act("/deal")}"><input type="hidden" name="action" value="accept_trial"><button class="btn" type="submit">Accept trial</button></form>`}
-<form method="post" action="${act("/deal")}"><input type="hidden" name="action" value="hours"><label class="field"><span>Hours this saved you <em style="color:inherit;opacity:.7">your own estimate</em></span><input type="number" name="hours" min="0" step="0.5" required value="${d.hours_saved ?? ""}"></label><div class="actions"><button class="btn sm" type="submit">Save hours</button></div></form></div></div></div></div></div></section>`;
+<form method="post" action="${act("/deal")}"><input type="hidden" name="action" value="hours"><label class="field"><span>Hours saved <em style="color:inherit;opacity:.7">your estimate</em></span><input type="number" name="hours" min="0" step="0.5" required value="${d.hours_saved ?? ""}"></label><div class="actions"><button class="btn sm" type="submit">Save hours</button></div></form></div></div></div></div></div></section>`;
   }
 
   // ---------------------------------------------------------------- Network
   function networkTab(): string {
     const results = v.ask
       ? v.matches.length
-        ? `<div class="grid2">${v.matches.map((m) => `<article class="card"><div class="line"><h3><a href="${safeHref(m.url)}" target="_blank" rel="noopener nofollow">${esc(m.company)}</a></h3></div><p class="small muted">${esc(m.one_liner)}</p><p style="margin-top:8px"><b style="font-weight:600">Why:</b> ${esc(m.why)}</p><p class="quote" style="margin-top:10px">${esc(m.ask)}</p><div class="actions">${copyBtn(m.ask, "Copy ask")}</div></article>`).join("")}</div>`
-        : empty("No match among opted-in founders", "Nobody in the squad clearly fits this ask. We'd rather show nothing than a weak match.")
-      : empty("Describe what you need", "We'll look through founders who opted in and explain why each one is relevant.");
-    return `<section class="pane"><div class="pane-head"><h1>Find the right founder</h1><p>Describe what you need help with, or who might want to try what you're building.</p></div>
-<form method="get" action="/k/${esc(l.slug)}"><input type="hidden" name="t" value="${esc(v.token)}"><input type="hidden" name="tab" value="network"><div class="fields"><label class="field"><span>Your ask</span><textarea name="ask" required maxlength="600" rows="3" placeholder="We need someone who has sold developer tools into security teams.">${esc(v.ask)}</textarea></label><div><button class="btn sm" type="submit">Find founders</button></div></div></form>
-<div class="block" style="margin-top:26px"><p class="sub">Searches only founders who opted in through Launchpad. It doesn't read Bookface or any private YC data.</p>${results}</div></section>`;
+        ? `<div class="grid2">${v.matches.map((m) => { const hits = keywords(m.why); return `<article class="card"><div class="line"><h3><a href="${safeHref(m.url)}" target="_blank" rel="noopener nofollow">${esc(m.company)}</a></h3></div><p class="small muted">${esc(m.one_liner)}</p>${hits.length ? tags(hits, "good") : `<p class="small" style="margin-top:8px">${esc(m.why)}</p>`}<p class="quote" style="margin-top:10px">${esc(m.ask)}</p><div class="actions">${copyBtn(m.ask, "Copy ask")}</div></article>`; }).join("")}</div>`
+        : empty("No clear match", "We'd rather show nothing than a weak match.")
+      : empty("Describe what you need", "We'll explain why each founder fits.");
+    return `<section class="pane"><div class="pane-head"><h1>Find the right founder</h1><div class="head-tags"><span class="tag" title="Doesn't read Bookface or any private YC data">Opted-in Launchpad founders only</span></div></div>
+<form method="get" action="/k/${esc(l.slug)}"><input type="hidden" name="t" value="${esc(v.token)}"><input type="hidden" name="tab" value="network"><div class="fields"><label class="field"><span>Your ask</span><textarea name="ask" required maxlength="600" rows="3" placeholder="Someone who has sold developer tools into security teams">${esc(v.ask)}</textarea></label><div><button class="btn sm" type="submit">Find founders</button></div></div></form>
+<div class="block" style="margin-top:26px">${results}</div></section>`;
   }
 
   // ---------------------------------------------------------------- Follow-through
@@ -292,12 +312,12 @@ ${v.reports.length ? `<div class="block"><h2>Reports</h2>${v.reports.map((r) => 
     const open = v.commitments.filter((c) => c.status === "open");
     const done = v.commitments.filter((c) => c.status === "done");
     const card = (c: WorkspaceView["commitments"][number]) => `<article class="card"><div class="line"><h3>${esc(c.person)}</h3>${c.status === "done" ? `<span class="tag good">Done</span>` : c.due ? `<span class="tag accent">Due ${esc(c.due)}</span>` : `<span class="tag">Open</span>`}</div>
-<p style="margin-top:6px"><b style="font-weight:600">You promised:</b> ${esc(c.promise)}</p>${c.context ? `<p class="small muted">${esc(c.context)}</p>` : ""}
-${c.followup ? `<p class="quote" style="margin-top:10px">${esc(c.followup)}</p>` : ""}
+<p style="margin-top:6px;color:var(--ink)">${esc(c.promise)}</p>${c.context ? `<p class="small muted">${esc(c.context)}</p>` : ""}
+${c.followup ? `<details class="edit"><summary>Follow-up draft</summary><p class="quote" style="margin-top:8px">${esc(c.followup)}</p></details>` : ""}
 <form method="post" action="${act(`/commit/${esc(c.id)}`)}"><div class="actions">${c.followup ? copyBtn(c.followup, "Copy follow-up") : ""}<button class="btn sm ${c.status === "done" ? "quiet" : ""}" name="action" value="${c.status === "done" ? "reopen" : "done"}" type="submit">${c.status === "done" ? "Reopen" : "Mark done"}</button></div></form></article>`;
-    return `<section class="pane"><div class="pane-head"><h1>Follow-through</h1><p>What you promised people, the context from the conversation, and a follow-up ready to send yourself.</p></div>
-<div class="block"><h2>Open <span class="muted" style="font-weight:400">${open.length}</span></h2><div style="height:12px"></div>${open.map(card).join("") || empty("Nothing outstanding", "Add a promise below after your next customer or investor conversation.")}</div>
-<form class="card" method="post" action="${act("/commit")}"><h3>Add a commitment</h3><div class="fields" style="margin-top:10px"><div class="grid2"><label class="field"><span>Person</span><input type="text" name="person" required maxlength="120"></label><label class="field"><span>Due <em>optional</em></span><input type="text" name="due" maxlength="60" placeholder="Friday"></label></div><label class="field"><span>What you promised</span><input type="text" name="promise" required maxlength="400"></label><label class="field"><span>Conversation context <em>optional</em></span><textarea name="context" maxlength="1000" rows="2" style="min-height:64px"></textarea></label><div><button class="btn sm" type="submit">Add</button></div></div></form>
-${done.length ? `<div class="block"><h2>Done <span class="muted" style="font-weight:400">${done.length}</span></h2><div style="height:12px"></div>${done.map(card).join("")}</div>` : ""}</section>`;
+    return `<section class="pane"><div class="pane-head"><h1>Follow-through</h1></div>
+<div class="block" style="margin-top:0"><div class="h-row"><h2>You owe</h2><span class="tag">${open.length}</span></div>${open.map(card).join("") || empty("Nothing outstanding", "Add a promise below.")}</div>
+<details class="context"><summary>Add a commitment</summary><form method="post" action="${act("/commit")}"><div class="fields" style="margin-top:10px"><div class="grid2"><label class="field"><span>Person</span><input type="text" name="person" required maxlength="120"></label><label class="field"><span>Due</span><input type="text" name="due" maxlength="60" placeholder="Friday"></label></div><label class="field"><span>Promise</span><input type="text" name="promise" required maxlength="400"></label><label class="field"><span>Context</span><textarea name="context" maxlength="1000" rows="2" style="min-height:64px"></textarea></label><div><button class="btn sm" type="submit">Add</button></div></div></form></details>
+${done.length ? `<div class="block"><div class="h-row"><h2>Done</h2><span class="tag">${done.length}</span></div>${done.map(card).join("")}</div>` : ""}</section>`;
   }
 }
