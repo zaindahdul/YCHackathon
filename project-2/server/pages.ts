@@ -149,8 +149,10 @@ textarea{min-height:132px;resize:vertical}
 .timeline a .c{color:var(--ink)}.timeline a .t{color:var(--muted);font-variant-numeric:tabular-nums;font-size:13px}
 .timeline a:hover .c{text-decoration:underline;text-underline-offset:3px}
 .todo{list-style:none;margin:0;padding:0;font-size:14px;color:var(--ink-2);display:grid;gap:12px}
-.todo li{padding-left:26px;position:relative;line-height:1.5}
-.todo li::before{content:"";position:absolute;left:0;top:4px;width:12px;height:12px;border:1.5px solid var(--muted);border-radius:4px}
+.todo li{line-height:1.5}
+.todo label{display:grid;grid-template-columns:18px 1fr;gap:8px;align-items:start;cursor:pointer}
+.todo input{width:14px;height:14px;margin:4px 0 0;accent-color:var(--ink)}
+.todo input:checked+span{color:var(--muted);text-decoration:line-through}
 .prose{max-width:62ch;color:var(--ink-2);font-size:16px;line-height:1.7}
 .prose p+p{margin-top:16px}.prose strong{color:var(--ink);font-weight:550}
 .prose h2{font-size:19px;color:var(--ink);margin:40px 0 12px}.prose h3{font-size:16px;color:var(--ink);margin:28px 0 8px;font-weight:550}
@@ -240,10 +242,12 @@ table.t td.muted,table.t th{white-space:nowrap}
 `;
 
 const FONT = `<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..600&display=swap" rel="stylesheet">`;
+const TODO_JS = `<script>(function(){var u=document.querySelector(".todo[data-kit]");if(!u)return;var k="lp-todo-"+u.getAttribute("data-kit"),d={};try{d=JSON.parse(localStorage.getItem(k)||"{}")}catch(e){}u.querySelectorAll("input[data-step]").forEach(function(i){i.checked=!!d[i.getAttribute("data-step")];i.addEventListener("change",function(){d[i.getAttribute("data-step")]=i.checked;try{localStorage.setItem(k,JSON.stringify(d))}catch(e){}})})})();</script>`;
+const ICON = `<link rel="icon" href="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect x="7" y="7" width="18" height="18" rx="3" transform="rotate(45 16 16)" fill="#141413"/></svg>')}">`;
 const COPY_JS = `<script>document.addEventListener("click",function(e){var b=e.target.closest("[data-copy]");if(!b)return;navigator.clipboard.writeText(b.getAttribute("data-copy")).then(function(){var o=b.textContent;b.textContent="Copied";setTimeout(function(){b.textContent=o},1400)})});</script>`;
 
 const page = (title: string, body: string, head = "") =>
-  `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title>${FONT}${head}<style>${CSS}</style></head><body>${body}</body></html>`;
+  `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title>${ICON}${FONT}${head}<style>${CSS}</style></head><body>${body}</body></html>`;
 
 const header = (cta = true) => `<header class="top wrap"><a class="mark" href="/"><i></i>Launchpad</a><nav><a class="link" href="/ops">How it runs</a>${cta ? `<a class="btn sm" href="/new">Plan a launch</a>` : ""}</nav></header>`;
 const footer = `<footer class="wrap"><div class="row"><p>Run by AI agents. Launchpad is not affiliated with Y Combinator. Every boost is a real founder choosing to share.</p><a href="/ops">How it runs</a></div></footer>`;
@@ -391,8 +395,10 @@ ${d.reports.length ? `<div style="margin-top:32px;display:grid;gap:8px">${d.repo
 </section>` : "";
 
   const launchPanel = launched
-    ? `<div class="panel"><span class="status live">You're live</span><p style="margin-top:12px">${esc(plural(s.boosts.sent, "squad founder was", "squad founders were"))} asked to share it, and ${esc(plural(s.boosts.shared, "has", "have"))} so far.</p></div>`
-    : `<div class="panel"><h3>When your first post is up</h3><p>${d.squad > 0 ? `Press Launch now and ${esc(plural(d.squad, "founder", "founders"))} in the squad get a one-tap request to share it.` : "Press Launch now. You're the first in the squad, so every founder who joins after you will be asked to share it."}</p><form method="post" action="/k/${esc(l.slug)}/go${esc(t)}"><button class="btn" type="submit">Launch now</button></form></div>`;
+    ? `<div class="panel"><span class="status live">You're live</span><p style="margin-top:12px">${s.boosts.total === 0
+      ? "Nobody else is in the squad yet. Founders who join in the next 48 hours will be asked to share it."
+      : `${s.boosts.pending > 0 ? `${esc(plural(s.boosts.pending, "squad founder is", "squad founders are"))} being asked to share it now.` : ""}${s.boosts.sent > 0 ? ` ${esc(plural(s.boosts.sent, "founder was", "founders were"))} asked, and ${esc(String(s.boosts.shared))} ${s.boosts.shared === 1 ? "has" : "have"} shared it so far.` : ""}`}</p></div>`
+    : `<div class="panel"><h3>When your first post is up</h3><p>${d.squad > 0 ? `Press Launch now and ${esc(plural(d.squad, "founder", "founders"))} in the squad get a one-tap request to share it.` : "Press Launch now. Nobody else is in the squad yet, so founders who join in the next 48 hours will be asked to share it."}</p><form method="post" action="/k/${esc(l.slug)}/go${esc(t)}"><button class="btn" type="submit">Launch now</button></form></div>`;
 
   return page(`${l.company} launch kit · Launchpad`, `${header(false)}
 <main class="wrap">
@@ -408,11 +414,11 @@ ${sections.join("")}
 <aside class="side">
 <div class="launch">${launchPanel}</div>
 <div><p class="label">When to post</p><ul class="timeline">${[...kit.timing].map((x) => `<li><a href="#ch-${esc(x.channel)}"><span class="c">${esc(CHANNEL_NAMES[x.channel])}</span><span class="t">${esc(x.when)}</span></a></li>`).join("")}</ul></div>
-${kit.checklist.length ? `<div><p class="label">Launch day</p><ul class="todo">${kit.checklist.map((c) => `<li>${esc(c)}</li>`).join("")}</ul></div>` : ""}
+${kit.checklist.length ? `<div><p class="label">Launch day</p><ul class="todo" data-kit="${esc(l.slug)}">${kit.checklist.map((c, i) => `<li><label><input type="checkbox" data-step="${i}"><span>${esc(c)}</span></label></li>`).join("")}</ul></div>` : ""}
 <p class="small muted">This is your private kit. Bookmark it.</p>
 </aside>
 </div>
-</main>${footer}${COPY_JS}`, `<meta name="robots" content="noindex">${launched ? `<meta http-equiv="refresh" content="120">` : ""}`);
+</main>${footer}${COPY_JS}${TODO_JS}`, `<meta name="robots" content="noindex">${launched ? `<meta http-equiv="refresh" content="120">` : ""}`);
 }
 
 // ------------------------------------------------------------------- boost page
@@ -431,8 +437,8 @@ ${done ? `<p class="status live" style="margin-top:24px">Thanks for boosting. Th
 </div></main>${footer}${COPY_JS}`, `<meta name="robots" content="noindex">`);
 }
 
-export const renderMessage = (title: string, text: string) =>
-  page(`${title} · Launchpad`, `${header()}<main class="wrap"><div class="narrow page" style="padding-top:120px"><h1>${esc(title)}</h1><p class="muted" style="margin-top:16px;font-size:17px">${esc(text)}</p></div></main>${footer}`);
+export const renderMessage = (title: string, text: string, confirm?: { label: string; action: string }) =>
+  page(`${title} · Launchpad`, `${header()}<main class="wrap"><div class="narrow page" style="padding-top:120px"><h1>${esc(title)}</h1><p class="muted" style="margin-top:16px;font-size:17px">${esc(text)}</p>${confirm ? `<form method="post" action="${esc(confirm.action)}" style="margin-top:28px"><button class="btn" type="submit">${esc(confirm.label)}</button></form>` : ""}</div></main>${footer}`, confirm ? `<meta name="robots" content="noindex">` : "");
 
 const SOURCE_NAMES: Record<string, string> = { launch_yc: "Launch YC", show_hn: "Show HN", product_hunt: "Product Hunt", x: "X", other: "Other" };
 
@@ -456,6 +462,7 @@ export function renderOps(d: { overview: Overview; launches: Launch[]; decisions
 <div><span>People clicked through</span><b>${o.clicks}</b><em>across tracked links</em></div>
 <div><span>Boosts shared</span><b>${o.boosts_shared}</b><em>of ${o.boosts_sent} asked</em></div>
 <div><span>Squad</span><b>${o.squad}</b><em>${o.squad === 1 ? "founder" : "founders"}</em></div>
+<div><span>Human step-ins</span><b>${d.interventions.length}</b><em>${d.interventions.length === 1 ? "time a person stepped in" : "times a person stepped in"}</em></div>
 </section>
 <div class="blocks">
 ${block("Launches", "Every launch planned, newest first.", launches)}

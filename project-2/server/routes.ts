@@ -171,13 +171,12 @@ export async function handleRequest(req: ApiRequest, ctx: Context): Promise<ApiR
       }
       return redirect(`/k/${l.slug}?t=${l.token}`);
     }
-    const squad = (await r.overview()).squad - (l.join_squad ? 1 : 0);
-    return html(200, renderKit(l, { links: await r.linksFor(l.id), origin, stats: await r.stats(l.id), squad: Math.max(0, squad), reports: await r.listReports(l.id), reciprocity: await r.reciprocity(l.id) }));
+    return html(200, renderKit(l, { links: await r.linksFor(l.id), origin, stats: await r.stats(l.id), squad: await r.squadFor(l), reports: await r.listReports(l.id), reciprocity: await r.reciprocity(l.id) }));
   }
 
   // ---------------------------------------------------------------- boost pages
   const boost = /^\/b\/([A-Za-z0-9]{4,12})(\/(go|skip|stop))?$/.exec(path);
-  if (boost && method === "GET") {
+  if (boost && (method === "GET" || (method === "POST" && boost[3] === "stop"))) {
     const r = await repo();
     const b = await r.getBoost(boost[1]!);
     if (!b) return html(404, renderMessage("Not found", "This boost link is not valid."));
@@ -185,12 +184,19 @@ export async function handleRequest(req: ApiRequest, ctx: Context): Promise<ApiR
     const link = linkCode ? `${origin}/l/${linkCode}` : b.launch.url;
     const text = withLink(b.launch.kit?.boost_text || `${b.launch.company}: ${b.launch.one_liner} {link}`, link);
     const action = boost[3];
+    // Mail scanners and link previews open every link in an email: they must not count as a
+    // share or a skip, and only a deliberate POST can take someone out of the squad.
+    const person = !isBot(req.headers["user-agent"]);
     if (action === "go") {
-      await r.markBoostShared(b.boost_id, now());
+      if (person) await r.markBoostShared(b.boost_id, now());
       return redirect(req.query.get("to") === "linkedin" ? share.linkedin(text) : share.x(text), 302);
     }
-    if (action === "skip") return html(200, renderMessage("No problem", "We won't count this one. You'll still get the next launch."));
+    if (action === "skip") {
+      if (person) await r.markBoostSkipped(b.boost_id);
+      return html(200, renderMessage("No problem", "We won't count this one. You'll still get the next launch."));
+    }
     if (action === "stop") {
+      if (method !== "POST") return html(200, renderMessage("Leave the boost squad?", "You won't get boost requests anymore, and nobody will be asked to boost your launches. Your own kit keeps working.", { label: "Leave the squad", action: `/b/${boost[1]}/stop` }));
       await r.optOut(b.booster.email, "left the boost squad from a boost page");
       return html(200, renderMessage("You've left the squad", "You won't get boost requests anymore. Your own launches still work."));
     }
