@@ -193,7 +193,7 @@ textarea{min-height:132px;resize:vertical}
 .opshead h1{font-size:48px;letter-spacing:-.04em;margin-bottom:20px}
 .opshead p{font-size:17px;color:var(--ink-2);line-height:1.65}
 .opshead p.updated{font-size:13px;color:var(--muted);margin-top:20px}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:80px 0 0}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;padding:80px 0 0}
 .kpis div{background:var(--surface);border-radius:16px;padding:24px 24px 22px}
 .kpis b{display:block;font-size:40px;font-weight:500;letter-spacing:-.04em;line-height:1.1;font-variant-numeric:tabular-nums;margin:10px 0 4px}
 .kpis span{font-size:13px;color:var(--muted)}
@@ -232,7 +232,7 @@ table.t td.muted,table.t th{white-space:nowrap}
   .kit{grid-template-columns:1fr;gap:0;padding-top:48px}.side{position:static;margin-top:88px}
   .channel{padding-top:72px}.channel>.head{flex-direction:column;gap:16px}
   .opshead{padding-top:40px}.opshead h1{font-size:36px}
-  .kpis{grid-template-columns:1fr 1fr;gap:12px;padding-top:48px}.kpis b{font-size:32px}
+  .kpis{grid-template-columns:1fr 1fr;gap:12px;padding-top:48px}.kpis div:last-child{grid-column:1/-1}.kpis b{font-size:32px}
   .blocks{padding-top:56px}.block{grid-template-columns:1fr;gap:24px;padding:40px 0}
   .two{grid-template-columns:1fr;gap:0}
   .writing{padding-top:88px}
