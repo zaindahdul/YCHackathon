@@ -1,0 +1,172 @@
+{
+  "baseRefName": "master",
+  "body": "## Summary\nWe pivoted to the YC-founder problems in `yc-founder-problems.md`, which come from a primary source. **Launchpad** (`project-2/`) is a new autonomous company: a YC founder tells it once what they're launching, and agents handle the launch.\n\n**It's live:** https://launchpad-2rdynba3hkaq.vercel.app (the public record of what the agents do is at `/ops`)\n\n### How it works\n1. **The founder fills in one form** (`/new`, about 2 minutes) and gets a private kit link.\n2. **The `lp-producer` agent writes the kit** (it runs every 5 minutes). It reads the founder's site, checks what else is launching on Show HN, Product Hunt and Launch YC, and picks a time for each channel with its reasons. Then it writes every post in that channel's style: X thread, LinkedIn, Show HN, Product Hunt, Launch YC or Bookface, and an email to the founder's network. Each post gets a one-click share button and a tracked link, and the founder is emailed the kit.\n3. **Launch now** queues a boost for every opt-in squad founder. The **`lp-booster`** agent emails each one a one-tap page to share on X or LinkedIn. Boosts are reciprocal: you boost others, and they boost you.\n4. **Results show on the kit page:** people who clicked on each channel (bots and refreshes ignored) and boosts shared. About 2 hours after launch, the producer writes a report covering what worked and what to do next time.\n5. **The `lp-scout` agent** finds YC founders who are launching now and emails them a free kit offer, within daily limits. **`lp-concierge`** answers the `launch@` inbox.\n\n### Design choices\n- **No fake engagement.** The source asked to \"bot the video\", but bots, bought views and upvote rings get launches buried and accounts banned on X, Product Hunt and HN. Every boost is a real founder choosing to share, and agents never ask anyone to upvote.\n- **\"Not affiliated with Y Combinator\"** appears on every page, and the agents never imply YC endorses it.\n- **The studio stays anonymous.** Founder emails and kit tokens never appear on public pages, and kit pages and reports are private unless the founder lists their launch.\n- **Guardrails:** 40 emails and 12 posts per day, at most 3 boost requests per squad founder per day, no contacting anyone twice in 7 days, an opt-out list, a run lock per agent, and no account sign-ups on other sites. Budgets: producer $30/day, scout $25/day, booster $8/day, concierge $5/day.\n- **It's separate from the first project** (PR #4, now parked with its schedules off): its own app, persona, `launch@` inbox, and `lp-` agents.\n\n## What we need from you\n1. **A Na\u00efve API key with every permission** (billing read and write, plus admin), saved only in `key.txt` locally and never pasted into the PR, chat or a commit. It turns on X posting for the scout, lets us see spend, and lets us block the org's built-in CEO agent from the studio's tools.\n2. **A fresh, anonymous X account** (plus Bluesky or Threads if possible) to connect once the new key is in, so the scout can post.\n3. **First users.** Most hackathon teams launch their project tomorrow morning. Sharing `https://launchpad-2rdynba3hkaq.vercel.app/new` with teams in the room is the fastest way to real launches and a real boost squad. Any hands-on outreach should be logged as a human step-in with `npm run intervene` from `project-2/`.\n4. **Review**, especially the agent instructions in `project-2/crew/crew.ts` and the kit rules in `project-2/server/rules.ts`.\n\n## Test plan\n- [x] `cd project-2 && npm test`: 11 tests covering the whole loop against an in-process Postgres (form, kit claiming and validation, Launch now, squad boosts with daily caps and opt-out, tracked clicks that ignore bots and refreshes, reports public or private by founder choice, scout quotas, no leaks of emails or tokens)\n- [x] `npm run typecheck` and `npm run build`\n- [x] Deployed with `naive up`: persona and `launch@` inbox, app with database, 4 agents, 3 schedules\n- [x] Production: every page returns 200, the MCP endpoint serves 15 tools, the form redirects to the kit\n- [ ] The producer writes a real kit on the live platform. In progress: Launchpad's own launch was submitted as the first test (unlisted, not in the squad).\n- [ ] First real founder launches, boosts and reports\n\n\ud83e\udd16 Generated with [Claude Code](https://claude.com/claude-code)",
+  "comments": [],
+  "commits": [
+    {
+      "authoredDate": "2026-11-08T02:39:36Z",
+      "authors": [
+        {
+          "email": "pmf-engine@users.noreply.github.com",
+          "id": "",
+          "login": "",
+          "name": "PMF Engine"
+        },
+        {
+          "email": "noreply@anthropic.com",
+          "id": "MDQ6VXNlcjgxODQ3",
+          "login": "claude",
+          "name": "Claude Opus 5.5"
+        }
+      ],
+      "committedDate": "2026-11-08T02:39:36Z",
+      "messageBody": "project-2/ is a new Na\u00efve company aimed at the YC-founder problems in\nyc-founder-problems.md. A founder fills one form; a producer agent picks\nthe timing per channel and writes every post (X, LinkedIn, Show HN,\nProduct Hunt, Launch YC, email) into a private kit with one-click share\nbuttons and tracked links. \"Launch now\" rallies an opt-in squad of\nfounders who boost each other (real shares, no bots or upvote rings); a\nbooster agent sends the asks, a scout finds YC founders who are\nlaunching, a concierge owns the inbox, and the producer reports results\nper channel. Public ops log at /ops.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+      "messageHeadline": "Add Launchpad: one-click launches for YC founders, run by agents",
+      "oid": "920fb9940a48764813ea9260161de4a8e3047b16"
+    }
+  ],
+  "files": [
+    {
+      "path": "project-2/.gitignore",
+      "additions": 7,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/README.md",
+      "additions": 46,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/build.mjs",
+      "additions": 47,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/crew/crew.ts",
+      "additions": 130,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/naive.config.ts",
+      "additions": 44,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/package-lock.json",
+      "additions": 1904,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/package.json",
+      "additions": 32,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/scripts/intervene.ts",
+      "additions": 25,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/server/db.ts",
+      "additions": 33,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/server/dev.ts",
+      "additions": 47,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/server/entry.ts",
+      "additions": 93,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/server/local-db.ts",
+      "additions": 31,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/server/mcp.ts",
+      "additions": 321,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/server/pages.ts",
+      "additions": 247,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/server/repo.ts",
+      "additions": 418,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/server/routes.ts",
+      "additions": 190,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/server/rules.ts",
+      "additions": 152,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/sql/0001_init.sql",
+      "additions": 150,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/test/app.test.ts",
+      "additions": 214,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/test/config.test.ts",
+      "additions": 24,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "project-2/tsconfig.json",
+      "additions": 17,
+      "deletions": 0,
+      "changeType": "ADDED"
+    },
+    {
+      "path": "yc-founder-problems.md",
+      "additions": 60,
+      "deletions": 0,
+      "changeType": "ADDED"
+    }
+  ],
+  "headRefName": "launchpad",
+  "headRefOid": "920fb9940a48764813ea9260161de4a8e3047b16",
+  "isDraft": false,
+  "mergedAt": null,
+  "number": 6,
+  "reviews": [],
+  "state": "OPEN",
+  "title": "Add Launchpad: one-click launches for YC founders, run by agents",
+  "updatedAt": "2026-11-08T02:39:58Z",
+  "url": "https://github.com/zaindahdul/YCHackathon/pull/6"
+}

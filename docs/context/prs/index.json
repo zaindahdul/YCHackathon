@@ -1,0 +1,85 @@
+{
+  "capturedAt": "2026-11-08T06:38:00.307775+00:00",
+  "repository": "zaindahdul/YCHackathon",
+  "mainAtCapture": "17c9556de6e58b9b85f75b28bd07cbec5da6fcaa",
+  "defaultBranch": "master",
+  "pullRequests": [
+    {
+      "baseRefName": "master",
+      "headRefName": "codex/formshop-plan",
+      "headRefOid": "bd2a83017e28570d5be8c6697d5139d70e13846d",
+      "isDraft": false,
+      "number": 1,
+      "state": "OPEN",
+      "title": "Hackathon research and Fire Drill business recommendation",
+      "updatedAt": "2026-11-07T21:55:21Z",
+      "url": "https://github.com/zaindahdul/YCHackathon/pull/1"
+    },
+    {
+      "baseRefName": "master",
+      "headRefName": "add-ideas",
+      "headRefOid": "b46bfe1cc2dc36de1b8feea00026bb5297c4061e",
+      "isDraft": false,
+      "number": 2,
+      "state": "MERGED",
+      "title": "Add shortlist of hackathon ideas",
+      "updatedAt": "2026-11-07T22:43:51Z",
+      "url": "https://github.com/zaindahdul/YCHackathon/pull/2"
+    },
+    {
+      "baseRefName": "master",
+      "headRefName": "pmf-engine",
+      "headRefOid": "13db2766c18bb4ba4776b335a50aca6b8d39c30e",
+      "isDraft": false,
+      "number": 3,
+      "state": "MERGED",
+      "title": "Build PMF Engine: an autonomous company that finds its own PMF",
+      "updatedAt": "2026-11-07T22:43:50Z",
+      "url": "https://github.com/zaindahdul/YCHackathon/pull/3"
+    },
+    {
+      "baseRefName": "master",
+      "headRefName": "studio",
+      "headRefOid": "f5404506bbe1ebac713ad2323dac7a0c07c18ca8",
+      "isDraft": false,
+      "number": 4,
+      "state": "OPEN",
+      "title": "Rebuild PMF Engine as an AI venture studio, live on Na\u00efve",
+      "updatedAt": "2026-11-08T00:31:11Z",
+      "url": "https://github.com/zaindahdul/YCHackathon/pull/4"
+    },
+    {
+      "baseRefName": "master",
+      "headRefName": "main",
+      "headRefOid": "17c9556de6e58b9b85f75b28bd07cbec5da6fcaa",
+      "isDraft": true,
+      "number": 5,
+      "state": "OPEN",
+      "title": "Integrate venture studio and repair publishing, storage and execution boundaries",
+      "updatedAt": "2026-11-08T00:31:51Z",
+      "url": "https://github.com/zaindahdul/YCHackathon/pull/5"
+    },
+    {
+      "baseRefName": "master",
+      "headRefName": "launchpad",
+      "headRefOid": "920fb9940a48764813ea9260161de4a8e3047b16",
+      "isDraft": false,
+      "number": 6,
+      "state": "OPEN",
+      "title": "Add Launchpad: one-click launches for YC founders, run by agents",
+      "updatedAt": "2026-11-08T02:39:58Z",
+      "url": "https://github.com/zaindahdul/YCHackathon/pull/6"
+    },
+    {
+      "baseRefName": "launchpad",
+      "headRefName": "launchpad-ui",
+      "headRefOid": "19b18e07ff4e45e51f6f386c29d30d6417658d42",
+      "isDraft": false,
+      "number": 7,
+      "state": "OPEN",
+      "title": "Redesign Launchpad's UI: quiet, editorial, show the product",
+      "updatedAt": "2026-11-08T05:35:03Z",
+      "url": "https://github.com/zaindahdul/YCHackathon/pull/7"
+    }
+  ]
+}

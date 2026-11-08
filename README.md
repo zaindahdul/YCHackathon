@@ -1,12 +1,14 @@
 # PMF Engine
 
+**Latest context for collaborators: [BOT_HANDOFF.md](BOT_HANDOFF.md).** All seven PRs are fetched and snapshotted, including Launchpad #6 and its stacked UI #7. The new [Jesai interview](docs/customer-research/jesai-tarun-launch-interview.md) points to company-aware launch-comment support, which those branches do not yet implement. The sections below describe the code currently integrated on main.
+
 **An AI venture studio: several founder agents build products, find users and decide what to improve or pivot.** Each founder starts with a different market, shares the studio's publishing and analytics infrastructure, and keeps its product/version history and reports visible.
 
-The latest direction comes from [PR #4](https://github.com/zaindahdul/YCHackathon/pull/4). It is integrated in [`studio/`](studio/README.md). The earlier fulfillment/payment company remains available under `src/`; both are tested together.
+The integrated studio baseline comes from [PR #4](https://github.com/zaindahdul/YCHackathon/pull/4). Its fc49da2 snapshot is integrated in [`studio/`](studio/README.md); two newer studio commits remain on that PR. The earlier fulfillment/payment company remains available under `src/`; both are tested together.
 
 ## Current studio
 
-The collaborator's [existing live deployment](https://pmf-2rdynba3hkaq.vercel.app/) currently lists **CORSfix**, **PayNudge** and **CramPlan**. These are the founders' first products, not fixed tracks. During this update, read-only health/state checks and a real browser confirmed the public dashboard responds. Its small counters include founder QA history and do not prove real outside customers or PMF. See the [full digest and verification boundary](docs/STUDIO_UPDATE.md).
+The collaborator's [existing live deployment](https://pmf-2rdynba3hkaq.vercel.app/) listed **CORSfix**, **PayNudge** and **CramPlan** at the earlier integration check. These are the founders' first products, not fixed tracks. During the earlier studio integration, read-only health/state checks and a real browser confirmed the public dashboard responded. Its small counters include founder QA history and do not prove real outside customers or PMF. See the [full digest and verification boundary](docs/STUDIO_UPDATE.md).
 
 The studio provides:
 

@@ -1,0 +1,46 @@
+{
+  "baseRefName": "master",
+  "body": "## Summary\n- Adds `ideas.md` with the three shortlisted company ideas for the Na\u00efve Autonomous Company Hackathon:\n  1. A QA agency that tests new mobile apps (current pick)\n  2. Free listing videos for real estate agents (backup)\n  3. A tool factory built from people's requests\n- Each idea covers how it finds customers, what the agents decide, why it scores with the judges, and its main risk. See `hackathon-rules.md` for the judging criteria.\n\n\ud83e\udd16 Generated with [Claude Code](https://claude.com/claude-code)",
+  "comments": [],
+  "commits": [
+    {
+      "authoredDate": "2026-11-07T21:59:32Z",
+      "authors": [
+        {
+          "email": "zaindahdul@berkeley.edu",
+          "id": "U_kgDOD6GjCw",
+          "login": "zaindahdul",
+          "name": "Zain"
+        },
+        {
+          "email": "noreply@anthropic.com",
+          "id": "MDQ6VXNlcjgxODQ3",
+          "login": "claude",
+          "name": "Claude Opus 5.5"
+        }
+      ],
+      "committedDate": "2026-11-07T21:59:32Z",
+      "messageBody": "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>",
+      "messageHeadline": "Add shortlist of hackathon ideas",
+      "oid": "b46bfe1cc2dc36de1b8feea00026bb5297c4061e"
+    }
+  ],
+  "files": [
+    {
+      "path": "ideas.md",
+      "additions": 35,
+      "deletions": 0,
+      "changeType": "ADDED"
+    }
+  ],
+  "headRefName": "add-ideas",
+  "headRefOid": "b46bfe1cc2dc36de1b8feea00026bb5297c4061e",
+  "isDraft": false,
+  "mergedAt": "2026-11-07T22:43:51Z",
+  "number": 2,
+  "reviews": [],
+  "state": "MERGED",
+  "title": "Add shortlist of hackathon ideas",
+  "updatedAt": "2026-11-07T22:43:51Z",
+  "url": "https://github.com/zaindahdul/YCHackathon/pull/2"
+}

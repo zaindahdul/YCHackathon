@@ -10,7 +10,9 @@ Build a runnable TypeScript company runtime seeded with four concrete PMF experi
 
 The current update integrates PR #4 (fc49da2) into main as a studio workspace, preserves the verified service runtime, validates the claimed public deployment read-only, repairs locally actionable integrity/access issues and updates current documentation. Acceptance includes both test suites/builds, real browser inspection of the integrated studio, independent review, preserved Git histories and clean pushed main. No deployment, live paid work, outreach or organization permission changes are authorized by this integration.
 
-Current startup request: keep the studio running locally with a simple npm start entry point, safe ignored configuration and secret-free diagnostics; leave the repo clean and pushed. Discover the requested Slop integration; the term is pending clarification. No Slop executable/connector or Naïve credentials are available in this environment, so do not claim paid founders have started.
+Current startup request: keep the studio running locally with a simple npm start entry point, safe ignored configuration and secret-free diagnostics; leave the repo clean and pushed. Later context treats Slop as AI-built products, not an established named integration; the earlier executable search is historical. No Naïve credentials were available at startup verification, so do not claim paid founders have started.
+
+Current handoff request: fetch every PR, preserve a dated source snapshot and add the new Jesai interview for Zain's bot. Acceptance: all seven PR heads and dependency #7→#6 documented; raw interview and earlier anonymous notes kept separate; implementation vs proposal and local vs live claims explicit; README/AGENTS/ideas point to one read-first handoff; independent review, valid references and clean pushed main through draft PR #5. No blind merge, pivot implementation, deployment or outreach is part of this update.
 
 ## Constraints
 - **Max concurrency: 3**
@@ -64,6 +66,10 @@ Current startup request: keep the studio running locally with a simple npm start
 - [x] T11 · Simplify startup configuration and verify running local studio
       files: package.json, studio/package.json, studio/scripts/env.ts, studio/scripts/doctor.ts, studio/.env.example, studio/server/dev.ts, studio/scripts/kickoff.ts, studio/scripts/fence-ceo.ts, studio/scripts/intervene.ts, studio/test/setup.test.ts, README.md, studio/README.md
       accept: npm run check && npm run build && npm run format:check
+- [x] T12 · Consolidate all PRs and founder interview into an accurate bot handoff
+      files: BOT_HANDOFF.md, docs/context, docs/customer-research, README.md, ideas.md, AGENTS.md, scripts/verify_deliverables.py
+      accept: python3 scripts/verify_deliverables.py all
+      notes: All seven PRs snapshotted with refs and stacked dependency; verbatim founder evidence distinguished from proposals; independent read-only review before clean push.
 ## Log
 
 - 2026-11-07 · thinkpad created
@@ -91,3 +97,6 @@ Current startup request: keep the studio running locally with a simple npm start
 - 2026-11-07 · Published main integration1c32a24 plus master-ancestry90f005b. Created draft cofounder review PR5 https://github.com/zaindahdul/YCHackathon/pull/5 (main→master). Clean local/remote90f005b deliverycheckpassed; defaultmaster remains due priorWRITEsettingsblocker. FinaldoccommitwillupdatePRhead automatically; verifyfullHEAD match afterpush.
 - 2026-11-07 · done T11 · Simplify startup configuration and verify running local studio
 - 2026-11-07 · Startup cleanup complete locally: npmstart serving127.0.0.1:8790, npmdoctor reportsserverrunning/keyfalse/livefalse. Added literal ignored.env loading/exportpriority, secretfree diagnostics, prepared blank inactive studio/.env, removed cleanunusedPR3worktree. 154tests +builds/typechecks/format pass; independent4setuptests clear; padfinish all11passed. Real founder start blocked on absent Naivekey/budget; Slopdefinitionpending. No providerrequest/deploy/outreach performed.
+- 2026-11-07 · T12 independent read-only handoff review found no material issues; repaired README historical deployment wording. Verified all seven snapshot heads and stacked ancestry, original anonymous note bytes, 124 local links, transcript/research; branch source review identified unimplemented engagement and sender/lease/privacy limits. No live Launchpad checks or external actions.
+- 2026-11-07 · done T12 · Consolidate all PRs and founder interview into an accurate bot handoff
+- 2026-11-07 · T12 delivery acceptance: pad finish --timeout60 FINISHED all12 tasks; 154 main tests, both builds/typechecks/format, transcript/research, seven PR snapshots and 124 links pass. Final GitHub refresh found no new PRs or changed heads/bases/states before publication. Handoff docs only; Launchpad source/deployment remains unmodified. Publishing main and updating draft PR5 next.

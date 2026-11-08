@@ -1,6 +1,6 @@
 # Project instructions
 
-Current product: the venture studio in studio/. Preserve the separate verified service runtime in src/. Both must pass the integrated root checks. Start at README.md, ideas.md, docs/OPERATING_MODEL.md and THINKPAD.md. The source event rules are hackathon-rules.md. Earlier single-idea proposals are historical in docs/archive/.
+Read BOT_HANDOFF.md first for current user intent, all PRs and the founder interview. Main currently contains the venture studio in studio/; the Launchpad implementation is only in PR #6/#7 under project-2/, and comment engagement is not yet built. Preserve the separate verified service runtime in src/. Both must pass the integrated root checks. Start at README.md, ideas.md, docs/OPERATING_MODEL.md and THINKPAD.md. The source event rules are hackathon-rules.md. Earlier single-idea proposals are historical in docs/archive/.
 
 - Node 24+, TypeScript ESM; npm run check is the integrated code gate.
 - Use the real Naïve adapter only with explicit operator policy, available budget and a configured key. Never expose credentials in task context or Git.

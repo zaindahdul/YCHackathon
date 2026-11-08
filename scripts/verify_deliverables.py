@@ -89,7 +89,10 @@ def plan():
     files = ('README.md', 'ideas.md', 'AGENTS.md', 'docs/hackathon-brief.md',
              'docs/recording-digest.md', 'docs/OPERATING_MODEL.md', 'docs/ARCHITECTURE.md',
              'docs/NAIVE_SETUP.md', 'docs/REVIEW.md', 'docs/DELIVERY.md', 'docs/archive/README.md',
-             'studio/README.md', 'docs/STUDIO_UPDATE.md', 'docs/STUDIO_REVIEW.md')
+             'studio/README.md', 'docs/STUDIO_UPDATE.md', 'docs/STUDIO_REVIEW.md',
+             'BOT_HANDOFF.md', 'docs/context/prs/README.md',
+             'docs/context/yc-founder-problems-pr6.md',
+             'docs/customer-research/jesai-tarun-launch-interview.md')
     paths = [ROOT / f for f in files]
     for path in paths:
         require(path.stat().st_size > 100, f'Missing/empty plan artifact: {path}')
@@ -98,7 +101,43 @@ def plan():
         require((ROOT / 'studio/sql' / name).read_bytes() == original,
                 f'Applied studio migration changed: {name}')
     local_links([p for p in ROOT.rglob('*.md') if not any(x in p.parts for x in ('node_modules', '.git', 'data'))])
+    handoff()
     print('Current and archived document/reference checks passed; behavior uses npm run check')
+
+
+
+def handoff():
+    directory = ROOT / 'docs/context/prs'
+    index = json.loads((directory / 'index.json').read_text())
+    require(index['repository'] == 'zaindahdul/YCHackathon', 'Wrong PR repository')
+    require(index['capturedAt'].startswith('2026-11-08'), 'Missing dated capture')
+    snapshots = {}
+    for item in index['pullRequests']:
+        number = item['number']
+        snapshot = json.loads((directory / f'{number:02d}.json').read_text())
+        for field in ('number', 'title', 'state', 'isDraft', 'baseRefName',
+                      'headRefName', 'headRefOid', 'url', 'updatedAt'):
+            require(snapshot[field] == item[field], f'PR {number} index/detail mismatch: {field}')
+        for field in ('body', 'files', 'commits', 'comments', 'reviews'):
+            require(field in snapshot, f'PR {number} missing source field: {field}')
+        require(snapshot['url'] == f'https://github.com/zaindahdul/YCHackathon/pull/{number}',
+                f'Wrong PR link: {number}')
+        subprocess.run(['git', 'cat-file', '-e', snapshot['headRefOid'] + '^{commit}'],
+                       cwd=ROOT, check=True)
+        snapshots[number] = snapshot
+    require(set(snapshots) == set(range(1, 8)), 'Expected all seven captured PRs')
+    require(snapshots[7]['baseRefName'] == snapshots[6]['headRefName'] == 'launchpad',
+            'Lost stacked PR7 -> PR6 relationship')
+    subprocess.run(['git', 'merge-base', '--is-ancestor', snapshots[6]['headRefOid'],
+                    snapshots[7]['headRefOid']], cwd=ROOT, check=True)
+    require(snapshots[5]['headRefOid'] == index['mainAtCapture'], 'PR5 capture is not main')
+    raw_notes = subprocess.check_output(['git', 'show',
+        snapshots[6]['headRefOid'] + ':yc-founder-problems.md'], cwd=ROOT, text=True)
+    require((ROOT / 'docs/context/yc-founder-problems-pr6.md').read_text().endswith(raw_notes),
+            'Earlier source copy differs from PR6')
+    for name in ('README.md', 'AGENTS.md', 'ideas.md'):
+        require('BOT_HANDOFF.md' in (ROOT / name).read_text(), f'Handoff undiscoverable from {name}')
+    print('Handoff: all 7 PR snapshots consistent with fetched commits; stacked ancestry and source provenance verified')
 
 
 def delivery():

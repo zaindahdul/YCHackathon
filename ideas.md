@@ -1,4 +1,8 @@
-# Current idea: an autonomous venture studio
+# Ideas and current implementation
+
+**Newest evidence and candidate:** [BOT_HANDOFF.md](BOT_HANDOFF.md) maps the Launchpad PRs and [Jesai's interview](docs/customer-research/jesai-tarun-launch-interview.md). Company-aware replies to launch comments are the strongest narrow hypothesis from that interview, not an implemented feature or proven PMF. No final pivot approval is recorded.
+
+## Implemented on main: autonomous venture studio
 
 Build one company whose job is to discover and operate useful small software products. Three founder agents work in different markets, each owns one active product, and they share publishing, analytics, feedback, reports and the studio inbox. Each founder can improve its company or kill it and start a child hypothesis from what it learned.
 
@@ -12,7 +16,7 @@ The concrete user promise is simple: open one of the products, paste your proble
 | Freelancers and small businesses | **PayNudge** | Enter an overdue invoice and generate a suitable payment reminder |
 | Students and creators | **CramPlan** | Enter exams and available hours, get a weighted study plan |
 
-These products are live artifacts, not proof of PMF. Public counters currently have very small samples and founder QA history. The studio's `scale`, `iterate` and `no_reach` labels are operational hypotheses based on browser telemetry, not independent validation of people, revenue or retention.
+These products are live artifacts, not proof of PMF. Public counters at the earlier integration check had very small samples and founder QA history. The studio's `scale`, `iterate` and `no_reach` labels are operational hypotheses based on browser telemetry, not independent validation of people, revenue or retention.
 
 ## What makes the company autonomous
 
