@@ -1,10 +1,12 @@
 /**
  * PMF Engine, declared. `naive up` reads this file and provisions it into your Naïve organization:
  *
- *   - the "Scout" persona, with a hello@ inbox on the org's system domain (mail to it wakes the operator)
- *   - the "pmf" app: public dashboard at /, a landing page per experiment at /x/<slug>, and the
+ *   - the "Scout" persona, with a hello@ inbox on the org's system domain (mail to it wakes the concierge)
+ *   - the "pmf" app: the public studio dashboard at /, a page per company at /c/<slug>, every
+ *     company's product at /p/<slug>/ with its own small backend, product analytics, and the
  *     agents' MCP tools at /mcp, on its own Postgres database (tables from sql/*.sql)
- *   - three agents (crew/crew.ts) with budgets, deny-by-default tools and cron schedules
+ *   - the founder agents (one company each, in parallel) and the concierge (crew/crew.ts), with
+ *     budgets, deny-by-default tools and staggered cron schedules
  *
  * Re-running is safe: every resource is keyed by name. Run `npm run naive:dry` first.
  */
@@ -14,13 +16,13 @@ import { crew, IDENTITY } from "./crew/crew.ts";
 export default defineProject({
   name: "pmf-engine",
   title: "PMF Engine",
-  description: "An autonomous company that finds its own product-market fit: it launches offers, does outreach, delivers to signups, and kills or pivots what is not working.",
+  description: "An AI venture studio: several founder agents each find a real problem, build and ship a working product, find users, and iterate or pivot on what users actually do.",
 
   identities: [
     {
       name: IDENTITY,
-      description: "PMF Engine's company persona: the inbox it sends from and receives at, and the X account it posts as.",
-      inbox: { localpart: "hello", agent: "operator" },
+      description: "PMF Engine's studio persona: the inbox it sends from and receives at, and the social accounts it posts as.",
+      inbox: { localpart: "hello", agent: "concierge" },
     },
   ],
 
@@ -28,7 +30,7 @@ export default defineProject({
     {
       name: "pmf",
       type: "fullstack",
-      description: "Public dashboard of every experiment and decision, one landing page per experiment, and the agents' MCP tools.",
+      description: "The studio: public dashboard, every company's product and backend, product analytics, and the agents' MCP tools.",
       deploy_dir: "dist",
       mcp: "/mcp",
       migrations: ["sql/*.sql"],
@@ -36,9 +38,10 @@ export default defineProject({
       env: {
         // Your own bearer for logging human interventions (POST /api/interventions). Any long random string.
         ADMIN_TOKEN: { from_env: "PMF_ADMIN_TOKEN" },
-        EMAIL_CAP_PER_DAY: "40",
-        X_POST_CAP_PER_DAY: "16",
-        MAX_LIVE_EXPERIMENTS: "3",
+        EMAILS_PER_COMPANY_PER_DAY: "15",
+        POSTS_PER_COMPANY_PER_DAY: "6",
+        EMAILS_PER_DAY: "45",
+        POSTS_PER_DAY: "18",
       },
     },
   ],

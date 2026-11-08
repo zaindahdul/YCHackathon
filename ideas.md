@@ -8,12 +8,13 @@ Shortlist for the Naïve Autonomous Company Hackathon (Nov 7-8, 2026). See `hack
 
 ---
 
-## 4. PMF Engine: a company that finds its own product-market fit (building this)
+## 4. PMF Engine: an AI venture studio (building this)
 
-One company runs offers as experiments and keeps or kills them by itself. It launches a free offer with its own landing page, does outreach on X and by email, delivers to every signup, and kills or pivots based on numbers it counted itself. Ideas 1 to 3 below are its first three experiments. See `README.md`.
+Several founder agents each run their own software company at the same time. Each one finds a real problem in public complaints, builds and ships a working web product, finds users, and iterates or pivots based on what users actually do. The only goal is real users. See `README.md`.
 
-- **Pitch:** "We didn't pick our idea. Our company did."
-- **Guardrails:** it can only pivot to offers an agent can deliver by email within 30 minutes. Kill and pivot calls run on fixed rules (`server/rules.ts`) that separate "nobody saw it" from "people saw it and didn't want it".
+- **Pitch:** "We didn't pick our ideas. Our founders did, and the users decided which ones lived."
+- **Why it scores:** many companies running in parallel, every product a real working app, and every decision tied to user counts the studio measured itself. A public dashboard answers all three judge questions: what got delivered, what got decided, and where a human stepped in.
+- **The first version** had one company running offers delivered by email. It was rebuilt into the studio so the products are real software.
 
 ## 1. A QA agency that tests new mobile apps
 

@@ -20,49 +20,58 @@ interface HostReply {
   end(body?: string): void;
 }
 
-export function requestFrom(req: HostRequest): ApiRequest {
+export function requestFrom(req: HostRequest, raw?: string): ApiRequest {
   const url = new URL(req.url ?? "/", "http://app");
   const path = url.searchParams.get("__path") ?? url.pathname;
   url.searchParams.delete("__path");
   const headers: Record<string, string | undefined> = {};
   for (const [name, value] of Object.entries(req.headers)) headers[name.toLowerCase()] = Array.isArray(value) ? value[0] : value;
   let body: unknown = null;
-  try {
-    // The host parses JSON and form bodies lazily; reading `req.body` can throw on a malformed one.
-    body = parseBody(req.body, headers["content-type"]);
-  } catch {
-    body = null;
+  if (raw !== undefined) {
+    body = parseBody(raw, headers["content-type"]);
+  } else {
+    try {
+      // The host parses JSON and form bodies lazily; reading `req.body` can throw on a malformed one.
+      body = parseBody(req.body, headers["content-type"]);
+    } catch {
+      body = null;
+    }
   }
-  return {
-    method: (req.method ?? "GET").toUpperCase(),
-    path: path.length > 1 ? path.replace(/\/+$/, "") : path,
-    query: url.searchParams,
-    headers,
-    body,
-  };
+  return { method: (req.method ?? "GET").toUpperCase(), path: path || "/", query: url.searchParams, headers, body, ...(raw !== undefined ? { raw } : {}) };
+}
+
+/** A file upload's bytes, read straight off the stream before the host's body parser touches it. */
+async function readRaw(req: HostRequest): Promise<string | undefined> {
+  const stream = req as unknown as AsyncIterable<Uint8Array>;
+  if (typeof stream[Symbol.asyncIterator] !== "function") return undefined;
+  const chunks: Buffer[] = [];
+  for await (const chunk of stream) chunks.push(Buffer.from(chunk));
+  return Buffer.concat(chunks).toString("utf8");
 }
 
 export function send(res: HostReply, reply: ApiReply): void {
-  for (const [name, value] of Object.entries(reply.headers ?? {})) res.setHeader(name, value);
+  const headers = { ...(reply.headers ?? {}) };
+  const has = (name: string) => Object.keys(headers).some((h) => h.toLowerCase() === name);
+  let body: string | undefined;
   if (reply.html !== undefined) {
-    res.setHeader("content-type", "text/html; charset=utf-8");
-    return res.status(reply.status).end(reply.html);
+    if (!has("content-type")) headers["content-type"] = "text/html; charset=utf-8";
+    body = reply.html;
+  } else if (reply.json !== undefined) {
+    if (!has("content-type")) headers["content-type"] = "application/json; charset=utf-8";
+    body = JSON.stringify(reply.json);
+  } else if (reply.text !== undefined) {
+    if (!has("content-type")) headers["content-type"] = "text/plain; charset=utf-8";
+    body = reply.text;
   }
-  if (reply.json !== undefined) {
-    res.setHeader("content-type", "application/json; charset=utf-8");
-    return res.status(reply.status).end(JSON.stringify(reply.json));
-  }
-  if (reply.text !== undefined) {
-    res.setHeader("content-type", "text/plain; charset=utf-8");
-    return res.status(reply.status).end(reply.text);
-  }
-  return res.status(reply.status).end();
+  for (const [name, value] of Object.entries(headers)) res.setHeader(name, value);
+  res.status(reply.status).end(body);
 }
 
 export default async function handler(req: HostRequest, res: HostReply): Promise<void> {
   let open: (Db & { end(): Promise<void> }) | null = null;
   try {
-    const reply = await handleRequest(requestFrom(req), {
+    const raw = (req.method ?? "").toUpperCase() === "PUT" ? await readRaw(req) : undefined;
+    const reply = await handleRequest(requestFrom(req, raw), {
       db: async () => {
         if (open === null) {
           const url = process.env["DATABASE_URL"];
@@ -71,18 +80,13 @@ export default async function handler(req: HostRequest, res: HostReply): Promise
         }
         return open;
       },
-      env: {
-        mcpToken: process.env["VETTA_MCP_TOKEN"],
-        adminToken: process.env["ADMIN_TOKEN"],
-        salt: process.env["VISITOR_SALT"] ?? process.env["VETTA_MCP_TOKEN"] ?? "pmf",
-        vars: process.env,
-      },
+      env: { mcpToken: process.env["VETTA_MCP_TOKEN"], adminToken: process.env["ADMIN_TOKEN"], vars: process.env },
     });
     send(res, reply);
   } catch (error) {
     // The driver's message can name the database host and user: log it, never send it.
     console.error(error);
-    send(res, { status: 503, json: { error: "the app is temporarily unavailable" } });
+    send(res, { status: 503, json: { error: "the studio is temporarily unavailable" } });
   } finally {
     if (open !== null) await (open as Db & { end(): Promise<void> }).end().catch(() => {});
   }

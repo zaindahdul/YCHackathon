@@ -1,74 +1,81 @@
 import { describe, expect, it } from "vitest";
-import { capsFromEnv, isBot, isEmail, judge, maskEmail, slugify, withDefaults } from "../server/rules.ts";
+import { capsFromEnv, cleanPath, isBot, isEmail, judge, maskEmail, slugify, withDefaults, type CompanyStats } from "../server/rules.ts";
 
-const stats = (over: Partial<Parameters<typeof judge>[0]> = {}) => ({ ageHours: 3, touches: 20, views: 0, signups: 0, impressions: 0, ...over });
+const live = (over: Partial<CompanyStats> = {}): CompanyStats => ({
+  status: "live", hoursSinceCreated: 4, hoursLive: 3, touches: 12, visitors: 0, activeUsers: 0, returningUsers: 0, signups: 0, ...over,
+});
 
 describe("judge", () => {
-  it("waits before judging a young experiment", () => {
-    expect(judge(stats({ ageHours: 0.5, touches: 3 })).verdict).toBe("too_early");
+  it("tells a founder who has not shipped to ship", () => {
+    expect(judge(live({ status: "building", hoursSinceCreated: 0.5 })).verdict).toBe("building");
+    expect(judge(live({ status: "building", hoursSinceCreated: 3 })).verdict).toBe("stalled");
   });
 
-  it("calls lots of outreach with no visitors a reach problem, not a product problem", () => {
-    const j = judge(stats({ touches: 20, views: 4, impressions: 900 }));
+  it("waits before judging a fresh launch", () => {
+    expect(judge(live({ hoursLive: 0.5, touches: 2 })).verdict).toBe("too_early");
+  });
+
+  it("calls outreach with no visitors a reach problem, not a product problem", () => {
+    const j = judge(live({ visitors: 5 }));
     expect(j.verdict).toBe("no_reach");
     expect(j.reason).toMatch(/fix the channel/);
+    expect(judge(live({ hoursLive: 5, touches: 1 })).verdict).toBe("no_reach");
   });
 
-  it("flags an experiment starved of outreach", () => {
-    expect(judge(stats({ ageHours: 7, touches: 2, views: 1 })).verdict).toBe("no_reach");
+  it("asks for an iteration when people visit but do not use it", () => {
+    const j = judge(live({ visitors: 60, activeUsers: 1 }));
+    expect(j.verdict).toBe("iterate");
+    expect(j.activation).toBeCloseTo(1 / 60);
   });
 
-  it("kills an offer people saw and did not want", () => {
-    const j = judge(stats({ views: 60, signups: 0 }));
-    expect(j.verdict).toBe("kill");
-    expect(j.signupRate).toBe(0);
+  it("keeps a product people use, and scales one they come back to", () => {
+    expect(judge(live({ visitors: 40, activeUsers: 6 })).verdict).toBe("keep");
+    expect(judge(live({ visitors: 40, activeUsers: 10 })).verdict).toBe("scale");
+    expect(judge(live({ visitors: 8, activeUsers: 4, returningUsers: 3 })).verdict).toBe("scale");
   });
 
-  it("keeps a promising offer and scales a strong one", () => {
-    expect(judge(stats({ views: 40, signups: 2 })).verdict).toBe("keep");
-    expect(judge(stats({ views: 30, signups: 3 })).verdict).toBe("scale");
+  it("stops judging an ended company", () => {
+    expect(judge(live({ status: "killed" })).verdict).toBe("ended");
   });
 
-  it("scales on raw signups even before there are enough visitors to compute a rate", () => {
-    expect(judge(stats({ views: 6, signups: 5 })).verdict).toBe("scale");
-  });
-
-  it("honours per-experiment threshold overrides and ignores junk", () => {
-    const t = withDefaults({ minViews: 10, killRate: 0.2, scaleRate: 0.5, minTouches: -1 });
-    expect(t.minViews).toBe(10);
-    expect(t.minTouches).toBe(12);
-    // Under the defaults 10 visitors are too few to judge the offer; this experiment asked for a 20% bar at 10.
-    expect(judge(stats({ views: 10, signups: 1 })).verdict).toBe("no_reach");
-    expect(judge(stats({ views: 10, signups: 1 }), t).verdict).toBe("kill");
+  it("honours per-company threshold overrides and ignores junk", () => {
+    const t = withDefaults({ minVisitors: 10, killActivation: 0.5, scaleUsers: -1 });
+    expect(t.scaleUsers).toBe(10);
+    expect(judge(live({ visitors: 10, activeUsers: 3 }), t).verdict).toBe("iterate");
   });
 });
 
 describe("helpers", () => {
-  it("masks emails for the public page", () => {
+  it("masks emails", () => {
     expect(maskEmail("jane.doe@gmail.com")).toBe("j***@gmail.com");
     expect(maskEmail("nope")).toBe("***");
   });
 
   it("makes clean slugs", () => {
-    expect(slugify("Launch-day QA Teardown!")).toBe("launch-day-qa-teardown");
+    expect(slugify("Invoice Chaser!")).toBe("invoice-chaser");
     expect(slugify("Café résumé")).toBe("cafe-resume");
-    expect(slugify("!!!")).toBe("offer");
+    expect(slugify("!!!")).toBe("company");
   });
 
-  it("validates emails", () => {
+  it("only accepts safe product paths", () => {
+    expect(cleanPath("index.html")).toBe("index.html");
+    expect(cleanPath("/assets/app.js")).toBe("assets/app.js");
+    expect(cleanPath("../secrets.js")).toBeNull();
+    expect(cleanPath("a//b.js")).toBeNull();
+    expect(cleanPath("server.php")).toBeNull();
+    expect(cleanPath("noext")).toBeNull();
+  });
+
+  it("validates emails and spots crawlers", () => {
     expect(isEmail("a@b.co")).toBe(true);
-    expect(isEmail("not an email")).toBe(false);
     expect(isEmail("a@b")).toBe(false);
-  });
-
-  it("does not count link-preview crawlers as visitors", () => {
     expect(isBot("Twitterbot/1.0")).toBe(true);
     expect(isBot(undefined)).toBe(true);
-    expect(isBot("Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Safari/604.1")).toBe(false);
+    expect(isBot("Mozilla/5.0 (iPhone) AppleWebKit/605.1.15 Safari/604.1")).toBe(false);
   });
 
   it("reads quota caps from the environment", () => {
-    expect(capsFromEnv({ EMAIL_CAP_PER_DAY: "10" })).toEqual({ emailsPerDay: 10, xPostsPerDay: 16 });
-    expect(capsFromEnv({ EMAIL_CAP_PER_DAY: "lots" }).emailsPerDay).toBe(40);
+    expect(capsFromEnv({ EMAILS_PER_COMPANY_PER_DAY: "3" })).toEqual({ emailsPerCompany: 3, postsPerCompany: 6, emailsTotal: 45, postsTotal: 18 });
+    expect(capsFromEnv({ POSTS_PER_DAY: "lots" }).postsTotal).toBe(18);
   });
 });

@@ -1,49 +1,56 @@
 /**
- * The company's decision rules, as pure functions.
+ * The studio's decision rules, as pure functions.
  *
- * The strategist agent makes the final call on every experiment, but it makes it against these
- * verdicts, so a kill or a pivot is grounded in numbers the app counted itself rather than in
- * numbers an agent remembers or claims. Thresholds can be overridden per experiment.
+ * Founder agents make the final call on their own company, but they make it against these
+ * verdicts, so an iteration, a kill or a pivot rests on numbers the studio counted itself
+ * (unique visitors, people who used the product, people who came back), not on what an agent
+ * remembers or claims. Thresholds can be overridden per company.
  */
 
 export interface Thresholds {
-  /** Don't judge an offer younger than this. */
+  /** A company still unlaunched after this many hours is stalled. */
+  maxBuildHours: number;
+  /** Don't judge a product live for less than this. */
   minHours: number;
-  /** Outreach actions (posts + emails) an experiment gets before it is judged. */
+  /** Outreach actions a product gets before it is judged. */
   minTouches: number;
-  /** Landing-page visitors needed before the offer itself is judged. */
-  minViews: number;
-  /** Signup rate below this, once there are enough visitors, means the offer is not wanted. */
-  killRate: number;
-  /** Signup rate at or above this means double down. */
-  scaleRate: number;
-  /** This many signups is a scale signal whatever the rate. */
-  scaleSignups: number;
+  /** Unique visitors needed before the product itself is judged. */
+  minVisitors: number;
+  /** Share of visitors who used the core feature, below which the product is not landing. */
+  killActivation: number;
+  /** This many active users is a scale signal. */
+  scaleUsers: number;
+  /** This many returning users is a scale signal: people came back on their own. */
+  scaleReturning: number;
 }
 
 export const DEFAULT_THRESHOLDS: Thresholds = {
+  maxBuildHours: 2,
   minHours: 2,
-  minTouches: 12,
-  minViews: 25,
-  killRate: 0.02,
-  scaleRate: 0.08,
-  scaleSignups: 5,
+  minTouches: 10,
+  minVisitors: 30,
+  killActivation: 0.05,
+  scaleUsers: 10,
+  scaleReturning: 3,
 };
 
-export interface ExperimentStats {
-  ageHours: number;
+export interface CompanyStats {
+  status: string;
+  hoursSinceCreated: number;
+  hoursLive: number;
   touches: number;
-  views: number;
+  visitors: number;
+  activeUsers: number;
+  returningUsers: number;
   signups: number;
-  impressions: number;
 }
 
-export type Verdict = "too_early" | "no_reach" | "kill" | "keep" | "scale";
+export type Verdict = "stalled" | "building" | "too_early" | "no_reach" | "iterate" | "keep" | "scale" | "ended";
 
 export interface Judgement {
   verdict: Verdict;
   reason: string;
-  signupRate: number | null;
+  activation: number | null;
 }
 
 const pct = (n: number) => `${(n * 100).toFixed(1)}%`;
@@ -58,74 +65,86 @@ export function withDefaults(overrides: Partial<Thresholds> | null | undefined):
 }
 
 /**
- * The rule-based verdict for one experiment.
+ * The rule-based verdict for one company.
  *
- * Reach and conversion are judged separately on purpose: an offer nobody saw has not been
- * rejected, so "no_reach" tells the company to fix distribution, not to pivot the product.
+ * Reach and product are judged separately: a product nobody visited has not been rejected
+ * ("no_reach": fix distribution), and a product people visited but did not use gets "iterate"
+ * (fix the product or the promise). Whether a second "iterate" means kill is the founder's call,
+ * made against the decision log.
  */
-export function judge(stats: ExperimentStats, t: Thresholds = DEFAULT_THRESHOLDS): Judgement {
-  const rate = stats.views > 0 ? stats.signups / stats.views : null;
+export function judge(s: CompanyStats, t: Thresholds = DEFAULT_THRESHOLDS): Judgement {
+  const activation = s.visitors > 0 ? s.activeUsers / s.visitors : null;
 
-  if (stats.signups >= t.scaleSignups) {
-    return { verdict: "scale", reason: `${stats.signups} signups (scale threshold ${t.scaleSignups})`, signupRate: rate };
+  if (s.status === "killed" || s.status === "winner") {
+    return { verdict: "ended", reason: `company ${s.status}`, activation };
+  }
+  if (s.status === "building") {
+    return s.hoursSinceCreated >= t.maxBuildHours
+      ? { verdict: "stalled", reason: `${s.hoursSinceCreated.toFixed(1)}h since it started and still no product live: ship something small now`, activation }
+      : { verdict: "building", reason: "not launched yet", activation };
   }
 
-  if (stats.views >= t.minViews && rate !== null) {
-    if (rate >= t.scaleRate) {
-      return { verdict: "scale", reason: `${pct(rate)} of ${stats.views} visitors signed up (scale at ${pct(t.scaleRate)})`, signupRate: rate };
-    }
-    if (rate < t.killRate) {
+  if (s.activeUsers >= t.scaleUsers || s.returningUsers >= t.scaleReturning) {
+    return {
+      verdict: "scale",
+      reason: `${s.activeUsers} people used it and ${s.returningUsers} came back (scale at ${t.scaleUsers} users or ${t.scaleReturning} returning)`,
+      activation,
+    };
+  }
+
+  if (s.visitors >= t.minVisitors && activation !== null) {
+    if (activation < t.killActivation) {
       return {
-        verdict: "kill",
-        reason: `${stats.views} visitors but only ${stats.signups} signups (${pct(rate)}, kill below ${pct(t.killRate)}): people saw it and did not want it`,
-        signupRate: rate,
+        verdict: "iterate",
+        reason: `${s.visitors} visitors but only ${s.activeUsers} used it (${pct(activation)}, bar ${pct(t.killActivation)}): the product or its promise is not landing`,
+        activation,
       };
     }
-    return { verdict: "keep", reason: `${pct(rate)} of ${stats.views} visitors signed up: promising, keep pushing`, signupRate: rate };
+    return { verdict: "keep", reason: `${pct(activation)} of ${s.visitors} visitors used it: promising, keep improving and pushing`, activation };
   }
 
-  const judgedLongEnough = stats.ageHours >= t.minHours;
-  const enoughOutreach = stats.touches >= t.minTouches;
-  if (judgedLongEnough && enoughOutreach) {
+  if (s.hoursLive >= t.minHours && s.touches >= t.minTouches) {
     return {
       verdict: "no_reach",
-      reason: `${stats.touches} outreach actions and ${stats.impressions} impressions produced only ${stats.views} visitors (need ${t.minViews} to judge the offer): fix the channel or the hook, not the product`,
-      signupRate: rate,
+      reason: `${s.touches} outreach actions produced only ${s.visitors} visitors (need ${t.minVisitors} to judge the product): fix the channel or the hook`,
+      activation,
     };
   }
-  if (stats.ageHours >= t.minHours * 3 && !enoughOutreach) {
-    return {
-      verdict: "no_reach",
-      reason: `${stats.ageHours.toFixed(1)}h old with only ${stats.touches} outreach actions: it is starved of distribution`,
-      signupRate: rate,
-    };
+  if (s.hoursLive >= t.minHours * 2 && s.touches < t.minTouches) {
+    return { verdict: "no_reach", reason: `live ${s.hoursLive.toFixed(1)}h with only ${s.touches} outreach actions: it is starved of distribution`, activation };
   }
   return {
     verdict: "too_early",
-    reason: `${stats.ageHours.toFixed(1)}h old, ${stats.touches}/${t.minTouches} outreach actions, ${stats.views}/${t.minViews} visitors: keep running`,
-    signupRate: rate,
+    reason: `live ${s.hoursLive.toFixed(1)}h, ${s.touches}/${t.minTouches} outreach actions, ${s.visitors}/${t.minVisitors} visitors`,
+    activation,
   };
 }
 
 export interface Caps {
-  emailsPerDay: number;
-  xPostsPerDay: number;
+  /** Per company, per rolling 24 hours. */
+  emailsPerCompany: number;
+  postsPerCompany: number;
+  /** Across the whole studio: the email domain and the social account are shared. */
+  emailsTotal: number;
+  postsTotal: number;
 }
 
-export const DEFAULT_CAPS: Caps = { emailsPerDay: 40, xPostsPerDay: 16 };
+export const DEFAULT_CAPS: Caps = { emailsPerCompany: 15, postsPerCompany: 6, emailsTotal: 45, postsTotal: 18 };
 
 export function capsFromEnv(env: Record<string, string | undefined>): Caps {
   const num = (value: string | undefined, fallback: number) => {
     const parsed = Number(value);
-    return Number.isInteger(parsed) && parsed >= 0 ? parsed : fallback;
+    return value !== undefined && value !== "" && Number.isInteger(parsed) && parsed >= 0 ? parsed : fallback;
   };
   return {
-    emailsPerDay: num(env["EMAIL_CAP_PER_DAY"], DEFAULT_CAPS.emailsPerDay),
-    xPostsPerDay: num(env["X_POST_CAP_PER_DAY"], DEFAULT_CAPS.xPostsPerDay),
+    emailsPerCompany: num(env["EMAILS_PER_COMPANY_PER_DAY"], DEFAULT_CAPS.emailsPerCompany),
+    postsPerCompany: num(env["POSTS_PER_COMPANY_PER_DAY"], DEFAULT_CAPS.postsPerCompany),
+    emailsTotal: num(env["EMAILS_PER_DAY"], DEFAULT_CAPS.emailsTotal),
+    postsTotal: num(env["POSTS_PER_DAY"], DEFAULT_CAPS.postsTotal),
   };
 }
 
-/** "jane.doe@gmail.com" → "j***@gmail.com": the public dashboard never shows a full address. */
+/** "jane.doe@gmail.com" → "j***@gmail.com": public pages and founders never see a full address. */
 export function maskEmail(email: string): string {
   const at = email.lastIndexOf("@");
   if (at <= 0) return "***";
@@ -140,8 +159,8 @@ export function slugify(name: string): string {
       .replace(/[̀-ͯ]/g, "")
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "")
-      .slice(0, 48)
-      .replace(/-+$/g, "") || "offer"
+      .slice(0, 40)
+      .replace(/-+$/g, "") || "company"
   );
 }
 
@@ -151,3 +170,60 @@ export const isEmail = (value: string): boolean => value.length <= 254 && EMAIL.
 /** Crawlers that fetch a link to render a preview would otherwise count as visitors. */
 const BOT = /bot|crawl|spider|slurp|preview|facebookexternalhit|embedly|quora link|outbrain|pinterest|vkshare|whatsapp|discord|telegram|headless|curl|wget|python|node-fetch|go-http|axios/i;
 export const isBot = (userAgent: string | undefined): boolean => !userAgent || BOT.test(userAgent);
+
+/** Product file paths: relative, no traversal, a short whitelist of text types. */
+export const CONTENT_TYPES: Record<string, string> = {
+  html: "text/html; charset=utf-8",
+  css: "text/css; charset=utf-8",
+  js: "text/javascript; charset=utf-8",
+  mjs: "text/javascript; charset=utf-8",
+  json: "application/json; charset=utf-8",
+  svg: "image/svg+xml",
+  txt: "text/plain; charset=utf-8",
+  md: "text/markdown; charset=utf-8",
+  webmanifest: "application/manifest+json",
+  xml: "application/xml",
+};
+
+export function cleanPath(path: string): string | null {
+  const trimmed = path.trim().replace(/^\/+/, "");
+  if (trimmed === "" || trimmed.length > 120) return null;
+  if (!/^[A-Za-z0-9._\/-]+$/.test(trimmed)) return null;
+  if (trimmed.split("/").some((part) => part === "" || part === "." || part === "..")) return null;
+  const ext = trimmed.includes(".") ? trimmed.slice(trimmed.lastIndexOf(".") + 1).toLowerCase() : "";
+  return CONTENT_TYPES[ext] ? trimmed : null;
+}
+
+export const contentTypeOf = (path: string): string =>
+  CONTENT_TYPES[path.slice(path.lastIndexOf(".") + 1).toLowerCase()] ?? "application/octet-stream";
+
+/**
+ * Why a file is not real product code, or null when it looks real. Catches the stand-ins a model
+ * sends when it means to paste the file later ("PLACEHOLDER", "...", "<contents of index.html>").
+ */
+export function placeholderReason(path: string, content: string): string | null {
+  const trimmed = content.trim();
+  if (/^(placeholder|todo|tbd|\.\.\.|…|<[^>]*(content|file|code)[^>]*>|\[[^\]]*(content|file|code)[^\]]*\])$/i.test(trimmed)) {
+    return `${path} is a placeholder ("${trimmed.slice(0, 40)}"), not the file's contents`;
+  }
+  if (path.endsWith(".html") && (trimmed.length < 200 || !/<[a-z]/i.test(trimmed))) {
+    return `${path} is only ${trimmed.length} characters: that is not a working page`;
+  }
+  return null;
+}
+
+/** Problems with the live product a founder must fix before anything else. */
+export function productHealth(files: { path: string; content: string }[]): string[] {
+  const warnings: string[] = [];
+  const index = files.find((f) => f.path === "index.html");
+  if (!index) warnings.push("There is no index.html: the product has no front page.");
+  for (const f of files) {
+    if (PRIVATE_FILES.has(f.path)) continue;
+    const why = placeholderReason(f.path, f.content);
+    if (why) warnings.push(`${why}. Users see a broken product: rebuild it and ship now.`);
+  }
+  return warnings;
+}
+
+/** Files a product keeps for its founder but never serves. */
+export const PRIVATE_FILES = new Set(["NOTES.md", "AGENTS.md"]);
