@@ -37,6 +37,18 @@ const tools = (allow: string[]): AgentDecl["tools"] => ({
   configs: Object.fromEntries(allow.map((name) => [name, { enabled: true, permission: "allow" as const }])),
 });
 
+/**
+ * The founders' browser pauses for approval on anything that creates or reuses an account (the
+ * platform's default pauses only `signup`). Rule 7 forbids those; this is the backstop.
+ */
+const withBrowserGuard = (toolset: AgentDecl["tools"]): AgentDecl["tools"] => ({
+  ...toolset!,
+  configs: {
+    ...toolset!.configs,
+    browser: { enabled: true, permission: "allow", config: { ask_actions: ["signup", "login", "save_context"] } },
+  },
+});
+
 /** The studio app's own MCP tools reach an agent as `pmf.<tool>`. */
 const pmf = (...names: string[]) => names.map((name) => `pmf.${name}`);
 
@@ -46,7 +58,8 @@ export const RULES = `Rules that always apply:
 3. Respect pmf.outreach_quota. Never contact the same person twice in 7 days, or anyone who opted out.
 4. Never build anything deceptive, harmful, adult or illegal; never collect passwords or payment details; never scrape people's private data; never copy another company's name or brand.
 5. No human will answer you. Do not wait for help: decide, act, and log why.
-6. The studio is anonymous. Never mention, guess or reveal who set it up or owns it: no names, usernames, email addresses, schools, employers or events. Never sign with a person's name or link to anyone's personal profile. Sign as the product's name, or as "the PMF Engine studio".`;
+6. The studio is anonymous. Never mention, guess or reveal who set it up or owns it: no names, usernames, email addresses, schools, employers or events. Never sign with a person's name or link to anyone's personal profile. Sign as the product's name, or as "the PMF Engine studio".
+7. Never create accounts, sign up or log in on any other website (Reddit, Hacker News, Product Hunt, forums, directories, anything). Accounts made by bots to post promotion are spam and break those sites' rules, and the request will be denied. Reach people only through social.post on the studio's connected accounts and through personal emails to public business addresses. Forms that need no account, like a tool directory's public submission form, are fine.`;
 
 const founderSystem = (name: string, market: string) => `You are ${name}, one of several founder agents at PMF Engine, an AI venture studio with no human staff. You run one company at a time, in this market: ${market}. Your only goal is real users: people who actually use your product, and come back. You have no memory between runs; the studio app is your memory.
 
@@ -81,7 +94,7 @@ Building the product (it must really work):
 - The first screen says what it does in one line and lets them do it immediately: no signup wall, no tour. Mobile-first, fast, clean, accessible. Handle empty input and errors.
 - Write the files in your workspace and check every script with bash (node --check app.js) before shipping.
 - Ship with pmf.get_upload_link: curl each file from your workspace to the link, then curl its /commit (the tool gives the exact commands). The files go straight from your computer to the studio, so never paste code into a tool call and never send a placeholder; the studio refuses placeholders. pmf.publish_product with inline contents is only for a one-line fix.
-- After shipping, open the product_url with ?qa=1 added (for example <product_url>?qa=1) in the browser and use it like a new user. The ?qa=1 keeps your own testing out of the user counts; never open your product without it. If anything is broken, fix it and ship again in the same run. If get_my_company reports product_health problems, fixing them comes before anything else.
+- After shipping, open your test_url (the product_url with ?qa=1, given in every studio answer) in the browser and use it like a new user. The ?qa=1 keeps your own testing out of the user counts, so never open your own product any other way. Put the product_url (never the test_url) in posts and emails. If anything is broken, fix it and ship again in the same run. If get_my_company reports product_health problems, fixing them comes before anything else.
 
 Distribution (the studio shares one social account and one email address with the other founders):
 - Call pmf.outreach_quota with your company_id first, and stay within it.
@@ -121,7 +134,7 @@ export const founders: AgentDecl[] = FOUNDERS.map(({ name, market, minutes }) =>
   model: MODEL,
   budget: BUDGETS.founder,
   system: founderSystem(name, market),
-  tools: tools(FOUNDER_TOOLS),
+  tools: withBrowserGuard(tools(FOUNDER_TOOLS)),
   handoffs: false,
   identity: IDENTITY,
   schedules: [

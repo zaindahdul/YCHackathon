@@ -160,7 +160,7 @@ export async function handleRequest(req: ApiRequest, ctx: Context): Promise<ApiR
       try {
         const version = await shipProduct(r, company, staged, note, replace, link.founder);
         await r.clearStaged(link.token);
-        return json(201, { version, product_url: productUrl(originOf(req), company.slug), check: "Open the product_url with the browser and use it like a new user." });
+        return json(201, { version, product_url: productUrl(originOf(req), company.slug), test_url: `${productUrl(originOf(req), company.slug)}?qa=1`, check: "Open the test_url (never the product_url) in the browser and use it like a new user." });
       } catch (error) {
         if (error instanceof ToolError) return json(400, { error: error.message });
         throw error;
@@ -200,7 +200,7 @@ export async function handleRequest(req: ApiRequest, ctx: Context): Promise<ApiR
     if (type === "view" || type === "use") {
       const name = type === "use" ? (str(body, "n").slice(0, 64) || "use") : "";
       const ref = str(body, "r").toLowerCase();
-      await r.recordEvent(company.id, uid, type, name, pagePath, now(), /^[a-z0-9_-]{1,24}$/.test(ref) ? ref : null);
+      await r.recordEvent(company.id, uid, type, name, pagePath, now(), /^[a-z0-9_-]{1,24}$/.test(ref) ? ref : null, (req.headers["user-agent"] ?? "").slice(0, 200));
       return { status: 204 };
     }
     if (type === "signup") {

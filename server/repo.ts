@@ -463,10 +463,10 @@ export class Repo {
 
   // ---------------------------------------------------------------- analytics, signups, feedback
 
-  async recordEvent(companyId: string, uid: string, type: "view" | "use", name: string, path: string | null, now = new Date(), source: string | null = null): Promise<void> {
+  async recordEvent(companyId: string, uid: string, type: "view" | "use", name: string, path: string | null, now = new Date(), source: string | null = null, ua: string | null = null): Promise<void> {
     await this.db.query(
-      "insert into events (company_id, uid, type, name, bucket, path, source) values ($1,$2,$3,$4,$5,$6,$7) on conflict do nothing",
-      [companyId, uid, type, name, hourOf(now), path, source],
+      "insert into events (company_id, uid, type, name, bucket, path, source, ua) values ($1,$2,$3,$4,$5,$6,$7,$8) on conflict do nothing",
+      [companyId, uid, type, name, hourOf(now), path, source, ua],
     );
   }
 

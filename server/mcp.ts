@@ -253,7 +253,7 @@ const snapshotOf = (row: ScoredCompany | undefined) =>
 
 const view = (origin: string, c: ScoredCompany) => ({
   id: c.id, slug: c.slug, founder: c.founder, name: c.name, status: c.status, problem: c.problem, audience: c.audience,
-  solution: c.solution, evidence: c.evidence, parent_id: c.parent_id, product_url: productUrl(origin, c.slug),
+  solution: c.solution, evidence: c.evidence, parent_id: c.parent_id, product_url: productUrl(origin, c.slug), test_url: `${productUrl(origin, c.slug)}?qa=1`,
   stats: c.stats, verdict: c.judgement.verdict, verdict_reason: c.judgement.reason,
   created_at: c.created_at, launched_at: c.launched_at, ended_at: c.ended_at,
 });
@@ -404,7 +404,7 @@ export async function callTool(name: string, args: Record<string, unknown>, ctx:
         snapshot: parentId ? snapshotOf(await scored(parentId)) : {},
         agent: founder,
       });
-      return { company, product_url: productUrl(origin, company.slug), next: "Build the product and ship it with publish_product (include index.html and NOTES.md)." };
+      return { company, product_url: productUrl(origin, company.slug), test_url: `${productUrl(origin, company.slug)}?qa=1`, next: "Build the product and ship it with publish_product (include index.html and NOTES.md)." };
     }
 
     case "publish_product": {
@@ -413,7 +413,7 @@ export async function callTool(name: string, args: Record<string, unknown>, ctx:
       const files = args["files"];
       if (!Array.isArray(files) || files.some((f) => typeof f !== "object" || f === null)) throw new ToolError(`files must be 1 to ${LIMITS.files} {path, content} objects`);
       const version = await shipProduct(repo, company, files as { path: unknown; content: unknown }[], need(args, "note", 200), args["replace"] === true, founder);
-      return { version, product_url: productUrl(origin, company.slug), check: "Open the product_url with the browser and use it like a new user before you move on." };
+      return { version, product_url: productUrl(origin, company.slug), test_url: `${productUrl(origin, company.slug)}?qa=1`, check: "Open the test_url (never the product_url) in the browser and use it like a new user before you move on." };
     }
 
     case "get_upload_link": {
