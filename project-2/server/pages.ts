@@ -194,17 +194,12 @@ h1{font-family:var(--serif);font-weight:400;letter-spacing:-.012em}
 .pricetag{font-size:14px;color:var(--ink-2)}.pricetag b{font-weight:650;font-variant-numeric:tabular-nums}
 .tag{display:inline-flex;align-items:center;padding:2px 8px;border:1px solid var(--rule);border-radius:999px;font-size:11.5px;font-weight:550;color:var(--muted);background:var(--panel);white-space:nowrap}
 .tag.accent{color:var(--accent);border-color:currentColor;background:transparent}.tag.good{color:var(--live);border-color:currentColor;background:transparent}.tag.warn{color:var(--amber-ink);background:var(--amber);border-color:var(--amber-rule)}
-.ledger .row{display:grid;grid-template-columns:56px minmax(180px,.8fr) 1.6fr;gap:20px;padding:20px 0;border-bottom:1px solid var(--rule);align-items:baseline}
-.ledger .n{font-family:var(--serif);font-size:24px;color:var(--accent);font-variant-numeric:tabular-nums}
-.ledger h3{font-size:17px}.ledger p{color:var(--ink-2);font-size:15px}
 .display{font-family:var(--serif);font-size:clamp(30px,3.8vw,44px);font-weight:400;letter-spacing:-.012em;line-height:1.08;margin-bottom:24px;max-width:18em}
 .section>h2.display{font-size:clamp(30px,3.8vw,44px);margin-bottom:24px}
 .founders{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .founders div{background:var(--soft);border-radius:14px;padding:22px 24px}
 .founders h3{font-family:var(--serif);font-weight:400;font-size:26px;letter-spacing:-.01em;margin-bottom:6px}
 .founders p{color:var(--ink-2);font-size:14.5px}
-.pains{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px 40px}
-.pains h3{font-size:16px;margin-bottom:6px}.pains p{font-size:14.5px;color:var(--ink-2)}
 .closing{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:center;margin-top:88px;padding:44px;background:var(--ink);color:var(--paper);border-radius:20px}
 .closing h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,3.6vw,42px);letter-spacing:-.012em}
 .closing p{color:inherit;opacity:.74;margin-top:8px;max-width:44em;font-size:15px}
@@ -294,17 +289,50 @@ pre.snippet{background:var(--soft);padding:12px 14px;border-radius:8px;font:12.5
 .err-state{margin-top:22px}
 [hidden]{display:none!important}
 @media (min-width:861px){.mobile-only{display:none}}
+.shows{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:22px}
+.show{background:var(--soft);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.show h3{font-size:15px;font-weight:600}.show.tall{grid-row:span 2}.show.wide{grid-column:span 2}
+.mini{background:var(--panel);border-radius:10px;padding:12px 14px;font-size:13px;display:grid;gap:8px;min-width:0}
+.mini .top{display:flex;justify-content:space-between;align-items:center;gap:8px}.mini b{font-weight:600}
+.frame{position:relative;flex:1;min-height:190px;background:#141413;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.frame::before{content:"";border-left:22px solid #fafaf7;border-top:13px solid transparent;border-bottom:13px solid transparent;margin-left:6px}
+.frame .cap{position:absolute;left:14px;right:14px;bottom:18px;color:#fafaf7;font-size:14px;font-weight:550;text-align:center}
+.frame .prog{position:absolute;left:0;bottom:0;height:3px;width:38%;background:#f0805c}
+.strip{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:0;list-style:none;margin:0;padding:0}
+.strip li{position:relative;padding:18px 14px 0 0;font-size:13.5px;min-width:0}
+.strip li::before{content:"";position:absolute;left:0;right:0;top:4px;height:2px;background:var(--rule)}
+.strip li::after{content:"";position:absolute;left:0;top:0;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.strip .w{font-size:12px;color:var(--muted)}.strip .s{font-weight:550;margin-top:2px}
+.strip.tiny li{padding-right:8px;font-size:12.5px}
+.meter{position:relative;padding-bottom:18px}.meter .zones{display:flex;height:8px;border-radius:4px;overflow:hidden}
+.meter .zones i:nth-child(1){flex:15;background:var(--accent-soft)}.meter .zones i:nth-child(2){flex:35;background:var(--amber)}.meter .zones i:nth-child(3){flex:50;background:var(--live-soft)}
+.meter b{position:absolute;top:-3px;width:4px;height:14px;margin-left:-2px;border-radius:2px;background:var(--ink)}
+.meter span{position:absolute;top:12px;font-size:11px;color:var(--muted);transform:translateX(-50%)}
+.rate{font-size:30px;letter-spacing:-.02em;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}.rate small{font-size:13px;font-weight:400;color:var(--muted);letter-spacing:0}
+.fchan{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:12px;align-items:center;padding:7px 0;font-size:13.5px}
+.fchan .ns{color:var(--muted);font-variant-numeric:tabular-nums;font-size:12.5px;white-space:nowrap}
+.nest{position:relative;height:10px;background:var(--soft);border-radius:5px;overflow:hidden}.nest i{position:absolute;left:0;top:0;bottom:0;border-radius:5px;background:var(--ink)}
+.nest i:nth-child(1){opacity:.18}.nest i:nth-child(2){opacity:.32}.nest i:nth-child(3){opacity:.6}.nest i:nth-child(4){background:var(--accent)}
+.timebar{display:flex;gap:3px;margin-bottom:14px}.timebar i{height:8px;border-radius:4px;background:var(--ink);opacity:.8}.timebar i:nth-child(even){opacity:.35}
+.head-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.h-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}.h-row h2{margin:0}
+.statuses{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}.statuses a{text-decoration:none;display:inline-flex;gap:7px;align-items:center;padding:6px 12px;border-radius:999px;background:var(--soft);font-size:13px;font-weight:550}.statuses a b{font-variant-numeric:tabular-nums}.statuses a.hot{background:var(--accent-soft);color:var(--accent)}
+.roles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}.roles div{background:var(--soft);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--muted)}.roles b{display:block;color:var(--ink);font-weight:600;font-size:14px}
+select{min-height:48px}
+.cmeta{font-size:12.5px;color:var(--muted);margin-top:6px}
 @media (max-width:860px){
   .side .launch{display:none}.kithead .right{text-align:left!important}
   .hero{grid-template-columns:minmax(0,1fr);gap:40px;padding:48px 0 40px}
   .preview .slot{grid-template-columns:minmax(0,1fr);gap:2px}
-  .points,.founders,.pains{grid-template-columns:minmax(0,1fr);gap:20px}
+  .points,.founders{grid-template-columns:minmax(0,1fr);gap:20px}
   .kit,.cols,.two,.split,.grid2,.fields .row3,.fields .row4{grid-template-columns:minmax(0,1fr)}
   .kit,.split{gap:24px}.side{position:static;margin-top:0}.cols{gap:24px}
   .fields .row4.nums{grid-template-columns:repeat(2,minmax(0,1fr))}
   .list .item{grid-template-columns:minmax(0,1fr);gap:4px}
   .closing{grid-template-columns:minmax(0,1fr);padding:28px}
-  .ledger .row{grid-template-columns:40px minmax(0,1fr);gap:4px 12px}.ledger .row p{grid-column:2}
+  .shows,.roles{grid-template-columns:minmax(0,1fr)}.show.tall,.show.wide{grid-row:auto;grid-column:auto}.roles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .strip{grid-auto-flow:row}.strip li{padding:0 0 12px 20px}.strip li::before{left:4px;right:auto;top:4px;bottom:-4px;width:2px;height:auto}.strip.tiny{grid-auto-flow:column}.strip.tiny li{padding:18px 8px 0 0}.strip.tiny li::before{left:0;right:0;top:4px;bottom:auto;width:auto;height:2px}
+  .fchan{grid-template-columns:76px minmax(0,1fr) auto;gap:8px}
   .pane{padding-top:24px}.pane-head h1{font-size:32px}.ws-id .co{font-size:22px}.section{padding-top:56px}
   .big{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-bottom:12px}
   .tabs{margin-left:-20px;margin-right:-20px;padding:0 44px 0 12px;scroll-padding:0 44px;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
@@ -323,8 +351,11 @@ export const page = (title: string, body: string, head = "") =>
   `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title>${ICON}${FONT}${head}<style>${CSS}</style></head><body>${body}</body></html>`;
 
 export const header = (cta = true) => `<header class="top wrap"><a class="mark" href="/"><i></i>Launchpad</a><nav><a class="link" href="/ops">How it runs</a>${cta ? `<a class="btn sm" href="/new">Plan a launch</a>` : ""}</nav></header>`;
-export const footer = `<footer class="wrap"><p>Launchpad is built to be operated by AI agents and is not affiliated with Y Combinator. No bots or fake engagement: every boost is a real founder choosing to share. <a href="/ops">See what the agents do</a>.</p></footer>`;
+export const footer = `<footer class="wrap"><p>Launchpad is not affiliated with Y Combinator. No bots, no fake engagement. <a href="/ops">How it runs</a></p></footer>`;
 export const copyBtn = (text: string, label = "Copy") => `<button class="copy" type="button" data-copy="${esc(text)}">${esc(label)}</button>`;
+
+/** Impressions an hour against the starting thresholds: under 150 is behind, 500 and up is ahead. */
+export const meter = (perHour: number) => `<div class="meter" role="img" aria-label="${perHour} impressions an hour"><div class="zones"><i></i><i></i><i></i></div><b style="left:${Math.min(perHour / 10, 100)}%"></b><span style="left:15%">150</span><span style="left:50%">500</span></div>`;
 
 // ------------------------------------------------------------------- landing
 
@@ -336,38 +367,20 @@ export function renderHome(d: { overview: Overview; launches: Launch[] }): strin
   const numbers = o.launched > 0
     ? `<div class="numbers wrap" style="padding-left:0;padding-right:0"><span><b>${o.launched}</b> launched</span><span><b>${o.clicks}</b> people clicked through</span><span><b>${o.boosts_shared}</b> ${o.boosts_shared === 1 ? "composer" : "composers"} opened by squad founders</span><span><b>${o.squad}</b> founders in the squad</span></div>`
     : "";
-  const steps: [string, string][] = [
-    ["Where to post", "Communities and launch sites matched to your audience, each with the reason it fits, its rules and a source link."],
-    ["What to post", "Every channel in its own format, with a time, a reason and a tracked link. Edit anything before it goes out."],
-    ["Demo cuts", "Bring a recording or start from a storyboard. Get a captioned cut you can play and download, in a format built for technical buyers."],
-    ["Outreach drafts", "Who to reach, why them, and a draft you approve. You send every message yourself."],
-    ["Comment replies", "Paste in launch comments and get replies grounded in your company facts. If we don't know the answer, we ask you."],
-    ["Wave checks", "Enter your numbers at each checkpoint. Get a reading against stated thresholds and the next move if a post is behind."],
-    ["What brought real users", "Each channel traced from click to product activation to return visit, with QA traffic left out."],
-  ];
-  const pains: [string, string][] = [
-    ["Finding the right rooms", "Early users often come from a handful of communities. Knowing which ones, and what they tolerate, takes hours."],
-    ["Timing that isn't a guess", "Each platform rewards posts differently in the first hours. Most founders find out after the window closes."],
-    ["Reading the numbers mid-launch", "A post is underperforming. Should you boost it, reply more, or move on? There's rarely time to work it out."],
-    ["Demos for technical buyers", "Most video tooling is made for consumer social. B2B founders still need regular, credible product demos."],
-    ["Comments while you're heads-down", "Launch threads fill with real questions. Answering them accurately needs company context, fast."],
-    ["Clicks that mean nothing", "Analytics stop at the click. What matters is who tried the product and who came back."],
-  ];
   return page("Launchpad: launch everywhere, know what brought users", `${header()}
 <main class="wrap">
 <section class="hero">
   <div>
-    <p class="eyebrow">Launch service for founders</p>
-    <h1 style="margin-top:14px">Launch everywhere. Know what <em>brought users.</em></h1>
-    <p class="lede">Give us your demo and company context. Get where to post, what to post, demo cuts, reviewable outreach, comment replies and a clear view of what brought real users.</p>
+    <h1>Launch everywhere. Know what <em>brought users.</em></h1>
+    <p class="lede">Give us your demo. Get the whole launch back.</p>
     <div class="ctas"><a class="btn" href="/new">Plan my launch</a><span class="pricetag"><b>$299</b> per launch. No subscription.</span></div>
   </div>
   <div class="preview" aria-label="An illustrative sample of a launch workspace">
     <div class="bar"><span><b style="font-weight:600">Ledgerline</b> <span class="muted">· launch workspace</span></span><span class="tag warn">Sample</span></div>
-    <div class="slot"><span class="muted">r/smallbusiness</span><span><b>Fits because</b> owners there ask about filing help every week. Self-promotion rules apply, so lead with the lesson.</span></div>
-    <div class="slot"><span class="muted">X, hour 2</span><span><b>Behind</b> the first-wave threshold. Reply to every question now, then post the demo cut.</span></div>
-    <div class="slot"><span class="muted">Comment</span><span><b>"Do you support S-corps?"</b> Not in your facts yet, so this one is waiting for you.</span></div>
-    <div class="tweet"><div class="who"><i></i><b style="font-weight:600">Show HN</b><span class="muted">· 41 clicks → 9 activated → 3 returned</span></div>Each channel traced past the click, to people who actually used the product.</div>
+    <div class="slot"><span class="muted">r/smallbusiness</span><span><span class="tag good">Fits</span> <span class="tag">tax filing</span></span></div>
+    <div class="slot"><span class="muted">X, hour 2</span><span><span class="tag accent">Behind</span> Boost now</span></div>
+    <div class="slot"><span class="muted">Comment</span><span>"S-corps?" <span class="tag accent">Needs you</span></span></div>
+    <div class="tweet"><div class="who" style="margin:0"><b style="font-weight:600">Show HN</b><span class="muted">41 clicks → 9 active → 3 back</span></div></div>
   </div>
 </section>
 <section class="section"><p class="eyebrow">YC F26</p><h2 class="display" style="margin-top:10px">Five YC founders already use Launchpad.</h2>
@@ -376,14 +389,19 @@ export function renderHome(d: { overview: Overview; launches: Launch[] }): strin
 <div><h3>Sentient OS</h3><p>Jesai Tarun, Aditya Vellanki</p></div>
 <div><h3>Archangel Health</h3><p>Aryaa Bhatia, Tej Patel</p></div>
 </div></section>
-<section class="section"><h2 class="display">Seven deliverables for one launch.</h2>
-<div class="ledger">${steps.map(([h, p], i) => `<div class="row"><span class="n">${i + 1}</span><h3>${esc(h)}</h3><p>${esc(p)}</p></div>`).join("")}</div></section>
-<section class="section"><h2 class="display">What founders told us takes the time.</h2>
-<div class="pains">${pains.map(([h, p]) => `<div><h3>${esc(h)}</h3><p>${esc(p)}</p></div>`).join("")}</div>
-<p class="small muted" style="margin-top:12px">Drawn from conversations with founders while building this.</p></section>
+<section class="section"><div class="h-row"><h2 class="display" style="margin:0">What you get.</h2><span class="tag warn">Sample</span></div>
+<div class="shows">
+<div class="show"><h3>Where to post</h3><div class="mini"><div class="top"><b>r/devops</b><span class="tag good">Fits</span></div><div class="chips-row" style="margin:0"><span class="tag">on-call</span><span class="tag">incidents</span></div></div><div class="mini"><div class="top"><b>Show HN</b><span class="tag good">Fits</span></div><div class="chips-row" style="margin:0"><span class="tag">developer tool</span></div></div></div>
+<div class="show"><h3>When to post</h3><div class="mini"><ol class="strip tiny"><li><div class="w">6:00</div><div class="s">X</div></li><li><div class="w">7:30</div><div class="s">HN</div></li><li><div class="w">9:00</div><div class="s">LinkedIn</div></li></ol></div><div class="mini"><div class="top"><span class="muted">Reddit</span><b>Tue 10:00</b></div><div class="top"><span class="muted">Launch YC</span><b>Tue 6:30</b></div></div></div>
+<div class="show tall"><h3>Demo cuts</h3><div class="frame"><span class="cap">Replay any failed run</span><i class="prog"></i></div><div class="chips-row" style="margin:0"><span class="tag">16:9 technical</span><span class="tag">9:16 short</span><span class="tag">Your footage</span></div></div>
+<div class="show"><h3>Outreach you approve</h3><div class="mini"><div class="top"><b>Head of Infra</b><span class="tag accent">Draft</span></div><div class="muted">"Saw your post on on-call fatigue…"</div><div><span class="btn sm">Approve</span></div></div></div>
+<div class="show"><h3>Replies from your facts</h3><div class="mini"><div class="muted">"Works with OTel?"</div><div class="top"><b>Yes, one exporter.</b><span class="tag good">Grounded</span></div></div><div class="mini"><div class="top"><span class="muted">"SOC 2?"</span><span class="tag accent">Needs you</span></div></div></div>
+<div class="show"><h3>First-hour check</h3><div class="mini"><div class="rate">120<small> / hour</small></div>${meter(120)}<div><b>Next:</b> boost</div></div></div>
+<div class="show wide"><h3>What brought real users</h3><div class="mini"><div class="bars full">${([["Clicks", 41], ["Visitors", 24], ["Activated", 9], ["Returned", 3]] as [string, number][]).map(([k, n]) => `<div class="row"><span>${k}</span><div class="track"><div class="fill" style="width:${Math.round((n / 41) * 100)}%"></div></div><span class="n">${n}</span></div>`).join("")}</div></div></div>
+</div></section>
 ${numbers}
 ${listed.length ? `<section class="section"><h2>Recent launches</h2><div class="list">${listed.map((l) => `<div class="item"><b style="font-weight:600">${esc(l.company)}</b><span class="muted">${esc(l.one_liner)}</span><a class="small" href="${esc(l.url)}" rel="noopener">${esc(l.url.replace(/^https?:\/\//, "").replace(/\/$/, ""))}</a></div>`).join("")}</div></section>` : ""}
-<section class="closing"><div><h2>You approve everything. You post everything.</h2><p>Launchpad drafts and measures. It doesn't publish to your accounts or message anyone for you, and every squad share is a real founder choosing to post. No bots, no upvote rings.</p></div><a class="btn" href="/new">Plan my launch</a></section>
+<section class="closing"><div><h2>You approve everything. You post everything.</h2></div><a class="btn" href="/new">Plan my launch</a></section>
 </main>${footer}`, `<meta name="description" content="Launch everywhere and know what brought users: communities, channel posts, demo cuts, reviewable outreach, comment replies and attribution. $299 per launch.">`);
 }
 
@@ -397,25 +415,24 @@ export function renderNew(error?: string, v: Record<string, string> = {}): strin
   return page("Plan a launch · Launchpad", `${header(false)}
 <main class="wrap narrow form">
 <h1>Plan a launch</h1>
-<p class="lede">Two minutes of context. Your private workspace, with timing for each channel and every post written, is ready in seconds.</p>
 <form method="post" action="/new">
 ${error ? `<div class="error" role="alert">${esc(error)}</div>` : ""}
-<fieldset><legend>What you're launching</legend>
+<fieldset style="margin-top:28px"><legend>What you're launching</legend>
 ${field("company", "Company", { required: true, max: 80 })}
-${field("one_liner", "One-liner", { hint: "what it does, for whom", required: true, max: 160 })}
-<label class="field"><span>The launch <em>the problem, what's new, anything we should know</em></span><textarea name="description" required maxlength="3000">${esc(v["description"])}</textarea></label>
+${field("one_liner", "One-liner", { required: true, max: 160, placeholder: "What it does, for whom" })}
+<label class="field"><span>The launch</span><textarea name="description" required maxlength="3000" placeholder="The problem, what's new">${esc(v["description"])}</textarea></label>
 <div class="two">${field("url", "Link", { type: "url", required: true, max: 500, placeholder: "https://" })}${field("video_url", "Launch video", { type: "url", hint: "optional", max: 500, placeholder: "https://" })}</div>
-<div class="two">${field("launch_when", "When", { hint: "e.g. Sunday morning", max: 120 })}${field("batch", "YC batch", { hint: "optional", max: 10, placeholder: "F25" })}</div>
+<div class="two">${field("launch_when", "When", { max: 120, placeholder: "Sunday morning" })}${field("batch", "YC batch", { hint: "optional", max: 10, placeholder: "F25" })}</div>
 </fieldset>
 <fieldset><legend>Channels</legend><div class="chips">${CHANNELS.map((c) => `<label><input type="checkbox" name="ch_${c}" value="1" ${on(`ch_${c}`) ? "checked" : ""}><span>${esc(CHANNEL_NAMES[c])}</span></label>`).join("")}</div></fieldset>
 <fieldset><legend>You</legend>
-<div class="two">${field("email", "Email", { type: "email", hint: "how we recognise your launch", required: true, max: 254 })}${field("x_handle", "X handle", { hint: "optional", max: 40, placeholder: "@" })}</div>
-<label class="check"><input type="checkbox" name="join_squad" value="1" ${on("join_squad") ? "checked" : ""}><span>Join the boost squad. You'll get a one-tap request when another founder launches, at most three a day, and they'll boost yours.</span></label>
-<label class="check"><input type="checkbox" name="listed" value="1" ${on("listed") ? "checked" : ""}><span>Show my launch on Launchpad's front page once it's live.</span></label>
+<div class="two">${field("email", "Email", { type: "email", required: true, max: 254 })}${field("x_handle", "X handle", { hint: "optional", max: 40, placeholder: "@" })}</div>
+<label class="check"><input type="checkbox" name="join_squad" value="1" ${on("join_squad") ? "checked" : ""}><span>Join the boost squad <em class="muted" style="font-style:normal">max 3 requests a day</em></span></label>
+<label class="check"><input type="checkbox" name="listed" value="1" ${on("listed") ? "checked" : ""}><span>List on the front page when live</span></label>
 </fieldset>
 <input type="hidden" name="timezone" id="tz"><script>try{document.getElementById("tz").value=Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){}</script>
 <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
-<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><button class="btn" type="submit">Write my kit</button><span class="small muted">Your workspace is private to its link. Launchpad never posts or sends anything for you.</span></div>
+<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><button class="btn" type="submit">Write my kit</button><span class="small muted">Private link. We never post for you.</span></div>
 </form>
 </main>${footer}`);
 }
@@ -549,7 +566,7 @@ export function renderOps(d: { overview: Overview; launches: Launch[]; decisions
   return page("How it runs · Launchpad", `${header()}
 <main class="wrap">
 <section style="padding:48px 0 8px"><p class="eyebrow">The live record</p><h1 style="font-size:36px;margin:12px 0 12px">How Launchpad runs</h1>
-<p class="prose" style="font-size:16px">A <b>producer</b> writes each kit and the report afterwards. A <b>booster</b> asks squad founders to share each launch. A <b>scout</b> finds YC founders who are launching and offers them a kit. A <b>concierge</b> answers the inbox. Everything they do lands here. Updated ${esc(time(d.now))}.</p></section>
+<div class="roles"><div title="Writes each kit and the report afterwards"><b>Producer</b>Kits, reports</div><div title="Asks squad founders to share each launch"><b>Booster</b>Squad asks</div><div title="Finds founders who are launching and offers a kit"><b>Scout</b>Finds launches</div><div title="Answers the inbox"><b>Concierge</b>Inbox</div></div><p class="small muted" style="margin-top:12px">Updated ${esc(time(d.now))}</p></section>
 <div class="numbers"><span><b>${o.launches}</b> launches planned</span><span><b>${o.launched}</b> launched</span><span><b>${o.clicks}</b> people clicked through</span><span><b>${o.boosts_sent}</b> ${o.boosts_sent === 1 ? "boost" : "boosts"} asked</span><span><b>${o.boosts_shared}</b> composers opened</span><span><b>${o.squad}</b> in the squad</span><span><b>${d.interventions.length}</b> human ${d.interventions.length === 1 ? "step-in" : "step-ins"}</span></div>
 <section class="section"><h2>Launches</h2>${d.launches.length === 0 ? `<p class="empty">None yet.</p>` : `<div class="tablewrap"><table class="t"><thead><tr><th>Company</th><th>Status</th><th>Asked</th><th>Kit ready</th><th>Launched</th></tr></thead><tbody>${[...d.launches].reverse().map((l) => `<tr><td>${esc(l.listed ? l.company : "Unlisted launch")}</td><td><span class="status ${l.status === "launched" || l.status === "reported" ? "live" : ""}">${esc(l.status)}</span></td><td class="muted">${esc(time(l.created_at))}</td><td class="muted">${l.ready_at ? esc(time(l.ready_at)) : "—"}</td><td class="muted">${l.launched_at ? esc(time(l.launched_at)) : "—"}</td></tr>`).join("")}</tbody></table></div>`}</section>
 <section class="section"><h2>Reports</h2>${feed(reports, "None yet. The producer writes one about two hours after each launch.", (r) => `<li><div class="meta"><b>${esc(name(r.launch_id))}</b> · ${esc(time(r.created_at))}</div><p><a href="/r/${esc(r.id)}">${esc(r.title)}</a></p></li>`)}</section>
