@@ -4,7 +4,7 @@
  * agency blueprint. The platform does not say which agent is calling, so tools that hold a run
  * lock take `agent`.
  */
-import { CHANNELS, KitError, capsFromEnv, isEmail, maskEmail, validateKit, type Caps } from "./rules.ts";
+import { CHANNEL_NAMES, CHANNELS, KitError, capsFromEnv, isEmail, maskEmail, validateKit, type Caps, type Kit } from "./rules.ts";
 import { RepoError, type Launch, type Repo } from "./repo.ts";
 
 export interface McpContext { repo: Repo; origin: string; caps: Caps; now?: () => Date }
@@ -128,6 +128,14 @@ const opt = (args: Record<string, unknown>, key: string, max = 4000): string | u
 };
 
 export const kitUrl = (origin: string, l: Launch) => `${origin}/k/${l.slug}?t=${l.token}`;
+
+/** A one-line record of a kit for the public log: the plan's first sentence and every timing call. */
+export function kitSummary(kit: Kit): string {
+  const plain = kit.strategy.replace(/[*_`#>]/g, "").replace(/\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/\s+/g, " ").trim();
+  const first = (/^.*?[.!?](?=\s|$)/.exec(plain)?.[0] ?? plain).slice(0, 300);
+  const timing = kit.timing.map((t) => `${CHANNEL_NAMES[t.channel]} ${t.when}`).join(" · ");
+  return `${first} Timing: ${timing}.`;
+}
 export const boostUrl = (origin: string, code: string) => `${origin}/b/${code}`;
 
 const brief = (origin: string, l: Launch) => ({
@@ -199,7 +207,7 @@ export async function callTool(name: string, args: Record<string, unknown>, ctx:
       try {
         const kit = validateKit(args["kit"], l.channels);
         const saved = await repo.saveKit(l.id, kit, now());
-        await repo.logDecision({ launch_id: l.id, decision: "kit", reasoning: kit.strategy.slice(0, 600), agent: "producer" });
+        await repo.logDecision({ launch_id: l.id, decision: "kit", reasoning: kitSummary(kit), agent: "producer" });
         return { kit_url: kitUrl(origin, saved), email_founder: `Email ${l.email} their kit_url now: what is in it, the first step, and that the Launch now button rallies the boost squad.`, founder_email: l.email };
       } catch (error) {
         if (error instanceof KitError || error instanceof RepoError) throw new ToolError(error.message);
